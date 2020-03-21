@@ -4,13 +4,14 @@ var bcrypt = require('bcryptjs');
 
 
 var UserSchema = new Schema({
+    firstName: String,
+    lastName: String,
     email: {
         type : String,
         required: true,
         unique: true
     },
-    firstName: String,
-    lastName: String,
+    
     password:{
         type : String,
         required: true
@@ -30,10 +31,10 @@ module.exports.getUserByEmail= function(email,cb){
 
 module.exports.createUser = function(newUser,cb){
     bcrypt.genSalt(10, function(err, salt){
-        bcrypt.hash(newUser.password, salt, function(err){
-            if(err) throw err;
+        bcrypt.hash(newUser.password, salt, function(err, hash){
+            if(hash){
             newUser.password =hash;
-            newUser.save(cb);
+            newUser.save(cb);}
         })
     })
 }
@@ -44,4 +45,4 @@ module.exports.comparePassword= function(myPassword,hash, cb){
         cb(null, isMatch)
     })
 
-})
+}
