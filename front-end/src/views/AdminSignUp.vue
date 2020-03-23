@@ -76,16 +76,28 @@
                 flat
               >
               <v-spacer></v-spacer>
-                <v-toolbar-title> Admin Login </v-toolbar-title>
+                <v-toolbar-title> Admin SignUp </v-toolbar-title>
                 <v-spacer />
                   
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                  <v-text-field
-                    label="Login"
-                    name="login"
+                    <v-text-field
+                    label="First Name"
+                    name="firstname"
                     prepend-icon="person"
+                    type="text"
+                  />
+                  <v-text-field
+                    label="Last Name"
+                    name="lastname"
+                    prepend-icon="person"
+                    type="text"
+                  />
+                  <v-text-field
+                    label="E-mail"
+                    name="email"
+                    prepend-icon="email"
                     type="text"
                   />
 
@@ -100,8 +112,9 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="red darken-4">Login</v-btn>
                 <v-btn color="primary">Sign Up</v-btn>
+                <v-btn color="red darken-4">Login</v-btn>
+                
               </v-card-actions>
             </v-card>
           </v-col>
@@ -116,7 +129,6 @@
   export default {
      data: () => ({
       drawer: false,
-      var1:"red darken-4"
     }),
     props: {
       source: String,

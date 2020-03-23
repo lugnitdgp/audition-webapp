@@ -17,7 +17,8 @@ module.exports = function(app,passport){
          firstName: req.body.firstname,
             lastName : req.body.lastname,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            isAdmin: req.body.isAdmin
         })
         UserModel.createUser(newUser, function(err, user){
             if(err){
@@ -43,16 +44,19 @@ app.post('/login', function(req,res){
          UserModel.comparePassword(password, user.password, function(err, isMatch){
                     if(err){throw err}
                     if(isMatch){
-                        var token = jwt.sign({user}, config.secret, {expiresIn: 600000})
+                        
+                        const payload ={
+                            id: user._id,
+                            firstName : user.firstName,
+                            lastName : user.lastName,
+                            email: user.email,
+                            password:user.password,
+                            isAdmin: user.isAdmin
+                        }
+                        var token = jwt.sign(payload, config.secret, {expiresIn: 600000})
 
                         res.json({
-                            success:true, token:'JWT '+token, user:{
-                                id: user._id,
-                                email: user.email,
-                                firstname: user.firstName,
-                                lastname: user.lastName,
-                                password:user.password
-                            }
+                            success:true, token:'Bearer '+token, payload
                         })
 
                     }

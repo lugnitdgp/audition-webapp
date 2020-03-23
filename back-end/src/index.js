@@ -16,7 +16,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(morgan('dev'))
 app.use(passport.initialize())
-app.use(passport.session())
 require('./routes/audition')(app, passport)
 
 app.use((req,res,next) =>{
@@ -35,14 +34,13 @@ app.use((req, res, next) => {
 
 //Handler for 500
 app.use((err, req, res, next) => {
-    console.error(err.stack)
+    console.log(err.stack)
    res.sendFile(path.join(__dirname,'../public/500.html'))
 })
 
 
-mongoose.connect(config.db , {
-    useMongoClient : true
-})
+mongoose.connect(config.db 
+)
 
 mongoose.Promise = global.Promise;
 

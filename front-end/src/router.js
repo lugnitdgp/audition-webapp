@@ -26,6 +26,30 @@ export default new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/AdminSignIn.vue')
+    },
+    {
+      path: '/StLog',
+      name: 'StudentSignIn',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ './views/StudentSignIn.vue')
+    },
+    {
+      path: '/StSign',
+      name: 'StudentSignUp',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ './views/StudentSignUp.vue')
+    },
+    {
+      path: '/AdSign',
+      name: 'AdminSignUp',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ './views/AdminSignUp.vue')
     }
     
   ]

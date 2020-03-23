@@ -7,11 +7,12 @@
     <v-content>
         <v-card
         class="mx-auto overflow-hidden"
-    >
+            >
     <v-app-bar
       color = "red darken-4"
+      
       dark
-      src="../../../img/bg2.jpg"
+      src="../../../img/bg.jpg"
     >
     
       
@@ -21,12 +22,9 @@
     </v-app-bar>
 
     
-  </v-card>
+            </v-card>
 
-    <v-container 
-        
-        fluid
-      >
+    
       <v-navigation-drawer
       v-model="drawer"
       absolute
@@ -40,12 +38,17 @@
           v-model="group"
           active-class="deep-purple--text text--lighten-2"
         >
+            <router-link tag="span" to="/">
           <v-list-item>
+            
             <v-list-item-icon>
+              
               <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Home</v-list-item-title>
+            
           </v-list-item>
+          </router-link>
 
           <v-list-item>
             <v-list-item-icon>
@@ -70,12 +73,12 @@
           >
             <v-card class="elevation-12">
               <v-toolbar
-                color="red darken-4"
+                color="primary"
                 dark
                 flat
               >
               <v-spacer></v-spacer>
-                <v-toolbar-title> Admin Login </v-toolbar-title>
+                <v-toolbar-title> Student Login </v-toolbar-title>
                 <v-spacer />
                   
               </v-toolbar>
@@ -99,14 +102,14 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="red darken-4">Login</v-btn>
+                <v-btn color="indigo darken-4">Login</v-btn>
+                <v-btn color="teal darken-3">Sign Up</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
       </v-container>
       
-      </v-container>
     </v-content>
   </v-app>
 </template>
@@ -115,7 +118,6 @@
   export default {
      data: () => ({
       drawer: false,
-      var1:"red darken-4"
     }),
     props: {
       source: String,

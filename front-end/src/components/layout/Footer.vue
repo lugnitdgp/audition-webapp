@@ -1,4 +1,5 @@
 <template>
+<v-card>
 <v-footer
       :padless= true    >
       <v-card
@@ -15,7 +16,7 @@
       </v-card>
     </v-footer>
     
-        
+        </v-card>
     </template>
 
     <script>

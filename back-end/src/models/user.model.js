@@ -15,6 +15,11 @@ var UserSchema = new Schema({
     password:{
         type : String,
         required: true
+    },
+    isAdmin:{
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 
@@ -22,7 +27,8 @@ var UserSchema = new Schema({
 var User = module.exports = mongoose.model('User', UserSchema);
 
 module.exports.getUserById= function(id,cb){
-    User.findById(id,cb);
+    var a = mongoose.Types.ObjectId(id);
+    User.findOne({_id: a},cb);
 }
 
 module.exports.getUserByEmail= function(email,cb){
