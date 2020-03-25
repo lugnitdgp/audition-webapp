@@ -83,18 +83,15 @@
               <v-card-text>
                 <v-form>
                     <v-text-field
-                    label="First Name"
-                    name="firstname"
+                    v-model="UserName"
+                    label="Name"
+                    name="UserName"
                     prepend-icon="person"
                     type="text"
                   />
+                  
                   <v-text-field
-                    label="Last Name"
-                    name="lastname"
-                    prepend-icon="person"
-                    type="text"
-                  />
-                  <v-text-field
+                    v-model="email"
                     label="E-mail"
                     name="email"
                     prepend-icon="email"
@@ -102,6 +99,7 @@
                   />
 
                   <v-text-field
+                    v-model="password"
                     id="password"
                     label="Password"
                     name="password"
@@ -112,8 +110,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="primary">Sign Up</v-btn>
-                <v-btn color="red darken-4">Login</v-btn>
+                <v-btn @click ="signup" color="primary">Sign Up</v-btn>
+                <v-btn @click="$router.push('/AdLog')" color="red darken-4">Login</v-btn>
                 
               </v-card-actions>
             </v-card>
@@ -126,12 +124,43 @@
 </template>
 
 <script>
+/* eslint-disable */
+
+  import axios from 'axios'
   export default {
      data: () => ({
       drawer: false,
+      UserName:'',
+      email:'',
+      password:''
     }),
     props: {
       source: String,
+    },
+    methods:{
+      signup(){
+        const user={
+          UserName : this.UserName,
+          email : this.email,
+          password : this.password
+
+        }
+
+        axios.post('http://localhost:3000/signup/admin', user).then((res)=>{
+              alert(res.data.message)
+                if(res.data.success==true){
+                                  this.$router.push('/AdLog')
+
+                }
+                else{
+                  this.$router.push('/AdSign')
+                }
+              })
+
+        
+
+
+      }
     }
       
   }

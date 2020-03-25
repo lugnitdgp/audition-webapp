@@ -12,13 +12,34 @@ module.exports = function(app,passport){
     });
 
 
-    app.post('/signup', function(req, res){
+    app.post('/signup/admin', function(req, res){
         var newUser = new UserModel({
-         UserName: req.body.name,
+         UserName: req.body.UserName,
            
             email: req.body.email,
             password: req.body.password,
-            isAdmin: req.body.isAdmin
+            isAdmin: true
+        })
+        UserModel.createUser(newUser, function(err, user){
+            if(err){
+                res.json({success: false, message:'User is not registered..'})
+            }
+
+            else{
+                res.json({success  :true, message : 'User is registered..'})
+            }
+            
+        })
+    })
+
+
+    app.post('/signup/user', function(req, res){
+        var newUser = new UserModel({
+         UserName: req.body.UserName,
+           
+            email: req.body.email,
+            password: req.body.password,
+            isAdmin: false
         })
         UserModel.createUser(newUser, function(err, user){
             if(err){

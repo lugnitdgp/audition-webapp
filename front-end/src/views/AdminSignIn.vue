@@ -83,6 +83,7 @@
               <v-card-text>
                 <v-form>
                   <v-text-field
+                     v-model="email"
                     label="Login"
                     name="login"
                     prepend-icon="person"
@@ -90,6 +91,7 @@
                   />
 
                   <v-text-field
+                    v-model="password"
                     id="password"
                     label="Password"
                     name="password"
@@ -100,8 +102,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="red darken-4">Login</v-btn>
-                <v-btn color="primary">Sign Up</v-btn>
+                <v-btn @click="send" color="red darken-4">Login</v-btn>
+                <v-btn  color="primary">Sign Up</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -116,10 +118,17 @@
   export default {
      data: () => ({
       drawer: false,
-      var1:"red darken-4"
+      email:'',
+      password:''
+
     }),
     props: {
       source: String,
+    },
+    methods:{
+        send(){
+          
+        }
     }
       
   }
