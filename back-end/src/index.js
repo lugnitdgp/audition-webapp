@@ -3,12 +3,16 @@ let app = express()
 var mongoose = require('mongoose')
 let path = require('path')
 let bodyParser = require('body-parser')
-let EventRoute = require('./routes/audition')
+let AuthRoute = require('./routes/auth')
+let ProfileRoutes = require('./routes/profile-routes')
+
 var morgan = require('morgan')
 let cors = require('cors')
 var passport = require('passport')
 var config = require('../config/database')
+const cookieSession = require('cookie-session');
 
+app.use('/profile', ProfileRoutes)
 
 app.use(cors())
 
@@ -16,7 +20,12 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended : true}))
 app.use(morgan('dev'))
 app.use(passport.initialize())
-require('./routes/audition')(app, passport)
+app.use(passport.session());
+app.use(cookieSession({
+    maxAge: 24*60*60*1000,
+    keys: ["rohan"]
+}))
+require('./routes/auth')(app, passport)
 
 app.use((req,res,next) =>{
     console.log(`${new Date().toString()} =>${req.originalUrl}` , req.body)
@@ -24,8 +33,7 @@ app.use((req,res,next) =>{
     next()
 })
 
-app.use(EventRoute)
-
+app.use(AuthRoute)
 app.use(express.static('public'))
 //Handler for 404
 app.use((req, res, next) => {
@@ -48,5 +56,5 @@ require('../config/passport')(passport)
 
 const PORT = process.env.PORT || 3000
 
-app.listen(PORT, () =>console.log(`SERVER started on port ${PORT}`))
+app.listen(PORT, () =>console.log(`SERVER started on port ${PORT} $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$` ))
 

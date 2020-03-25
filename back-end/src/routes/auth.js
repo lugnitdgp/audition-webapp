@@ -14,8 +14,8 @@ module.exports = function(app,passport){
 
     app.post('/signup', function(req, res){
         var newUser = new UserModel({
-         firstName: req.body.firstname,
-            lastName : req.body.lastname,
+         UserName: req.body.name,
+           
             email: req.body.email,
             password: req.body.password,
             isAdmin: req.body.isAdmin
@@ -47,8 +47,7 @@ app.post('/login', function(req,res){
                         
                         const payload ={
                             id: user._id,
-                            firstName : user.firstName,
-                            lastName : user.lastName,
+                            UserName : user.UserName,
                             email: user.email,
                             password:user.password,
                             isAdmin: user.isAdmin
@@ -73,14 +72,24 @@ app.post('/login', function(req,res){
         })
 
 
-        app.get('/profile', passport.authenticate('jwt', {session: false}), function(req,res){
-           res.json({user : req.user});
+        app.get('/auth/jwt', passport.authenticate('jwt', {session: false}), function(req,res){
+            res.redirect('/profile/')
         })
 
         app.get('/logout', function(req, res){
             req.logout();
             res.redirect('/');
 
+        })
+
+        app.get('/auth/google', passport.authenticate('google', {
+            scope:['profile']
+        }))
+
+        // callback google
+
+        app.get('/auth/google/redirect', passport.authenticate('google'),(req,res)=>{
+                res.redirect(`/profile/${req.user.id}`)
         })
 
     }
