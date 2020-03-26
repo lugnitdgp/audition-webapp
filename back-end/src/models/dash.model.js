@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcryptjs');
 
 
-var UserSchema = new Schema({
+var DashSchema = new Schema({
     UserName: String,
     email: {
         type : String,
@@ -19,15 +19,11 @@ var UserSchema = new Schema({
         type: Boolean,
         required: false,
         default: false
-    },
-    flag:{
-        type: Boolean,
-        default: false
     }
 });
 
 
-var User = module.exports = mongoose.model('User', UserSchema);
+var User = module.exports = mongoose.model('Dash', DashSchema);
 
 module.exports.getUserById= function(id,cb){
     var a = mongoose.Types.ObjectId(id);

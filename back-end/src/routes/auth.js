@@ -5,20 +5,25 @@ let mongoose = require('mongoose')
 var passport = require('passport')
 var jwt = require('jsonwebtoken');
 var config = require('../../config/database')
+let DashModel = require('../models/dash.model')
 
 module.exports = function(app,passport){
     app.get('/', function(req,res){
         res.json('fuckoff');
     });
 
-
-    app.post('/signup/admin', function(req, res){
+    app.post('/flag', (req,res)=>{
+         const id = req.body.id
+         UserModel.findByIdAndUpdate(id, {flag : true})
+         return
+    })
+    app.post('/signup', function(req, res){
         var newUser = new UserModel({
          UserName: req.body.UserName,
            
             email: req.body.email,
             password: req.body.password,
-            isAdmin: true
+            isAdmin: req.body.isAdmin
         })
         UserModel.createUser(newUser, function(err, user){
             if(err){
@@ -33,25 +38,6 @@ module.exports = function(app,passport){
     })
 
 
-    app.post('/signup/user', function(req, res){
-        var newUser = new UserModel({
-         UserName: req.body.UserName,
-           
-            email: req.body.email,
-            password: req.body.password,
-            isAdmin: false
-        })
-        UserModel.createUser(newUser, function(err, user){
-            if(err){
-                res.json({success: false, message:'User is not registered..'})
-            }
-
-            else{
-                res.json({success  :true, message : 'User is registered..'})
-            }
-            
-        })
-    })
 
 
 
@@ -76,7 +62,7 @@ app.post('/login', function(req,res){
                         var token = jwt.sign(payload, config.secret, {expiresIn: 600000})
 
                         res.json({
-                            success:true, token:'Bearer '+token, payload
+                            success:true, token:'Bearer '+token
                         })
 
                     }
@@ -94,13 +80,14 @@ app.post('/login', function(req,res){
 
 
         app.get('/auth/jwt', passport.authenticate('jwt', {session: false}), function(req,res){
-            res.redirect('/profile/')
+            console.log(req.user+'ddddddddddddd')
+            res.send(req.user)
         })
 
         app.get('/logout', function(req, res){
             req.logout();
-            res.redirect('/');
-
+            res.send('Logged out successfully')
+            
         })
 
         app.get('/auth/google', passport.authenticate('google', {
@@ -110,7 +97,7 @@ app.post('/login', function(req,res){
         // callback google
 
         app.get('/auth/google/redirect', passport.authenticate('google'),(req,res)=>{
-                res.redirect(`/profile/${req.user.id}`)
+                res.send(req.user)
         })
 
     }

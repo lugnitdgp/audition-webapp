@@ -142,11 +142,12 @@
         const user={
           UserName : this.UserName,
           email : this.email,
-          password : this.password
+          password : this.password,
+          isAdmin: true
 
         }
 
-        axios.post('http://localhost:3000/signup/admin', user).then((res)=>{
+        axios.post('http://localhost:3000/signup', user).then((res)=>{
               alert(res.data.message)
                 if(res.data.success==true){
                                   this.$router.push('/AdLog')

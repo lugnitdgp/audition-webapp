@@ -9,7 +9,7 @@
         class="mx-auto overflow-hidden"
             >
     <v-app-bar
-      color = "red darken-4"
+      color = "primary"
       
       dark
       src="../../../img/bg.jpg"
@@ -48,12 +48,7 @@
             
           </v-list-item>
           </router-link>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Account</v-list-item-title>
-          </v-list-item>
+        
 
         </v-list-item-group>
       </v-list>
@@ -71,30 +66,27 @@
           >
             <v-card class="elevation-12">
               <v-toolbar
-                color="red darken-4"
+                color="primary"
                 dark
                 flat
               >
               <v-spacer></v-spacer>
-                <v-toolbar-title> Admin SignUp </v-toolbar-title>
+                <v-toolbar-title> Student SignUp </v-toolbar-title>
                 <v-spacer />
                   
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                    <v-text-field
-                    label="First Name"
-                    name="firstname"
+                     <v-text-field
+                    v-model="UserName"
+                    label="Name"
+                    name="UserName"
                     prepend-icon="person"
                     type="text"
                   />
+                  
                   <v-text-field
-                    label="Last Name"
-                    name="lastname"
-                    prepend-icon="person"
-                    type="text"
-                  />
-                  <v-text-field
+                    v-model="email"
                     label="E-mail"
                     name="email"
                     prepend-icon="email"
@@ -102,6 +94,7 @@
                   />
 
                   <v-text-field
+                    v-model="password"
                     id="password"
                     label="Password"
                     name="password"
@@ -112,8 +105,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="teal darken-3">Sign Up</v-btn>
-                <v-btn color="indigo darken-4">Login</v-btn>
+                <v-btn @click ="signup" color="teal darken-3">Sign Up</v-btn>
+                <v-btn @click="$router.push('/StLog')" color="indigo darken-4">Login</v-btn>
                 
               </v-card-actions>
             </v-card>
@@ -126,13 +119,44 @@
 </template>
 
 <script>
+/* eslint-disable */
+
+  import axios from 'axios'
   export default {
      data: () => ({
       drawer: false,
-      var1:"red darken-4"
+      UserName:'',
+      email:'',
+      password:''
     }),
     props: {
       source: String,
+    },
+    methods:{
+      signup(){
+        const user={
+          UserName : this.UserName,
+          email : this.email,
+          password : this.password,
+          isAdmin: false
+
+        }
+
+        axios.post('http://localhost:3000/signup/user', user).then((res)=>{
+              alert(res.data.message)
+                if(res.data.success==true){
+                                  this.$router.push('/StLog')
+
+                }
+                else{
+                  this.$router.push('/StSign')
+                }
+              })
+
+        
+
+
+      }
     }
       
   }

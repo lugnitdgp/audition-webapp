@@ -50,12 +50,6 @@
           </v-list-item>
           </router-link>
 
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Account</v-list-item-title>
-          </v-list-item>
 
         </v-list-item-group>
       </v-list>
@@ -102,8 +96,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
-                <v-btn color="indigo darken-4">Login</v-btn>
-                <v-btn color="teal darken-3">Sign Up</v-btn>
+                <v-btn @click="send" color="indigo darken-4">Login</v-btn>
+                <v-btn @click="$router.push('/StSign')" color="teal darken-3">Sign Up</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -115,12 +109,34 @@
 </template>
 
 <script>
+import axios from 'axios'
+
   export default {
+    
      data: () => ({
       drawer: false,
     }),
     props: {
       source: String,
+    },
+    methods:{
+        send(){
+          var credentials = {
+            email: this.email,
+            password: this.password
+          }
+          axios.post('http://localhost:3000/login', credentials).then((res)=>{
+            if(res.data.success==true){
+                localStorage.setItem('token', res.data.token)
+                alert('Successful login')
+                this.$router.push('/Stlanding')
+            }
+            else{
+              alert(res.data.message)
+              this.$router.push('/StLog')
+            }
+          })
+        }
     }
       
   }

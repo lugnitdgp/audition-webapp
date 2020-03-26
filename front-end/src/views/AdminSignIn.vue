@@ -48,12 +48,7 @@
             
           </v-list-item>
           </router-link>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Account</v-list-item-title>
-          </v-list-item>
+         
 
         </v-list-item-group>
       </v-list>
@@ -103,7 +98,7 @@
               <v-card-actions>
                 <v-spacer />
                 <v-btn @click="send" color="red darken-4">Login</v-btn>
-                <v-btn  color="primary">Sign Up</v-btn>
+                <v-btn @click="$router.push('/AdSign')" color="primary">Sign Up</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
@@ -115,6 +110,7 @@
 </template>
 
 <script>
+import axios from 'axios'
   export default {
      data: () => ({
       drawer: false,
@@ -127,7 +123,21 @@
     },
     methods:{
         send(){
-          
+          var credentials = {
+            email: this.email,
+            password: this.password
+          }
+          axios.post('http://localhost:3000/login', credentials).then((res)=>{
+            if(res.data.success==true){
+                localStorage.setItem('token', res.data.token)
+                alert('Successful login')
+                this.$router.push('/Adlanding')
+            }
+            else{
+              alert(res.data.message)
+              this.$router.push('/AdLog')
+            }
+          })
         }
     }
       
