@@ -13,14 +13,19 @@ module.exports = function(app,passport){
     });
 
     app.post('/flag', (req,res)=>{
-         const id = req.body.id
-         UserModel.findByIdAndUpdate(id, {flag : true})
-         return
+        console.log("backend" +req.body._id)
+         const id = req.body._id
+         UserModel.findByIdAndUpdate(id, {flag : true}, (err,user)=>{
+             if(err) throw err;
+             else{
+                 return res.json('done')
+             }
+         })
+         
     })
     app.post('/signup', function(req, res){
         var newUser = new UserModel({
-         UserName: req.body.UserName,
-           
+            UserName: req.body.UserName,
             email: req.body.email,
             password: req.body.password,
             isAdmin: req.body.isAdmin
@@ -31,6 +36,17 @@ module.exports = function(app,passport){
             }
 
             else{
+                
+                if(user.isAdmin === false){
+                    var user = new DashModel({
+                        uid: user._id,
+
+                    })
+
+                    user.save()
+                }
+
+
                 res.json({success  :true, message : 'User is registered..'})
             }
             
@@ -44,6 +60,7 @@ module.exports = function(app,passport){
 app.post('/login', function(req,res){
         var email = req.body.email;
         var password = req.body.password;
+        console.log(email + ' '+password)
         UserModel.getUserByEmail(email, function(err, user){
             if(err){ throw err;}
             if(!user){
@@ -78,9 +95,10 @@ app.post('/login', function(req,res){
 
         })
 
+       
+
 
         app.get('/auth/jwt', passport.authenticate('jwt', {session: false}), function(req,res){
-            console.log(req.user+'ddddddddddddd')
             res.send(req.user)
         })
 
@@ -99,5 +117,23 @@ app.post('/login', function(req,res){
         app.get('/auth/google/redirect', passport.authenticate('google'),(req,res)=>{
                 res.send(req.user)
         })
+
+
+
+        app.get('/protected/getUsers',(req,res)=>{
+            var a
+                UserModel.find({isAdmin : false}).then(doc =>{
+                    DashModel.find().then(doc1=>{
+                        return res.json({ users : doc, details : doc1})
+    
+                    })
+                })
+                
+                
+            
+        })
+
+
+        
 
     }

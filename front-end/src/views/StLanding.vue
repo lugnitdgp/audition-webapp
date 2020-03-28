@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import axios from '../axios'
-import a from 'axios'
+
+import axios from 'axios'
 export default {
     name:'Landing',
     beforeCreate(){
@@ -21,11 +21,7 @@ export default {
                         }
                 else{
                     alert('You are the Admin. Accessing wrong route, re-routing')
-                    
-                    a.post('http://localhost:3000/flag',res.data).then((response)=>{
-                        console.log(response)
-                    })
-                    this.$router.push('/')
+                    this.$router.push('/AdLog')
                 }
             })
            
@@ -33,8 +29,7 @@ export default {
     },
     methods:{
         logout(){
-            localStorage.removeItem('token')
-            a.get('http://localhost:3000/logout').then((res)=>{
+            axios.get('http://localhost:3000/logout').then((res)=>{
                 alert(res.data)
                 this.$router.push('/StLog')
             })

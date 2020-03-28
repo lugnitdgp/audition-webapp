@@ -121,8 +121,12 @@ import axios from 'axios'
     props: {
       source: String,
     },
+    created(){
+      localStorage.clear()
+    },
     methods:{
         send(){
+      
           var credentials = {
             email: this.email,
             password: this.password
@@ -130,12 +134,14 @@ import axios from 'axios'
           axios.post('http://localhost:3000/login', credentials).then((res)=>{
             if(res.data.success==true){
                 localStorage.setItem('token', res.data.token)
+                console.log(localStorage.getItem('token'))
                 alert('Successful login')
                 this.$router.push('/Adlanding')
             }
             else{
               alert(res.data.message)
-              this.$router.push('/AdLog')
+
+              this.$router.push('/')
             }
           })
         }

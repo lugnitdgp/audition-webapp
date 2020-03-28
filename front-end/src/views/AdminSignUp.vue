@@ -137,8 +137,12 @@
     props: {
       source: String,
     },
+    created(){          
+      localStorage.clear()
+      },
     methods:{
       signup(){
+
         const user={
           UserName : this.UserName,
           email : this.email,

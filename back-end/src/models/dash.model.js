@@ -4,50 +4,33 @@ var bcrypt = require('bcryptjs');
 
 
 var DashSchema = new Schema({
-    UserName: String,
-    email: {
-        type : String,
+    uid:{
+        type: String,
         required: true,
-        unique: true
+        unique : true
     },
-    
-    password:{
-        type : String,
-        required: true
+    selected:{
+        type: Array,
+        required: true,
+        default: { selected : false, user:''}
     },
-    isAdmin:{
+    round:{
+        type:Number,
+        required: true,
+        default:1
+    },
+    feedback:{
+        type: Array,
+        required:false
+    },
+    final:{
         type: Boolean,
-        required: false,
+        required:true,
         default: false
     }
+
 });
 
 
-var User = module.exports = mongoose.model('Dash', DashSchema);
+var Details = module.exports = mongoose.model('Details', DashSchema);
 
-module.exports.getUserById= function(id,cb){
-    var a = mongoose.Types.ObjectId(id);
-    User.findOne({_id: a},cb);
-}
-
-module.exports.getUserByEmail= function(email,cb){
-    User.findOne({email : email},cb);
-}
-
-module.exports.createUser = function(newUser,cb){
-    bcrypt.genSalt(10, function(err, salt){
-        bcrypt.hash(newUser.password, salt, function(err, hash){
-            if(hash){
-            newUser.password =hash;
-            newUser.save(cb);}
-        })
-    })
-}
-
-module.exports.comparePassword= function(myPassword,hash, cb){
-    bcrypt.compare(myPassword, hash, function(err, isMatch){
-        if(err) throw err;
-        cb(null, isMatch)
-    })
-
-}

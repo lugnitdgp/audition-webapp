@@ -79,6 +79,7 @@
               <v-card-text>
                 <v-form>
                   <v-text-field
+                     v-model="email"
                     label="Login"
                     name="login"
                     prepend-icon="person"
@@ -86,6 +87,7 @@
                   />
 
                   <v-text-field
+                    v-model="password"
                     id="password"
                     label="Password"
                     name="password"
@@ -115,17 +117,22 @@ import axios from 'axios'
     
      data: () => ({
       drawer: false,
+      email:'',
+      password:''
     }),
     props: {
       source: String,
     },
+    created(){
+      localStorage.clear()
+    },
     methods:{
         send(){
-          var credentials = {
+          var user = {
             email: this.email,
             password: this.password
           }
-          axios.post('http://localhost:3000/login', credentials).then((res)=>{
+          axios.post('http://localhost:3000/login', user).then((res)=>{
             if(res.data.success==true){
                 localStorage.setItem('token', res.data.token)
                 alert('Successful login')
@@ -133,7 +140,7 @@ import axios from 'axios'
             }
             else{
               alert(res.data.message)
-              this.$router.push('/StLog')
+              this.$router.push('/')
             }
           })
         }
