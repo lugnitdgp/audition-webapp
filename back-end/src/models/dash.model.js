@@ -9,10 +9,13 @@ var DashSchema = new Schema({
         required: true,
         unique : true
     },
+    name:{
+        type: String,
+        required : true
+    },
     selected:{
-        type: Array,
-        required: true,
-        default: { selected : false, user:''}
+         status : {type: Boolean, required: true, default: false},
+          user: {type:String}
     },
     round:{
         type:Number,
@@ -24,9 +27,12 @@ var DashSchema = new Schema({
         required:false
     },
     final:{
-        type: Boolean,
-        required:true,
-        default: false
+        status : {type: Boolean, required: true, default: false},
+          user: {type:String}
+    },
+    answers:{
+        type: Array,
+        required:false
     }
 
 });

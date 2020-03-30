@@ -134,6 +134,8 @@
     },
     created(){
       localStorage.clear()
+                    this.$vuetify.theme.dark = true
+
     },
     methods:{
       signup(){

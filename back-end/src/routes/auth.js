@@ -40,7 +40,7 @@ module.exports = function(app,passport){
                 if(user.isAdmin === false){
                     var user = new DashModel({
                         uid: user._id,
-
+                        name: user.UserName
                     })
 
                     user.save()
@@ -121,17 +121,35 @@ app.post('/login', function(req,res){
 
 
         app.get('/protected/getUsers',(req,res)=>{
-            var a
-                UserModel.find({isAdmin : false}).then(doc =>{
+                
                     DashModel.find().then(doc1=>{
-                        return res.json({ users : doc, details : doc1})
+                        return res.send(doc1)
     
                     })
-                })
+            
                 
                 
             
         })
+
+        app.post('/protected/getUser',(req,res)=>{
+                console.log(req.body)
+            DashModel.findOne({_id : req.body.id}).then(doc1=>{
+                return res.json(doc1)
+
+            })
+
+    
+    app.post('/protected/update', (req,res)=>{
+        var a= req.body
+        DashModel.replaceOne({_id:req.body._id}, a).then((doc)=>{
+         console.log(doc)
+        })
+
+    })
+        
+    
+})
 
 
         

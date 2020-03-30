@@ -27,6 +27,10 @@ export default {
            
         }
     },
+    created(){
+                      this.$vuetify.theme.dark = true
+
+    },
     methods:{
         logout(){
             axios.get('http://localhost:3000/logout').then((res)=>{
