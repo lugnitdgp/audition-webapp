@@ -48,12 +48,7 @@
             
           </v-list-item>
           </router-link>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Account</v-list-item-title>
-          </v-list-item>
+          
 
         </v-list-item-group>
       </v-list>

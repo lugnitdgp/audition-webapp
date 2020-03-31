@@ -15,8 +15,18 @@
       <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
       <v-toolbar-title>GLUG AUDITIONS 2020</v-toolbar-title>
+<v-spacer></v-spacer><v-spacer></v-spacer>
 <v-spacer></v-spacer>
+<v-spacer></v-spacer>
+<v-spacer></v-spacer>
+<v-spacer></v-spacer>
+<v-spacer></v-spacer>
+<v-spacer></v-spacer>
+
               <v-btn @click="logout" color="teal darken-3">Logout</v-btn>
+              <v-spacer></v-spacer>
+
+              <v-btn @click="purge" color="teal darken-3">PURGE</v-btn>
 
     </v-app-bar>
 
@@ -90,8 +100,14 @@
               <v-divider></v-divider>
               <v-list v-if="isExpanded(item)" dense>
                 <v-container fluid>
-                    {{item.selected.status}}
+                  <v-card>
+                    <strong>Selection status : {{item.selected.status}} last change by : {{item.selected.user}}</strong><v-spacer />
+                    <strong>Final : {{item.final.status}} Finalised by : {{item.final.user}}</strong>
+                    </v-card>
+                    <v-card-actions>
+                        <v-spacer />
                     <v-btn @click="usercontrol(item._id)" color="teal darken-3">User Details</v-btn>
+                    </v-card-actions>
                 </v-container>
               </v-list>
             </v-card>
@@ -177,6 +193,12 @@ export default {
         usercontrol(a){
             let routeData = this.$router.resolve({name: 'UserControl', query: {id: a}});
             window.open(routeData.href, '_blank');
+            },
+            purge(){
+              axios.post('http://localhost:3000/protected/purge').then((res)=>{
+                alert(res.data.message)
+                location.reload()
+              })
             }
         
     }

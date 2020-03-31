@@ -112,7 +112,6 @@ app.post('/login', function(req,res){
             scope:['profile']
         }))
 
-        // callback google
 
         app.get('/auth/google/redirect', passport.authenticate('google'),(req,res)=>{
                 res.send(req.user)
@@ -126,10 +125,6 @@ app.post('/login', function(req,res){
                         return res.send(doc1)
     
                     })
-            
-                
-                
-            
         })
 
         app.post('/protected/getUser',(req,res)=>{
@@ -139,17 +134,56 @@ app.post('/login', function(req,res){
 
             })
 
-    
+        })
+
+
     app.post('/protected/update', (req,res)=>{
         var a= req.body
         DashModel.replaceOne({_id:req.body._id}, a).then((doc)=>{
-         console.log(doc)
+          return res.json({message : 'Changes have been saved'})
         })
 
     })
         
     
-})
+    app.post('/protected/purge',(req,res)=>{
+        
+        DashModel.find().then(doc =>{
+            doc.forEach(element=>{
+                console.log(element)
+                if(element.selected.status== false && element.final.status==true){
+                    console.log("Entered if block")
+                    DashModel.findByIdAndRemove(element._id).then((err,res)=>{
+                        if(err)throw err
+                        
+
+                    })
+
+                    var a = mongoose.Types.ObjectId(element.uid)
+                        UserModel.findByIdAndRemove(a).then((err,res2)=>{
+                            if(err)throw err
+                        })
+                }
+                
+            })
+           
+        })
+        DashModel.find().then(doc =>{
+            doc.forEach(element=>{
+                element.selected={status: false, user:''},
+                element.final={status: false, user:''}
+                element.round= element.round+1
+                DashModel.replaceOne({_id:element._id}, element).then((doc)=>{
+                    console.log('Round details updated')
+                  })
+
+            })
+
+        })
+        return res.send({message : 'Purge completed'})
+        
+
+    })
 
 
         

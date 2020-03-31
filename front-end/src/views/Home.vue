@@ -48,13 +48,14 @@
             
           </v-list-item>
           </router-link>
+          <router-link tag="span" to='/StSign'>
           <v-list-item>
             <v-list-item-icon>
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Account</v-list-item-title>
+            <v-list-item-title>Student SignUp</v-list-item-title>
           </v-list-item>
-
+    </router-link>
         </v-list-item-group>
       </v-list>
       </v-navigation-drawer>
@@ -76,46 +77,18 @@
                 flat
               >
               <v-spacer></v-spacer>
-                <v-toolbar-title> Admin SignUp </v-toolbar-title>
+                <v-toolbar-title> Welcome to the GLUG AUDITIONS 2020</v-toolbar-title>
                 <v-spacer />
                   
               </v-toolbar>
-              <v-card-text>
-                <v-form>
-                    <v-text-field
-                    label="First Name"
-                    name="firstname"
-                    prepend-icon="person"
-                    type="text"
-                  />
-                  <v-text-field
-                    label="Last Name"
-                    name="lastname"
-                    prepend-icon="person"
-                    type="text"
-                  />
-                  <v-text-field
-                    label="E-mail"
-                    name="email"
-                    prepend-icon="email"
-                    type="text"
-                  />
-
-                  <v-text-field
-                    id="password"
-                    label="Password"
-                    name="password"
-                    prepend-icon="lock"
-                    type="password"
-                  />
-                </v-form>
-              </v-card-text>
               <v-card-actions>
-                <v-spacer />
                 <v-btn color="primary">Sign Up</v-btn>
+                <v-spacer />
                 <v-btn color="red darken-4">Login</v-btn>
-                
               </v-card-actions>
+                
+                
+              
             </v-card>
           </v-col>
         </v-row>

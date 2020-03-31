@@ -8,7 +8,7 @@
                 
               >
               
-    <v-toolbar-title >Welcome to  the details of <strong>{{details.name}}</strong> Selection status : {{details.selected.status}}</v-toolbar-title>
+    <v-toolbar-title >Welcome to  the details of <strong>{{details.name}}</strong> </v-toolbar-title>
     <v-spacer/>
     <v-spacer/>
     <v-spacer/>
@@ -18,6 +18,20 @@
     </v-toolbar>
     <v-spacer/>
     <v-spacer/>
+     <v-container fluid>
+       
+        <v-toolbar
+          class="mb-2"
+          color="green darken-4"
+          dark
+          
+          flat
+        >
+          <v-toolbar-title>Current Round : {{details.round}} Current selection status : {{details.selected.status}} by <strong>{{details.selected.user}}</strong></v-toolbar-title>
+        </v-toolbar>
+     </v-container>
+     <v-spacer/>
+     <v-spacer/>
     <v-container fluid>
     <v-data-iterator
       :items="details.answers"
@@ -234,8 +248,8 @@ export default {
         },
         updateEntry(){
                     var a= this.details
-                axios.post('http://localhost:3000/protected/update', a).then(()=>{
-                        alert('Changes have been saved.')
+                axios.post('http://localhost:3000/protected/update', a).then((res)=>{
+                        alert(res.data.message)
                 })
         }
         
