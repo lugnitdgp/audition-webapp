@@ -9,7 +9,7 @@ let DashModel = require('../models/dash.model')
 
 module.exports = function(app,passport){
     app.get('/', function(req,res){
-        res.json('fuckoff');
+        res.json('welcome');
     });
 
     app.post('/flag', (req,res)=>{
