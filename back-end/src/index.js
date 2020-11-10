@@ -14,6 +14,13 @@ const cookieSession = require('cookie-session');
 const mongoSanitize = require('express-mongo-sanitize');
 
 
+require('dotenv').config()
+
+// console.log('sending email...')
+// sendMail("Hello world", "this is email body it can contain html also")
+// console.log('email sent ✓')
+
+
 app.use(mongoSanitize())
 app.use(xss())
 app.use(express.json({ limit: '4kb' }))
