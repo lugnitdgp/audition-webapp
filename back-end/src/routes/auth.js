@@ -6,6 +6,7 @@ var passport = require('passport')
 var jwt = require('jsonwebtoken');
 var config = require('../../config/database')
 let DashModel = require('../models/dash.model')
+let RoundModel = require('../models/round.model')
 
 const { sendMail } = require('../reportSender');
 
@@ -59,7 +60,30 @@ module.exports = function (app, passport) {
 
 
 
+    app.post('/addRound', function(req,res){
+        console.log(req.body)
+        var round = new RoundModel({
+            roundNo: req.body.roundNo,
+            questions: req.body.questions
+        })
 
+        round.save().then(()=>{
+            res.json({success:true});
+        });
+
+    })
+
+    app.get('/getRound', function(req,res){
+        RoundModel.find().then((doc)=>{
+            if(!doc){
+               return res.json({success:false})
+            }
+            else{
+                return res.send(doc)
+            }
+        })
+
+    })
 
     app.post('/login', function (req, res) {
         var email = req.body.email;
