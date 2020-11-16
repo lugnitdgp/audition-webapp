@@ -1,8 +1,4 @@
 let UserModel = require('../models/user.model')
-let express = require('express')
-let router = express.Router()
-let mongoose = require('mongoose')
-var passport = require('passport')
 var jwt = require('jsonwebtoken');
 var config = require('../../config/database')
 let DashModel = require('../models/dash.model')
@@ -38,9 +34,8 @@ module.exports = function (app, passport) {
             if (err) {
                 res.json({ success: false, message: 'User is not registered..' })
             }
-
+            
             else {
-
                 if (user.isAdmin === false) {
                     var user = new DashModel({
                         uid: user._id,
@@ -51,8 +46,8 @@ module.exports = function (app, passport) {
                     user.save()
                 }
 
-
                 res.json({ success: true, message: 'User is registered..' })
+        
             }
 
         })
@@ -66,7 +61,6 @@ module.exports = function (app, passport) {
             roundNo: req.body.roundNo,
             questions: req.body.questions
         })
-
         round.save().then(()=>{
             res.json({success:true});
         });
@@ -75,14 +69,11 @@ module.exports = function (app, passport) {
 
     app.get('/getRound', function(req,res){
         RoundModel.find().then((doc)=>{
-            if(!doc){
+            if(!doc)
                return res.json({success:false})
-            }
-            else{
+            else
                 return res.send(doc)
-            }
         })
-
     })
 
     app.post('/login', function (req, res) {
@@ -106,11 +97,10 @@ module.exports = function (app, passport) {
                         isAdmin: user.isAdmin
                     }
                     var token = jwt.sign(payload, config.secret, { expiresIn: 600000 })
-
+                    
                     res.json({
                         success: true, token: 'Bearer ' + token
                     })
-
                 }
 
                 else {
@@ -123,8 +113,6 @@ module.exports = function (app, passport) {
 
 
     })
-
-
 
 
     app.get('/auth/jwt', passport.authenticate('jwt', { session: false }), function (req, res) {
@@ -140,7 +128,6 @@ module.exports = function (app, passport) {
     app.get('/auth/google', passport.authenticate('google', {
         scope: ['profile']
     }))
-
 
     app.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
         res.send(req.user)
