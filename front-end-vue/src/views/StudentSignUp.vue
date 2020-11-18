@@ -1,170 +1,130 @@
-
-
-
 <template>
-  <v-app id="inspire">
-    
-    <v-content>
-        <v-card
-        class="mx-auto overflow-hidden"
-            >
-    <v-app-bar
-      color = "primary"
-      
-      dark
-      src="../../../img/bg.jpg"
-    >
-    
-      
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+	<v-app id="inspire">
+		<v-content>
+			<Sidenav />
 
-      <v-toolbar-title>GLUG AUDITIONS 2020</v-toolbar-title>
-    </v-app-bar>
+			<Particle />
 
-    
-            </v-card>
+			<v-container fluid class="centered">
+				<v-row align="center" justify="center">
+					<v-col cols="12" sm="8" md="4">
+						<v-card class="elevation-12">
+							<v-toolbar color="" dark flat>
+								<v-spacer></v-spacer>
+								<v-toolbar-title> STUDENT SIGNUP </v-toolbar-title>
+								<v-spacer />
+							</v-toolbar>
+							<v-card-text>
+								<v-form>
+									<v-text-field
+										v-model="UserName"
+										label="Full Name"
+										name="UserName"
+										prepend-icon="person"
+										type="text"
+									/>
 
-    
-      <v-navigation-drawer
-      v-model="drawer"
-      absolute
-      temporary
-    >
-      <v-list
-        nav
-        dense
-      >
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--lighten-2"
-        >
-          <router-link tag="span" to='/'>
-          <v-list-item>
-            
-            <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Home</v-list-item-title>
-            
-          </v-list-item>
-          </router-link>
-        
+									<v-text-field
+										v-model="email"
+										label="E-mail"
+										name="email"
+										prepend-icon="email"
+										type="text"
+									/>
 
-        </v-list-item-group>
-      </v-list>
-      </v-navigation-drawer>
-      <v-container fluid
-      class= "fill-height">
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col
-            cols="12"
-            sm="8"
-            md="4"
-          >
-            <v-card class="elevation-12">
-              <v-toolbar
-                color="primary"
-                dark
-                flat
-              >
-              <v-spacer></v-spacer>
-                <v-toolbar-title> Student SignUp </v-toolbar-title>
-                <v-spacer />
-                  
-              </v-toolbar>
-              <v-card-text>
-                <v-form>
-                     <v-text-field
-                    v-model="UserName"
-                    label="Name"
-                    name="UserName"
-                    prepend-icon="person"
-                    type="text"
-                  />
-                  
-                  <v-text-field
-                    v-model="email"
-                    label="E-mail"
-                    name="email"
-                    prepend-icon="email"
-                    type="text"
-                  />
-
-                  <v-text-field
-                    v-model="password"
-                    id="password"
-                    label="Password"
-                    name="password"
-                    prepend-icon="lock"
-                    type="password"
-                  />
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <v-btn @click ="signup" color="teal darken-3">Sign Up</v-btn>
-                <v-btn @click="$router.push('/StLog')" color="indigo darken-4">Login</v-btn>
-                
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-      
-    </v-content>
-  </v-app>
+									<v-text-field
+										v-model="password"
+										id="password"
+										label="Password"
+										name="password"
+										prepend-icon="lock"
+										type="password"
+									/>
+								</v-form>
+							</v-card-text>
+							<v-card-actions>
+								<v-spacer />
+								<v-container align="center">
+									<v-row align="center" justify="center">
+										<v-col cols="6">
+											<v-btn @click="signup" color="lime accent-4" large block
+												>Sign Up</v-btn
+											>
+										</v-col>
+										<v-col cols="6">
+											<v-btn
+												@click="$router.push('/StLog')"
+												color="blue lighten-1"
+												large
+												block
+												>Login</v-btn
+											>
+										</v-col>
+									</v-row>
+								</v-container>
+							</v-card-actions>
+						</v-card>
+					</v-col>
+				</v-row>
+			</v-container>
+		</v-content>
+	</v-app>
 </template>
 
 <script>
 /* eslint-disable */
+import common from '@/services/common.js'
+import Particle from "../components/layout/Particle";
+import Sidenav from "../components/layout/Sidenav";
 
-  import axios from 'axios'
-  export default {
-     data: () => ({
-      drawer: false,
-      UserName:'',
-      email:'',
-      password:''
-    }),
-    props: {
-      source: String,
-    },
-    created(){
-      localStorage.clear()
-                    this.$vuetify.theme.dark = true
+import axios from "axios";
 
-    },
-    methods:{
-      signup(){
+export default {
+	components: {
+		Particle,
+		Sidenav
+	},
+	data: () => ({
+		drawer: false,
+		UserName: "",
+		email: "",
+		password: ""
+	}),
+	props: {
+		source: String
+	},
+	created() {
+		localStorage.clear();
+		this.$vuetify.theme.dark = true;
+	},
+	methods: {
+		signup() {
+			const user = {
+				UserName: this.UserName,
+				email: this.email,
+				password: this.password,
+				isAdmin: false
+			};
 
-        const user={
-          UserName : this.UserName,
-          email : this.email,
-          password : this.password,
-          isAdmin: false
-
-        }
-
-        axios.post('http://localhost:3000/signup', user).then((res)=>{
-              alert(res.data.message)
-                if(res.data.success==true){
-                                  this.$router.push('/StLog')
-
-                }
-                else{
-                  this.$router.push('/StSign')
-                }
-              })
-
-        
-
-
-      }
-    }
-      
-  }
-  
+			 common.signup(user).then(res => {
+				alert(res.data.message);
+				if (res.data.success == true) {
+					this.$router.push("/StLog");
+				} else {
+					this.$router.push("/StSign");
+				}
+			});
+		}
+	}
+};
 </script>
+
+<style scoped>
+.centered {
+	color: #ffffff;
+	position: absolute;
+	text-align: center;
+	top: 20%;
+	width: 100%;
+}
+</style>

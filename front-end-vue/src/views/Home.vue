@@ -1,113 +1,41 @@
-
-
-
 <template>
-  <v-app id="inspire">
-    
-    <v-content>
-        <v-card
-        class="mx-auto overflow-hidden"
-            >
-    <v-app-bar
-      color = "red darken-4"
-      
-      dark
-      src="../../../img/bg.jpg"
-    >
-    
-      
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>GLUG AUDITIONS 2020</v-toolbar-title>
-    </v-app-bar>
-
-    
-            </v-card>
-
-    
-      <v-navigation-drawer
-      v-model="drawer"
-      absolute
-      temporary
-    >
-      <v-list
-        nav
-        dense
-      >
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--lighten-2"
-        >
-          <router-link tag="span" to='/'>
-          <v-list-item>
-            
-            <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Home</v-list-item-title>
-            
-          </v-list-item>
-          </router-link>
-          <router-link tag="span" to='/StSign'>
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Student SignUp</v-list-item-title>
-          </v-list-item>
-    </router-link>
-        </v-list-item-group>
-      </v-list>
-      </v-navigation-drawer>
-      <v-container fluid
-      class= "fill-height">
-        <v-row
-          align="center"
-          justify="center"
-        >
-          <v-col
-            cols="12"
-            sm="8"
-            md="4"
-          >
-            <v-card class="elevation-12">
-              <v-toolbar
-                color="red darken-4"
-                dark
-                flat
-              >
-              <v-spacer></v-spacer>
-                <v-toolbar-title> Welcome to the GLUG AUDITIONS 2020</v-toolbar-title>
-                <v-spacer />
-                  
-              </v-toolbar>
-              <v-card-actions>
-                <v-btn color="primary">Sign Up</v-btn>
-                <v-spacer />
-                <v-btn color="red darken-4">Login</v-btn>
-              </v-card-actions>
-                
-                
-              
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-      
-    </v-content>
-  </v-app>
+<div id="app">
+  <span class="bg"></span>
+	<v-app id="inspire">
+		<v-content>
+			<Sidenav />
+		</v-content>
+	</v-app>
+</div>
 </template>
 
 <script>
-  export default {
-     data: () => ({
-      drawer: false,
-      var1:"red darken-4"
-    }),
-    props: {
-      source: String,
-    }
-      
-  }
-  
+import Sidenav from "../components/layout/Sidenav";
+export default {
+	components: {
+		Sidenav
+	},
+	data: () => ({
+		drawer: false
+	}),
+	props: {
+		source: String
+	}
+};
 </script>
+
+<style scoped>
+.bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: url( '../assets/img/f.gif') no-repeat center center;
+    background-size: cover;
+	background-color: rgba(0,0,0,0.5);
+	opacity: 0.4;
+}
+
+
+</style>

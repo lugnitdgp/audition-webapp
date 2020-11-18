@@ -5,8 +5,8 @@
 </template>
 
 <script>
-
-import axios from 'axios'
+import common from '@/services/common.js'
+import axios from "axios";
 export default {
     name:'Landing',
     beforeCreate(){
@@ -33,7 +33,7 @@ export default {
     },
     methods:{
         logout(){
-            axios.get('http://localhost:3000/logout').then((res)=>{
+            common.logout().then((res)=>{
                 alert(res.data)
                 this.$router.push('/StLog')
             })
