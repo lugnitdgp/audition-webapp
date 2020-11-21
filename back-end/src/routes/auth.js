@@ -8,6 +8,11 @@ const { sendMail } = require('../reportSender');
 
 
 module.exports = function (app, passport) {
+
+    require('../../config/passport/passportjwt')(passport)
+    require('../../config/passport/passportgoogle')(passport)
+
+
     app.get('/', function (req, res) {
         res.json('welcome');
     });
@@ -34,7 +39,7 @@ module.exports = function (app, passport) {
             if (err) {
                 res.json({ success: false, message: 'User is not registered..' })
             }
-            
+
             else {
                 if (user.isAdmin === false) {
                     var user = new DashModel({
@@ -47,7 +52,7 @@ module.exports = function (app, passport) {
                 }
 
                 res.json({ success: true, message: 'User is registered..' })
-        
+
             }
 
         })
@@ -55,22 +60,22 @@ module.exports = function (app, passport) {
 
 
 
-    app.post('/addRound', function(req,res){
+    app.post('/addRound', function (req, res) {
         console.log(req.body)
         var round = new RoundModel({
             roundNo: req.body.roundNo,
             questions: req.body.questions
         })
-        round.save().then(()=>{
-            res.json({success:true});
+        round.save().then(() => {
+            res.json({ success: true });
         });
 
     })
 
-    app.get('/getRound', function(req,res){
-        RoundModel.find().then((doc)=>{
-            if(!doc)
-               return res.json({success:false})
+    app.get('/getRound', function (req, res) {
+        RoundModel.find().then((doc) => {
+            if (!doc)
+                return res.json({ success: false })
             else
                 return res.send(doc)
         })
@@ -97,7 +102,7 @@ module.exports = function (app, passport) {
                         isAdmin: user.isAdmin
                     }
                     var token = jwt.sign(payload, config.secret, { expiresIn: 600000 })
-                    
+
                     res.json({
                         success: true, token: 'Bearer ' + token
                     })
@@ -115,10 +120,6 @@ module.exports = function (app, passport) {
     })
 
 
-    app.get('/auth/jwt', passport.authenticate('jwt', { session: false }), function (req, res) {
-        res.send(req.user)
-    })
-
     app.get('/logout', function (req, res) {
         req.logout();
         res.send('Logged out successfully')
@@ -130,17 +131,41 @@ module.exports = function (app, passport) {
     }))
 
     app.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
-        res.send(req.user)
+        const payload = {
+            id: req.user._id,
+            UserName: req.user.UserName,
+            email: req.user.email,
+            password: req.user.password,
+            isAdmin: req.user.isAdmin
+        }
+        var token = jwt.sign(payload, config.secret, { expiresIn: 600000 })
+
+        res.redirect(`${process.env.FRONTEND}?token=${token}`)
     })
 
 
 
-    app.get('/protected/getUsers', (req, res) => {
+    app.get('/protected/getUsers', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-        DashModel.find().then(doc1 => {
-            return res.send(doc1)
+        if (req.user.isAdmin === true) {
+            try {
+                DashModel.find().then(doc1 => {
+                    return res.status(200).json({ doc: doc1, user: req.user.UserName })
 
-        })
+                })
+            }
+            catch (err) {
+                return res.status(404)
+            }
+        }
+        else {
+            UserModel.findByIdAndUpdate(req.user._id, { flag: true }, (err, user) => {
+                if (err) throw err;
+                else {
+                    return res.status(401)
+                }
+            })
+        }
     })
 
     app.post('/protected/getUser', (req, res) => {
@@ -167,16 +192,16 @@ module.exports = function (app, passport) {
         DashModel.find().then((doc) => {
             doc.forEach((user) => {
                 if (user.selected.status === false && user.final.status === true) {
-                     DashModel.findByIdAndDelete(user._id).then((err) => {
-                         if (err) throw err
-                        
-                     })
+                    DashModel.findByIdAndDelete(user._id).then((err) => {
+                        if (err) throw err
+
+                    })
                     rejected += user.email + ",";
                 }
                 else {
                     var userNew = user
                     userNew.selected = { status: false, user: '' },
-                    userNew.final = { status: false, user: '' }
+                        userNew.final = { status: false, user: '' }
                     userNew.round = userNew.round + 1
                     DashModel.findByIdAndUpdate(user._id, userNew).then((res) => {
                         sendMail("Congratulations!", `Hi ${user.name}.\nWe are glad to inform you that you will be moving ahead in the audition process. Further details will be let known very soon.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)`, user.email)
@@ -185,10 +210,10 @@ module.exports = function (app, passport) {
 
             })
         }).then(() => {
-            const rejectedones = rejected.slice(0,-1)
+            const rejectedones = rejected.slice(0, -1)
             sendMail("Thank you for your participation.", "Hi there.\nWe announce with a heavy heart that you will not be moving ahead in the audition process. However, the GNU/Linux User's Group will always be there to help your every need to the best of our abilities.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)", rejectedones)
-           
-           }).then(() => {
+
+        }).then(() => {
             return res.send({ message: 'Purge completed' })
         })
 

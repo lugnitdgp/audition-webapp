@@ -62,7 +62,6 @@ mongoose.connect(config.db ,{ useUnifiedTopology: true, useNewUrlParser: true },
 
 mongoose.Promise = global.Promise;
 
-require('../config/passport')(passport)
 
 const PORT = process.env.PORT || 3000
 
