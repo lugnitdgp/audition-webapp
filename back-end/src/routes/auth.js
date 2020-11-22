@@ -11,6 +11,8 @@ module.exports = function (app, passport) {
 
     require('../../config/passport/passportjwt')(passport)
     require('../../config/passport/passportgoogle')(passport)
+    require('../../config/passport/passportfb')(passport)
+
 
 
     app.get('/', function (req, res) {
@@ -129,6 +131,22 @@ module.exports = function (app, passport) {
     app.get('/auth/google', passport.authenticate('google', {
         scope: ['profile']
     }))
+
+    app.get('/auth/facebook', passport.authenticate('facebook'))
+
+    app.get('/auth/facebook/redirect', passport.authenticate('facebook'), (req, res) => {
+        const payload = {
+            id: req.user._id,
+            UserName: req.user.UserName,
+            email: req.user.email,
+            password: req.user.password,
+            isAdmin: req.user.isAdmin
+        }
+        var token = jwt.sign(payload, config.secret, { expiresIn: 600000 })
+
+        res.redirect(`${process.env.FRONTEND}?token=${token}`)
+    })
+
 
     app.get('/auth/google/redirect', passport.authenticate('google'), (req, res) => {
         const payload = {

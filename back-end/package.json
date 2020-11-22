@@ -19,6 +19,7 @@
     "nodemailer": "^6.4.15",
     "nodemon": "^2.0.6",
     "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "xss-clean": "^0.1.1"
