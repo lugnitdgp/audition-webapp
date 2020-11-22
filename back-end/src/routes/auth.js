@@ -144,6 +144,14 @@ module.exports = function (app, passport) {
         }
         var token = jwt.sign(payload, config.secret, { expiresIn: 600000 })
 
+        var user = new DashModel({
+            uid: req.user._id,
+            name: req.user.UserName,
+            email: req.user.email
+        })
+
+        user.save()
+
         res.redirect(`${process.env.FRONTEND}?token=${token}`)
     })
 
@@ -157,6 +165,13 @@ module.exports = function (app, passport) {
             isAdmin: req.user.isAdmin
         }
         var token = jwt.sign(payload, config.secret, { expiresIn: 600000 })
+        var user = new DashModel({
+            uid: req.user._id,
+            name: req.user.UserName,
+            email: req.user.email
+        })
+
+        user.save()
 
         res.redirect(`${process.env.FRONTEND}?token=${token}`)
     })
