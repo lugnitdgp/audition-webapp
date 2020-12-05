@@ -5,7 +5,6 @@ const quesSchema = new Schema({
     quesNo:{
         type:Number,
         required: true,
-
     },
     quesText:{
         type:String,
@@ -14,6 +13,10 @@ const quesSchema = new Schema({
     quesLink:{
         type:String,
         required:false
+    },
+    quesType:{
+        type:String,
+        required:true
     }
   });
 
@@ -22,6 +25,10 @@ var RoundSchema = new Schema({
         type: Number,
         required:true,
         unique:true
+    },
+    time:{
+        type:Number,
+        required:true,
     },
     questions: [quesSchema],
     

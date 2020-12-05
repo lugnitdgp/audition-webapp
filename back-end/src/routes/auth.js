@@ -201,12 +201,26 @@ module.exports = function (app, passport) {
         }
     })
 
-    app.post('/protected/getUser', (req, res) => {
-        console.log(req.body)
-        DashModel.findOne({ _id: req.body.id }).then(doc1 => {
-            return res.json(doc1)
+    app.post('/protected/getUser', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-        })
+        console.log(req.body)
+        if (req.user.isAdmin === true) {
+            try {
+                DashModel.findOne({ _id: req.body.id }).then(doc1 => {
+                    return res.status(200).json(doc1)
+
+                })
+            } catch (err) {
+                return res.status(404)
+            }
+        } else {
+            UserModel.findByIdAndUpdate(req.user._id, { flag: true }, (err, user) => {
+                if (err) throw err;
+                else {
+                    return res.status(401)
+                }
+            })
+        }
 
     })
 
