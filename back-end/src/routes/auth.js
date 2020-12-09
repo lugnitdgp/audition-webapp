@@ -4,7 +4,10 @@ var config = require('../../config/database')
 let DashModel = require('../models/dash.model')
 let RoundModel = require('../models/round.model')
 
-const { sendMail } = require('../reportSender');
+const { sendMail } = require('../services/reportSender');
+
+const upload = require("../services/upload");
+const { uploadImage, getImages } = require("../controller/appController");
 
 
 module.exports = function (app, passport) {
@@ -13,7 +16,10 @@ module.exports = function (app, passport) {
     require('../../config/passport/passportgoogle')(passport)
     require('../../config/passport/passportfb')(passport)
 
-
+    app.post("/upload", upload.single("file"), (req,res)=>{
+            if (req.file && req.file.path) 
+            return res.status(200).json({ link: req.file.path });
+    });
 
     app.get('/', function (req, res) {
         res.json('welcome');
@@ -66,6 +72,7 @@ module.exports = function (app, passport) {
         console.log(req.body)
         var round = new RoundModel({
             roundNo: req.body.roundNo,
+            time: req.body.time,
             questions: req.body.questions
         })
         round.save().then(() => {

@@ -8,10 +8,7 @@
     tile
     >
      <v-card-text >
-      "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-      "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-       "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-      "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
+     {{question.quesText}}
     </v-card-text>
     </v-card>
     <v-spacer />
@@ -31,6 +28,7 @@
 
 <script>
   export default {
+    	props: ['question'],
     data () {
       return {
         checkbox: [],

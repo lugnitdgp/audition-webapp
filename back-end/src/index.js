@@ -52,7 +52,7 @@ app.use((req, res, next) => {
 
 //Handler for 500
 app.use((err, req, res, next) => {
-    console.log(err.stack)
+    console.log(err)
    res.sendFile(path.join(__dirname,'../public/500.html'))
 })
 

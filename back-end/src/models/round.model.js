@@ -2,10 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 const quesSchema = new Schema({
-    quesNo:{
-        type:Number,
-        required: true,
-    },
     quesText:{
         type:String,
         required:true
@@ -17,6 +13,10 @@ const quesSchema = new Schema({
     quesType:{
         type:String,
         required:true
+    },
+    options:{
+        type:String,
+        required:false
     }
   });
 

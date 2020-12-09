@@ -3,15 +3,11 @@
 		
 			<v-card outlined shaped tile>
 				<v-card-text>
-					"Turns out semicolon-less style is easier and safer in TS because most
-					gotcha edge cases are type invalid as well." "Turns out semicolon-less
-					style is easier and safer in TS because most gotcha edge cases are type
-					invalid as well."
+					{{question.quesText}}
 				</v-card-text>
                 <v-card class="mx-auto" max-width="344">
 				<v-img
-					src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-					height="200px"
+					:src= "question.quesLink"
 				></v-img>
                 <v-spacer />
 			<v-spacer />
@@ -24,6 +20,7 @@
 
 <script>
 export default {
-	name: "Imageques"
+	name: "Imageques",
+	props: ['question'],
 };
 </script>
