@@ -2,11 +2,7 @@
 	<div>
       <v-container fluid>
     
-    <v-card
-    outlined
-    shaped
-    tile
-    >
+    <v-card class="bord">
      <v-card-text >
       "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
       "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
@@ -21,6 +17,7 @@
       filled
       label="Answers"
       auto-grow
+      color="success"
     ></v-textarea>
     
   </v-container>
@@ -33,3 +30,13 @@ export default {
     
 };
 </script>
+
+
+<style scoped>
+
+.bord {
+	box-shadow: -3px 0px 3px 0px rgb(6, 223, 6) !important;
+  background-color: rgba(202, 202, 202, 0.267) !important;
+}
+
+</style>

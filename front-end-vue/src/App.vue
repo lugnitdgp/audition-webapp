@@ -22,7 +22,6 @@ export default {
 
 <style scoped>
 #app{
- height: 100vh;
- 
-}
+ height: 100%;
+ }
 </style>
