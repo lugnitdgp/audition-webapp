@@ -138,7 +138,9 @@ module.exports = function (app, passport) {
         scope: ['profile']
     }))
 
-    app.get('/auth/facebook', passport.authenticate('facebook'))
+    app.get('/auth/facebook', passport.authenticate('facebook', {
+        scope: ['profile']
+    }))
 
     app.get('/auth/facebook/redirect', passport.authenticate('facebook'), (req, res) => {
         const payload = {
