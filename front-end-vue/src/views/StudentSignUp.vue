@@ -121,10 +121,10 @@ export default {
 			});
 		},
 		goauth() {
-			window.location.href = "http://localhost:3000/auth/google/";
+			window.location.href = `${process.env.VUE_APP_BASE_URL}/auth/google/`;
 		},
 		fboauth() {
-			window.location.href = "http://localhost:3000/auth/facebook/";
+			window.location.href = `${process.env.VUE_APP_BASE_URL}/auth/facebook/`;
 		}
 	}
 };

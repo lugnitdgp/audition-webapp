@@ -2,6 +2,6 @@ import axios from 'axios'
 
 export default () => {
   return axios.create({
-    baseURL: `http://localhost:3000/`
+    baseURL: process.env.VUE_APP_BASE_URL
   })
 }
