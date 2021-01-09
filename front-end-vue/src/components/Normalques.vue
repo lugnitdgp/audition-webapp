@@ -1,42 +1,37 @@
 <template>
 	<div>
-      <v-container fluid>
-    
-    <v-card class="bord">
-     <v-card-text >
-      "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-      "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-       "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-      "Turns out semicolon-less style is easier and safer in TS because most gotcha edge cases are type invalid as well."
-    </v-card-text>
-    </v-card>
-    <v-spacer />
-    <v-spacer />
-    <v-textarea
-      name="input-7-4"
-      filled
-      label="Answers"
-      auto-grow
-      color="success"
-    ></v-textarea>
-    
-  </v-container>
-	</div> 
+		<v-container fluid>
+			<v-card class="bord" color="#141d2b">
+				<v-card-text class="justify-center" id="text">
+					{{ question.quesText }}
+				</v-card-text>
+			</v-card>
+			<v-spacer />
+			<v-spacer />
+			<v-textarea
+				filled
+				name="input-7-4"
+				label="Answers"
+				auto-grow
+				color="#00FFBF"
+				class="text"
+			></v-textarea>
+		</v-container>
+	</div>
 </template>
 
 <script>
 export default {
 	name: "Normalques",
-    
+	props: ["question"]
 };
 </script>
 
-
 <style scoped>
-
-.bord {
-	box-shadow: -3px 0px 3px 0px rgb(6, 223, 6) !important;
-  background-color: rgba(202, 202, 202, 0.267) !important;
+#text {
+	color: aquamarine !important;
+	text-align: center !important;
+	font-size: 1rem;
+	font-weight: 700;
 }
-
 </style>

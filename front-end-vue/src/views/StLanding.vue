@@ -1,30 +1,32 @@
 <template>
-  <div id="app">
-    <span class="bg"></span>
-    <v-app id="inspire">
-      <v-content>
-        <Sidenav />
-            <v-btn @click="logout" color="#FF1744">Logout</v-btn>
-            <Normalques />
-            <Normalques />
-            <Normalques />
-            <Normalques />
-      </v-content>
-    </v-app>
-  </div>
+	<div id="app">
+		<span class="bg"></span>
+		<v-app id="inspire">
+			<v-content>
+				<v-card class="mx-auto overflow-hidden" color="#121a26">
+					<v-app-bar color="#141d2b">
+						<v-btn @click="logout" color="#FF1744">Logout</v-btn>
+					</v-app-bar>
+				</v-card>
+				<v-container fluid>
+					<Normalques />
+					<Test />
+				</v-container>	
+			</v-content>
+		</v-app>
+	</div>
 </template>
-
-
 
 <script>
 import common from "@/services/common.js";
 import Normalques from "../components/Normalques";
-import Sidenav from "../components/layout/Sidenav";
+import Test from "../components/Test";
+
 import axios from "axios";
 export default {
 	components: {
-        Sidenav,
-        Normalques,
+		Normalques,
+		Test
 	},
 	name: "Landing",
 	beforeCreate() {
@@ -58,14 +60,14 @@ export default {
 
 <style scoped>
 .bg {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: url("../assets/img/bg.mp4") no-repeat center center;
-  background-size: cover;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0.4;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: url("../assets/img/pp.png") no-repeat center center;
+	background-size: cover;
+	background-color: #141d2b;
+	opacity: 0.4;
 }
 </style>

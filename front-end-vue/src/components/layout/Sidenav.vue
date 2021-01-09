@@ -4,7 +4,7 @@
 			<v-app-bar>
 				<v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
-				<v-toolbar-title>GLUG AUDITIONS 2020</v-toolbar-title>
+				<v-toolbar-title>GLUG AUDITIONS 2021</v-toolbar-title>
 			</v-app-bar>
 		</v-card>
 

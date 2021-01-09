@@ -81,7 +81,7 @@
 						<v-spacer />
 						<v-spacer />
 						<br />
-						<draggable group="people" @start="drag = true" @end="drag = false">
+						<!-- <draggable group="people" @start="drag = true" @end="drag = false"> -->
 							<v-container v-for="(question, index) in questions" :key="index">
 								<Normalques
 									:question="question"
@@ -91,7 +91,7 @@
 								<Mcq :question="question" v-if="question[`quesType`] === 'mcq'" />
 								<Audio :question="question" v-if="question[`quesType`] === 'aud'" />
 							</v-container>
-						</draggable>
+						<!-- </draggable> -->
 					</v-container>
 				</v-card>
 			</v-container>
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import draggable from "vuedraggable";
+// import draggable from "vuedraggable";
 import axios from "axios";
 import Audio from "../components/Audio";
 import Normalques from "../components/Normalques";
@@ -111,7 +111,7 @@ export default {
 	components: {
 		Sidenav,
 		Audio,
-		draggable,
+		// draggable,
 		Normalques,
 		Imageques,
 		Mcq
@@ -163,6 +163,9 @@ export default {
 			this.questions = JSON.parse(localStorage.getItem("questions"));
 		else localStorage.removeItem("questions");
 	},
+	created() {
+		this.$vuetify.theme.dark = true;
+	},
 	watch: {
 		questions: {
 			handler() {
@@ -183,7 +186,7 @@ export default {
 <style scoped></style>
 
 <style scoped>
-.bg {
+/* .bg {
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -193,10 +196,11 @@ export default {
 	background-size: cover;
 	background-color: rgba(0, 0, 0, 0.5);
 	opacity: 0.4;
-}
+} */
+/* 
 .bord {
-	/* border-left: 5px solid rgb(136, 255, 0) !important; */
+	border-left: 5px solid rgb(136, 255, 0) !important;
 	background-color: transparent !important;
 	box-shadow: -3px 0px 3px 0px rgb(6, 223, 6) !important;
-}
+} */
 </style>
