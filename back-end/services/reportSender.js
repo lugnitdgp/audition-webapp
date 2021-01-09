@@ -13,7 +13,7 @@ const nodemailer = require('nodemailer');
                 });
 
                 const message = {
-                    from: `The GNU/Linux User's  Group, NIT Durgapur`,
+                    from: `The GNU/Linux User's Group, NIT Durgapur`,
                     to,
                     subject,
                     text: subject,

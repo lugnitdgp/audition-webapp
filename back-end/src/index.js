@@ -9,7 +9,6 @@ let xss= require('xss-clean')
 var morgan = require('morgan')
 let cors = require('cors')
 var passport = require('passport')
-var config = require('../config/database')
 const cookieSession = require('cookie-session');
 const mongoSanitize = require('express-mongo-sanitize');
 
@@ -57,7 +56,7 @@ app.use((err, req, res, next) => {
 })
 
 
-mongoose.connect(config.db ,{ useUnifiedTopology: true, useNewUrlParser: true },
+mongoose.connect(process.env.MONGO_URL ,{ useUnifiedTopology: true, useNewUrlParser: true },
 )
 
 mongoose.Promise = global.Promise;

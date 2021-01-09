@@ -1,20 +1,19 @@
 let UserModel = require('../models/user.model')
 var jwt = require('jsonwebtoken');
-var config = require('../../config/database')
 let DashModel = require('../models/dash.model')
 let RoundModel = require('../models/round.model')
 
-const { sendMail } = require('../services/reportSender');
+const { sendMail } = require('../../services/reportSender');
 
-const upload = require("../services/upload");
+const upload = require("../../services/upload");
 const { uploadImage, getImages } = require("../controller/appController");
 
 
 module.exports = function (app, passport) {
 
-    require('../../config/passport/passportjwt')(passport)
-    require('../../config/passport/passportgoogle')(passport)
-    require('../../config/passport/passportfb')(passport)
+    require('../../passport/passportjwt')(passport)
+    require('../../passport/passportgoogle')(passport)
+    require('../../passport/passportfb')(passport)
 
     app.post("/upload", upload.single("file"), (req,res)=>{
             if (req.file && req.file.path) 
@@ -110,7 +109,7 @@ module.exports = function (app, passport) {
                         password: user.password,
                         isAdmin: user.isAdmin
                     }
-                    var token = jwt.sign(payload, config.secret, { expiresIn: 600000 })
+                    var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 })
 
                     res.json({
                         success: true, token: 'Bearer ' + token
@@ -149,7 +148,7 @@ module.exports = function (app, passport) {
             password: req.user.password,
             isAdmin: req.user.isAdmin
         }
-        var token = jwt.sign(payload, config.secret, { expiresIn: 600000 })
+        var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 })
 
         var user = new DashModel({
             uid: req.user._id,
@@ -171,7 +170,7 @@ module.exports = function (app, passport) {
             password: req.user.password,
             isAdmin: req.user.isAdmin
         }
-        var token = jwt.sign(payload, config.secret, { expiresIn: 600000 })
+        var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 })
         var user = new DashModel({
             uid: req.user._id,
             name: req.user.UserName,
