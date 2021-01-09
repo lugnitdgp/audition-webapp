@@ -34,6 +34,9 @@ var DashSchema = new Schema({
         status : {type: Boolean, required: true, default: false},
           user: {type:String}
     },
+    lastUser:{
+        type:String
+    },
     answers:{
         type: Array,
         required:false

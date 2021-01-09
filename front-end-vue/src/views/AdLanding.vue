@@ -47,7 +47,7 @@
       <v-container fluid>
         <div>
           <v-spacer>
-            <h1>Welcome, {{ adminUser.UserName }}</h1>
+            <h1>Welcome, {{ adminUser }}</h1>
           </v-spacer>
         </div>
         <v-spacer />
@@ -76,7 +76,7 @@
                   <v-list-item-content>
                     <div class="subtitle-2">COMPLETED</div>
                     <v-list-item-title class="display-2"></v-list-item-title>
-                    <v-list-item-subtitle>kk</v-list-item-subtitle>
+                    <v-list-item-subtitle>vvv</v-list-item-subtitle>
                   </v-list-item-content>
 
                   <v-list-item-avatar tile size="90">
@@ -113,13 +113,14 @@
               <td>{{ row.item.name }}</td>
               <td>{{ row.item.selected.status }}</td>
               <td>{{ row.item.final.status }}</td>
+              <td>{{ row.item.lastUser }}</td>
               <td>{{ row.item.selected.user }}</td>
               <td>
                 <v-btn
                   class="mx-2"
                   light
                   small
-                  @click="usercontrol(row.item._id)"
+                  @click="usercontrol(row.item)"
                   >Detail</v-btn
                 >
               </td>
@@ -140,7 +141,7 @@ export default {
   data() {
     return {
       drawer: false,
-      adminUser: null,
+      adminUser: localStorage.getItem("admin"),
       items: [],
       expand: false,
       darkmode: false,
@@ -148,6 +149,7 @@ export default {
         { text: "FULL NAME", align: "start", value: "name" },
         { text: "STATUS", align: "start", value: "status" },
         { text: "FINAL STATUS", align: "start", value: "final status" },
+        { text: "LAST VIEWED", align: "start", value: "details" },
         { text: "LAST CHANGED", align: "start", value: "details" },
         { text: "DETAILS", align: "start", value: "details" },
       ],
@@ -166,7 +168,6 @@ export default {
       common.getUsers().then((res) => {
         if (res.status === 200) {
           this.items = res.data.doc;
-          this.adminUser = res.data.user;
         } else if (res.status === 401) {
           alert("UNAUTHORISED ACCESS");
           localStorage.clear("token");
@@ -187,9 +188,12 @@ export default {
       });
     },
     usercontrol(a) {
+      var payload = a;
+      payload['lastUser']=this.adminUser 
+      common.updateEntry(payload)
       let routeData = this.$router.resolve({
         name: "UserControl",
-        query: { id: a },
+        query: { id: a._id },
       });
       window.open(routeData.href, "_blank");
     },

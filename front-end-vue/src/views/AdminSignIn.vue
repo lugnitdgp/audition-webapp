@@ -78,7 +78,7 @@ export default {
 			common.login(user).then(res => {
 				if (res.data.success == true) {
 					localStorage.setItem("token", res.data.token);
-					console.log(localStorage.getItem("token"));
+					localStorage.setItem("admin", res.data.admin)
 					alert("Successful login");
 					this.$router.push("/Adlanding");
 				} else {

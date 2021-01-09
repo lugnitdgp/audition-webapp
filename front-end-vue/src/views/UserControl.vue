@@ -142,44 +142,45 @@
 </template>
 
 <script>
-import axios from "axios";
+import common from '@/services/common.js'
+
 export default {
   name: "Landing",
   data() {
     return {
-      adminUser: "",
+      adminUser: localStorage.getItem("admin"),
       details: [],
       flag: false,
       feedback: "",
       expand: false,
     };
   },
-  created() {
-    var a = { id: this.$route.query.id };
+  beforeCreate() {
+    const a = { id: this.$route.query.id };
     console.log(a);
     if (localStorage.getItem("token") === null) {
       localStorage.clear();
       this.$router.push("/");
     } else {
-      axios
-        .post(
-          "http://localhost:3000/protected/getUser",
-          {
-            headers: { Authorization: localStorage.getItem("token") },
-            body:a
-          }
-        )
-        .then((res) => {
+      common.getUser(a).then((res) => {
+        if (res.status === 200) {
           this.details = res.data;
-          console.log(this.details);
-        });
+          console.log(res);
+        } else if (res.status === 401) {
+          alert("UNAUTHORISED ACCESS");
+          localStorage.clear("token");
+          this.$router.push("/");
+        } else {
+          alert("No data");
+        }
+      })
     }
   },
   methods: {
     submitFeedback() {
-      var a = {
+      const a = {
         feedback: this.feedback,
-        user: this.adminUser.UserName,
+        user: this.adminUser,
         round: this.details.round,
       };
       this.details.feedback.push(a);
@@ -188,18 +189,18 @@ export default {
     selectionstatus() {
       this.details.selected = {
         status: !this.details.selected.status,
-        user: this.adminUser.UserName,
+        user: this.adminUser,
       };
       this.updateEntry();
     },
     finalise() {
-      this.details.final = { status: true, user: this.adminUser.UserName };
+      this.details.final = { status: true, user: this.adminUser };
       alert("You've finalised this candidate's audition procedure");
       this.updateEntry();
     },
     updateEntry() {
       var a = this.details;
-      axios.post("http://localhost:3000/protected/update", a).then((res) => {
+      common.updateEntry(a).then((res) => {
         alert(res.data.message);
       });
     },
