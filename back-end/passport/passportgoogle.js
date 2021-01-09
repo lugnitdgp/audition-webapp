@@ -15,7 +15,7 @@ passport.deserializeUser((id, done) => {
 })
 
 passport.use(new GoogleStrategy({
-    callbackURL: "http://127.0.0.1:3000/auth/google/redirect/",
+    callbackURL: process.env.GOOGLE_CALLBACK,
     clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,
     clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET
 }, (accessToken, refreshToken, profile, done) => {

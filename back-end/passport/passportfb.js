@@ -8,7 +8,7 @@ passport.use(new FacebookStrategy({
     clientID: process.env.FB_OAUTH_CLIENT_ID,
     clientSecret: process.env.FB_OAUTH_CLIENT_SECRET,
     //callbackURL: "/auth/facebook/redirect"
-    callbackURL: "https://358377204083.ngrok.io/auth/facebook/redirect/"
+    callbackURL: process.env.FB_CALLBACK
   }, (accessToken, refreshToken, profile, done) => {
       console.log(profile)
     User.findOne({ password: profile.id }).then((currentUser) => {
