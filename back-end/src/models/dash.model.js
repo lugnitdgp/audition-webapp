@@ -17,9 +17,10 @@ var DashSchema = new Schema({
         type: String,
         required : true
     },
-    selected:{
-         status : {type: Boolean, required: true, default: false},
-          user: {type:String}
+    status:{
+        type: String,
+        default: 'unevaluated',
+        required: false
     },
     round:{
         type:Number,
@@ -29,10 +30,6 @@ var DashSchema = new Schema({
     feedback:{
         type: Array,
         required:false
-    },
-    final:{
-        status : {type: Boolean, required: true, default: false},
-          user: {type:String}
     },
     lastUser:{
         type:String

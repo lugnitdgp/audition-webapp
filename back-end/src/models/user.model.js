@@ -10,19 +10,22 @@ var UserSchema = new Schema({
         required: true,
         unique: true
     },
-    
     password:{
         type : String,
         required: true
     },
-    isAdmin:{
-        type: Boolean,
+    role:{
+        type: String,
         required: false,
-        default: false
+        default: 's'
     },
     flag:{
         type: Boolean,
         default: false
+    },
+    clearance:{
+        type: Number,
+        required: false
     }
 });
 

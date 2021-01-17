@@ -18,7 +18,7 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.GOOGLE_CALLBACK,
     clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,
     clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET
-}, (accessToken, refreshToken, profile, done) => {
+}, (accessToken, refreshToken, email, profile, done) => {
     User.findOne({ password: profile.id }).then((currentUser) => {
         if (currentUser) {
             console.log('Existing User: ' + currentUser)
@@ -27,7 +27,7 @@ passport.use(new GoogleStrategy({
         else {
             new User({
                 UserName: profile.displayName,
-                email: profile.displayName,
+                email: profile.emails[0].value,
                 password: profile.id
             }).save().then((newUser) => {
                 console.log(newUser)
