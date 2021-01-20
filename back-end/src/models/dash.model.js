@@ -1,6 +1,28 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+questionstore = new Schema({
+    qid:{
+        type:String,
+        required:true
+    },
+    answer:{
+        type:String,
+        required:true
+    },
+    qtype:{
+        type:String,
+        required:true
+    }
+})
+
+const answerschema = new Schema({
+    roundNo:{
+        type:Number,
+        required:true
+    },
+    questions:[questionstore]
+  });
 
 var DashSchema = new Schema({
     uid:{
@@ -34,10 +56,7 @@ var DashSchema = new Schema({
     lastUser:{
         type:String
     },
-    answers:{
-        type: Array,
-        required:false
-    }
+    answers:[answerschema]
 
 });
 

@@ -18,7 +18,7 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.GOOGLE_CALLBACK,
     clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,
     clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET
-}, (accessToken, refreshToken, email, profile, done) => {
+}, (accessToken, refreshToken, profile, done) => {
     User.findOne({ password: profile.id }).then((currentUser) => {
         if (currentUser) {
             console.log('Existing User: ' + currentUser)

@@ -11,7 +11,8 @@ const { uploadImage, getImages } = require("../controller/appController");
 module.exports = function (app, passport) {
   require("../../passport/passportjwt")(passport);
   require("../../passport/passportgoogle")(passport);
-  require("../../passport/passportfb")(passport);
+  require("../../passport/passportgithub")(passport);
+
 
   //////////////////////////////////////////////
   //          UPLOAD
@@ -95,9 +96,10 @@ module.exports = function (app, passport) {
     passport.authenticate("jwt", { session: false }),
     async function (req, res) {
       if (req.user.role === "m" || req.user.role === "su") {
-        await RoundModel.findByIdAndUpdate(req.body.round._id, req.body.round).then(
-            res.sendStatus(202)
-        );
+        await RoundModel.findByIdAndUpdate(
+          req.body.round._id,
+          req.body.round
+        ).then(res.sendStatus(202));
       } else res.sendStatus(401);
     }
   );
@@ -109,7 +111,7 @@ module.exports = function (app, passport) {
     passport.authenticate("jwt", { session: false }),
     async function (req, res) {
       if (req.user.role === "m" || req.user.role === "su") {
-       await RoundModel.findByIdAndDelete(req.body.id).then(() => {
+        await RoundModel.findByIdAndDelete(req.body.id).then(() => {
           res.sendStatus(200);
         });
       } else res.sendStatus(401);
@@ -132,7 +134,7 @@ module.exports = function (app, passport) {
       if (err) {
         res.json({ success: false, message: "User is not registered.." });
       } else {
-        if (user.isAdmin === false) {
+        if (user.role === "s") {
           var user = new DashModel({
             uid: user._id,
             name: user.UserName,
@@ -213,38 +215,6 @@ module.exports = function (app, passport) {
   );
 
   app.get(
-    "/auth/facebook",
-    passport.authenticate("facebook", {
-      scope: ["profile"],
-    })
-  );
-
-  app.get(
-    "/auth/facebook/redirect",
-    passport.authenticate("facebook"),
-    (req, res) => {
-      const payload = {
-        id: req.user._id,
-        UserName: req.user.UserName,
-        email: req.user.email,
-        password: req.user.password,
-        role: req.user.role,
-      };
-      var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 });
-
-      var user = new DashModel({
-        uid: req.user._id,
-        name: req.user.UserName,
-        email: req.user.email,
-      });
-
-      user.save();
-
-      res.redirect(`${process.env.FRONTEND}?token=${token}`);
-    }
-  );
-
-  app.get(
     "/auth/google/redirect",
     passport.authenticate("google"),
     (req, res) => {
@@ -267,6 +237,31 @@ module.exports = function (app, passport) {
       res.redirect(`${process.env.FRONTEND}?token=${token}`);
     }
   );
+
+app.get('/auth/github',
+  passport.authenticate('github', { scope: [ 'user:email' ] }));
+
+app.get('/auth/github/redirect', 
+  passport.authenticate('github'),
+  function(req, res) {
+    const payload = {
+      id: req.user._id,
+      UserName: req.user.UserName,
+      email: req.user.email,
+      password: req.user.password,
+      role: req.user.role,
+    };
+    var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 });
+    var user = new DashModel({
+      uid: req.user._id,
+      name: req.user.UserName,
+      email: req.user.email,
+    });
+
+    user.save();
+
+    res.redirect(`${process.env.FRONTEND}?token=${token}`);
+  });
 
   /////////////////////////////////////
 
@@ -435,6 +430,72 @@ module.exports = function (app, passport) {
             }
           }
         );
+      } else {
+        res.sendStatus(401);
+      }
+    }
+  );
+
+  //////////////////////////////////
+  //        STUDENT ROUTES
+  //////////////////////////////////
+
+  app.put(
+    "/student/answer",
+    passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+      if (req.user.role === "s") {
+        var qid = req.body.qid;
+        var qtype = req.body.qtype;
+        var answer = req.body.answer;
+        var roundNo = req.body.round;
+
+        DashModel.findOne({ uid: req.user._id }).then((doc) => {
+          if (!doc) throw err;
+          else if (Array.isArray(doc.answers) && doc.answers.length) {
+            var studentdata = doc;
+            var foundround = false;
+            studentdata.answers.map((round) => {
+              if (round.roundNo === roundNo) {
+                foundround = true;
+                if (Array.isArray(round.questions) && round.questions.length) {
+                  var foundques = false;
+                  round.questions.map((question) => {
+                    if (question.qid === qid) {
+                      question.answer = answer;
+                      foundques = true;
+                    }
+                  });
+                  if (foundques == false) {
+                    round.questions.push({
+                      qid: qid,
+                      answer: answer,
+                      qtype: qtype,
+                    });
+                  }
+                }
+              }
+            });
+            if (!foundround) {
+              studentdata.answers.push({
+                roundNo: roundNo,
+                questions: {
+                  qid: qid,
+                  qtype: qtype,
+                  answer: answer,
+                },
+              });
+            }
+
+            DashModel.findByIdAndUpdate(studentdata._id, studentdata).then(
+              () => {
+                res.sendStatus(200);
+              }
+            );
+          }
+        });
+
+        
       } else {
         res.sendStatus(401);
       }
