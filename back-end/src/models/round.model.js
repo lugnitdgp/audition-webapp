@@ -17,6 +17,10 @@ const quesSchema = new Schema({
     options:{
         type:String,
         required:false
+    },
+    score:{
+        type:Number,
+        required:true
     }
   });
 

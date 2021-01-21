@@ -1,8 +1,9 @@
 let UserModel = require("../models/user.model");
 var jwt = require("jsonwebtoken");
 let DashModel = require("../models/dash.model");
+const fs = require("fs");
 let RoundModel = require("../models/round.model");
-
+const path = require("path");
 const { sendMail } = require("../../services/reportSender");
 
 const upload = require("../../services/upload");
@@ -12,7 +13,6 @@ module.exports = function (app, passport) {
   require("../../passport/passportjwt")(passport);
   require("../../passport/passportgoogle")(passport);
   require("../../passport/passportgithub")(passport);
-
 
   //////////////////////////////////////////////
   //          UPLOAD
@@ -238,30 +238,34 @@ module.exports = function (app, passport) {
     }
   );
 
-app.get('/auth/github',
-  passport.authenticate('github', { scope: [ 'user:email' ] }));
+  app.get(
+    "/auth/github",
+    passport.authenticate("github", { scope: ["user:email"] })
+  );
 
-app.get('/auth/github/redirect', 
-  passport.authenticate('github'),
-  function(req, res) {
-    const payload = {
-      id: req.user._id,
-      UserName: req.user.UserName,
-      email: req.user.email,
-      password: req.user.password,
-      role: req.user.role,
-    };
-    var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 });
-    var user = new DashModel({
-      uid: req.user._id,
-      name: req.user.UserName,
-      email: req.user.email,
-    });
+  app.get(
+    "/auth/github/redirect",
+    passport.authenticate("github"),
+    function (req, res) {
+      const payload = {
+        id: req.user._id,
+        UserName: req.user.UserName,
+        email: req.user.email,
+        password: req.user.password,
+        role: req.user.role,
+      };
+      var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 });
+      var user = new DashModel({
+        uid: req.user._id,
+        name: req.user.UserName,
+        email: req.user.email,
+      });
 
-    user.save();
+      user.save();
 
-    res.redirect(`${process.env.FRONTEND}?token=${token}`);
-  });
+      res.redirect(`${process.env.FRONTEND}?token=${token}`);
+    }
+  );
 
   /////////////////////////////////////
 
@@ -361,6 +365,7 @@ app.get('/auth/github/redirect',
                 var userNew = user;
                 userNew.status = "unevaluated";
                 userNew.round = userNew.round + 1;
+                userNew.time = 0
                 DashModel.findByIdAndUpdate(user._id, userNew).then((res) => {
                   sendMail(
                     "Congratulations!",
@@ -436,6 +441,61 @@ app.get('/auth/github/redirect',
     }
   );
 
+  app.post(
+    "/protected/pushround",
+    passport.authenticate("jwt", { session: false }),
+    async function (req, res) {
+      if (req.user.role === "su") {
+        let save = JSON.parse(
+          fs.readFileSync(
+            path.resolve(__dirname + "../../../config/auditionConfig.json")
+          )
+        );
+
+        save.round = save.round + 1;
+        save.status = "ong";
+
+        await RoundModel.findOne({ roundNo: save.round }).then((doc) => {
+          save.time = doc.time;
+        });
+
+        save = JSON.stringify(save);
+        fs.writeFileSync(
+          path.resolve(__dirname + "../../../config/auditionConfig.json"),
+          save
+        );
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(401);
+      }
+    }
+  );
+
+  app.post(
+    "/protected/pushresult",
+    passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+      if (req.user.role === "su") {
+        let save = JSON.parse(
+          fs.readFileSync(
+            path.resolve(__dirname + "../../../config/auditionConfig.json")
+          )
+        );
+        save = JSON.stringify({
+          round: save.round,
+          status: "res",
+        });
+        fs.writeFileSync(
+          path.resolve(__dirname + "../../../config/auditionConfig.json"),
+          save
+        );
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(401);
+      }
+    }
+  );
+
   //////////////////////////////////
   //        STUDENT ROUTES
   //////////////////////////////////
@@ -450,52 +510,94 @@ app.get('/auth/github/redirect',
         var answer = req.body.answer;
         var roundNo = req.body.round;
 
-        DashModel.findOne({ uid: req.user._id }).then((doc) => {
-          if (!doc) throw err;
-          else if (Array.isArray(doc.answers) && doc.answers.length) {
-            var studentdata = doc;
-            var foundround = false;
-            studentdata.answers.map((round) => {
-              if (round.roundNo === roundNo) {
-                foundround = true;
-                if (Array.isArray(round.questions) && round.questions.length) {
-                  var foundques = false;
-                  round.questions.map((question) => {
-                    if (question.qid === qid) {
-                      question.answer = answer;
-                      foundques = true;
+        var currenttime = new Date().getTime();
+
+        let save = JSON.parse(
+          fs.readFileSync(
+            path.resolve(__dirname + "../../../config/auditionConfig.json")
+          )
+        );
+
+        if (save.round === roundNo && save.status === "ong") {
+          DashModel.findOne({ uid: req.user._id }).then((doc) => {
+            if (!doc) throw err;
+            else if (doc.time >= currenttime && doc.round === roundNo) {
+              if (Array.isArray(doc.answers) && doc.answers.length) {
+                var studentdata = doc;
+                var foundround = false;
+                studentdata.answers.map((round) => {
+                  if (round.roundNo === roundNo) {
+                    foundround = true;
+                    if (
+                      Array.isArray(round.questions) &&
+                      round.questions.length
+                    ) {
+                      var foundques = false;
+                      round.questions.map((question) => {
+                        if (question.qid === qid) {
+                          question.answer = answer;
+                          foundques = true;
+                        }
+                      });
+                      if (foundques == false) {
+                        round.questions.push({
+                          qid: qid,
+                          answer: answer,
+                          qtype: qtype,
+                        });
+                      }
                     }
-                  });
-                  if (foundques == false) {
-                    round.questions.push({
-                      qid: qid,
-                      answer: answer,
-                      qtype: qtype,
-                    });
                   }
-                }
+                });
+                if (!foundround) res.sendStatus(500);
+
+                DashModel.findByIdAndUpdate(studentdata._id, studentdata).then(
+                  () => {
+                    res.sendStatus(200);
+                  }
+                );
               }
-            });
-            if (!foundround) {
-              studentdata.answers.push({
-                roundNo: roundNo,
-                questions: {
-                  qid: qid,
-                  qtype: qtype,
-                  answer: answer,
-                },
-              });
+            } else res.sendStatus(401);
+          });
+        } else {
+          res.sendStatus(401);
+        }
+      } else {
+        res.sendStatus(401);
+      }
+    }
+  );
+
+  app.get(
+    "/student/getRound",
+    passport.authenticate("jwt", { session: false }),
+    async function (req, res) {
+      if (req.user.role === "s") {
+        let save = JSON.parse(
+          fs.readFileSync(
+            path.resolve(__dirname + "../../../config/auditionConfig.json")
+          )
+        );
+       await DashModel.findOne({ uid: req.user._id}).then((doc)=>{
+          if(doc.round === save.round && save.status === "ong"){
+            if(doc.time===0){
+              var a = doc;
+              a.time = (new Date()).getTime() + save.time * 60000
+               DashModel.findOneAndUpdate({ uid: req.user._id },a).then(()=>{
+                RoundModel.findOne({roundNo:save.round}).then((round)=>{
+                  if(!round)res.sendStatus(404)
+                  res.status(200).json({round:round, time:a.time})
+                })
+              })
+            }else{
+              RoundModel.findOne({roundNo:save.round}).then((round)=>{
+                if(!round)res.sendStatus(404)
+                res.status(200).json({round:round, time:doc.time})
+              })
             }
 
-            DashModel.findByIdAndUpdate(studentdata._id, studentdata).then(
-              () => {
-                res.sendStatus(200);
-              }
-            );
           }
-        });
-
-        
+        })
       } else {
         res.sendStatus(401);
       }

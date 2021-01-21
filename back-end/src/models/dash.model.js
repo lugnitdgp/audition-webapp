@@ -13,6 +13,14 @@ questionstore = new Schema({
     qtype:{
         type:String,
         required:true
+    },
+    score:{
+        type:Number,
+        required:false
+    },
+    ansLink:{
+        type: String,
+        required:false
     }
 })
 
@@ -21,7 +29,7 @@ const answerschema = new Schema({
         type:Number,
         required:true
     },
-    questions:[questionstore]
+    questions:[questionstore],
   });
 
 var DashSchema = new Schema({
@@ -48,6 +56,11 @@ var DashSchema = new Schema({
         type:Number,
         required: true,
         default:1
+    },
+    time:{
+        type:Number,
+        required:true,
+        default:0
     },
     feedback:{
         type: Array,
