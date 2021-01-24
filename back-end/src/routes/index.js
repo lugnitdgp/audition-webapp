@@ -450,7 +450,7 @@ module.exports = function (app, passport) {
           )
         );
 
-        save.round = save.round + 1;
+        save.round = save.round;
         save.status = "def";
 
         save = JSON.stringify(save);
