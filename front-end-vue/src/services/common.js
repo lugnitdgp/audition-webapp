@@ -1,38 +1,66 @@
-import Api from "./Api";
+import Api from './Api'
 
 export default {
+
   login(user) {
-    return Api().post("auth/login", JSON.stringify(user), {
-      headers: { "content-type": "application/json" },
-    });
+    return Api().post('auth/login', user)
   },
   signup(user) {
-    return Api().post("auth/signup", user);
+    return Api().post('auth/signup', user)
   },
   logout() {
-    return Api().get("logout");
+    return Api().get('auth/logout')
   },
   getUsers() {
-    return Api()
-      .get("protected/getUsers", {
+
+      return Api().get('protected/getUsers', {
+        headers: { Authorization: localStorage.getItem("token") }
+      }).catch(()=>{
+        const res = {
+          status : 401,
+        }
+        return res;
+      })
+    
+  },
+  getUser(id){
+      return Api().post('protected/getUser',id,{
         headers: { Authorization: localStorage.getItem("token") },
       })
-      .catch(() => {
-        const res = {
-          status: 401,
-        };
-        return res;
-      });
   },
-  getUser(id) {
-    return Api().post("protected/getUser", id, {
+  updateEntry(a){
+
+    return Api().put('protected/update',a,{
       headers: { Authorization: localStorage.getItem("token") },
-    });
+    })
   },
-  updateEntry(a) {
-    return Api().post("protected/update", a);
+  upload(formdata){
+    return Api().post('upload',formdata,{
+      headers: { Authorization: localStorage.getItem("token") },
+    })
   },
-  purge() {
-    return Api().post("protected/purge");
+  addround(round){
+    return Api().post('addround',round,{
+      headers: { Authorization: localStorage.getItem("token") },
+    })
+
   },
-};
+  getAuditionStatus(){ 
+    return Api().get('auditionstatus')
+  },
+
+  changeRole(id){ 
+    return Api().put('protected/changerole',id ,{
+      headers: { Authorization: localStorage.getItem("token") },
+    })
+  },
+  
+  setClearance(id) { 
+    return Api().put('protected/setclearance',id ,{
+      headers: { Authorization: localStorage.getItem("token") },
+    })
+}
+ 
+  
+}
+

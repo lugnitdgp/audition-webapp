@@ -4,8 +4,15 @@
 		<Sidenav />
 		<v-content>
 			<v-container fluid>
+				
 				<v-card class="bord">
 					<v-container>
+						<v-text-field
+								v-model="time"
+								label="time"
+								solo
+							>
+							</v-text-field>
 						<v-skeleton-loader
 							class="mx-auto"
 							v-if="loading === true"
@@ -61,6 +68,14 @@
 							>
 							</v-text-field>
 							<v-spacer />
+							<v-text-field
+								v-model="score"
+								label="score"
+								solo
+							>
+
+							</v-text-field>
+							<v-spacer />
 							<v-btn color="blue-grey" class="ma-2 white--text" @click="uploadForm">
 								Media
 								<v-icon right dark>
@@ -70,8 +85,14 @@
 
 							<v-spacer />
 							<v-spacer />
-							<v-btn color="blue-grey" class="ma-2 white--text" @click="addQues">
+							<v-btn color="blue-grey"   :disabled="quesText === ''" class="ma-2 white--text" @click="addQues">
 								Question
+								<v-icon right dark>
+									mdi-plus
+								</v-icon>
+							</v-btn>
+								<v-btn color="blue-grey" class="ma-2 white--text" @click="addRound">
+								Add Round
 								<v-icon right dark>
 									mdi-plus
 								</v-icon>
@@ -90,6 +111,7 @@
 								<Imageques :question="question" v-if="question[`quesType`] === 'img'" />
 								<Mcq :question="question" v-if="question[`quesType`] === 'mcq'" />
 								<Audio :question="question" v-if="question[`quesType`] === 'aud'" />
+								
 							</v-container>
 						<!-- </draggable> -->
 					</v-container>
@@ -101,12 +123,13 @@
 
 <script>
 // import draggable from "vuedraggable";
-import axios from "axios";
 import Audio from "../components/Audio";
 import Normalques from "../components/Normalques";
 import Imageques from "../components/Imageques";
 import Mcq from "../components/Mcq";
 import Sidenav from "../components/layout/Sidenav";
+import common from "@/services/common.js";
+import VueJwtDecode from "vue-jwt-decode";
 export default {
 	components: {
 		Sidenav,
@@ -122,9 +145,12 @@ export default {
 		questions: [],
 		loading: false,
 		file: "",
+		adminUser: "",
+		score: 0,
 		items: ["mcq", "img", "aud", "nor"],
 		quesType: "",
 		options: "",
+		time:10,
 		rules: [
 			value =>
 				!value || value.size < 2000000 || "Avatar size should be less than 2 MB!"
@@ -132,8 +158,10 @@ export default {
 	}),
 	methods: {
 		addQues() {
-			this.questions.push({
+			if(this.quesText !== ""){
+				this.questions.push({
 				quesText: this.quesText,
+				score : this.score,
 				quesLink: this.quesLink,
 				quesType: this.quesType,
 				options: this.options
@@ -142,6 +170,13 @@ export default {
 			this.quesLink = "";
 			this.quesType = "";
 			this.options = "";
+		}
+		},
+		addRound(){ 
+			var round = {time : this.time , questions : this.questions }
+			common.addround(round).then((res ) =>{ 
+				console.log(res.data)
+			})
 		},
 		removeTodo(index) {
 			this.questions.splice(index, 1);
@@ -150,7 +185,7 @@ export default {
 			this.loading = true;
 			const formdata = new FormData();
 			formdata.append("file", this.file, this.file.name);
-			await axios.post("http://localhost:3000/upload", formdata).then(res => {
+			await common.upload(formdata).then(res => {
 				console.log(res.data);
 				this.quesLink = res.data.link;
 				this.loading = false;
@@ -162,6 +197,16 @@ export default {
 		if (localStorage.getItem("questions"))
 			this.questions = JSON.parse(localStorage.getItem("questions"));
 		else localStorage.removeItem("questions");
+	},
+	beforeCreate() {
+		console.log(localStorage.getItem("token"));
+		if (localStorage.getItem("token") === null) {
+			this.$router.push("/");
+		} else if (
+			VueJwtDecode.decode(localStorage.getItem("token").substring(6)).role === "s"
+		) {
+			this.$router.push("/");
+		}
 	},
 	created() {
 		this.$vuetify.theme.dark = true;
