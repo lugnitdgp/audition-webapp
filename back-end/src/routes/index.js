@@ -172,8 +172,9 @@ module.exports = function (app, passport) {
               id: user._id,
               UserName: user.UserName,
               email: user.email,
-              password: user.password,
+             // password: user.password,
               role: user.role,
+              clearance:user.clearance
             };
             var token = jwt.sign(payload, process.env.SECRET, {
               expiresIn: 600000,
@@ -222,8 +223,9 @@ module.exports = function (app, passport) {
         id: req.user._id,
         UserName: req.user.UserName,
         email: req.user.email,
-        password: req.user.password,
+      //  password: req.user.password,
         role: req.user.role,
+        clearance: req.user.clearance
       };
       var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 });
       var user = new DashModel({
@@ -251,8 +253,9 @@ module.exports = function (app, passport) {
         id: req.user._id,
         UserName: req.user.UserName,
         email: req.user.email,
-        password: req.user.password,
+      //  password: req.user.password,
         role: req.user.role,
+        clearance: req.user.clearance
       };
       var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 });
       var user = new DashModel({
@@ -367,8 +370,15 @@ module.exports = function (app, passport) {
           if (err) throw err;
           else {
             console.log(user);
-            res.sendStatus(202);
           }
+        }).then(()=>{
+          DashModel.findOneAndUpdate({uid:id}, {role:role},(err,dash)=>{
+            if(err) throw err;
+            else{
+              console.log(dash)
+              res.sendStatus(202)
+            }
+          })
         });
       } else {
         res.sendStatus(401);
