@@ -52,6 +52,11 @@ var DashSchema = new Schema({
         default: 'unevaluated',
         required: false
     },
+    role:{
+        type: String,
+        required: false,
+        default: 's'
+    },
     round:{
         type:Number,
         required: true,
