@@ -59,8 +59,25 @@ export default {
     return Api().put('protected/setclearance',id ,{
       headers: { Authorization: localStorage.getItem("token") },
     })
-}
- 
+},
+pushRound(){
+  return Api().post('protected/pushround',null,{
+    headers: { Authorization: localStorage.getItem("token") },
+  })
+},
+stopRound(){
+  return Api().post('protected/stopround',null,{
+    headers: { Authorization: localStorage.getItem("token") },
+  })
+},
+
+pushResult(){
+  return Api().post('protected/pushresult',null,{
+    headers: { Authorization: localStorage.getItem("token") },
+  })
+},
+
+
   
 }
 

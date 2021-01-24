@@ -423,7 +423,10 @@ module.exports = function (app, passport) {
         save.round = save.round + 1;
         save.status = "ong";
 
-        await RoundModel.findOne({ roundNo: save.round }).then((doc) => {
+        await RoundModel.findOne({ roundNo: save.round }).then((err, doc) => {
+          if(err){
+            res.sendStatus(400)
+          }else
           save.time = doc.time;
         });
 
@@ -442,7 +445,7 @@ module.exports = function (app, passport) {
   app.post(
     "/protected/stopround",
     passport.authenticate("jwt", { session: false }),
-    async function (req, res) {
+      (req, res) => {
       if (req.user.role === "su") {
         let save = JSON.parse(
           fs.readFileSync(
@@ -460,7 +463,7 @@ module.exports = function (app, passport) {
         );
         res.sendStatus(200);
       } else {
-        res.sendStatus(401);
+        res.sendStatus(300);
       }
     }
   );

@@ -4,6 +4,11 @@
     <v-app id="inspire">
       <template>
         <v-container>
+           <v-btn color="primary" @click="btnHandler()">{{btntext}}</v-btn>
+           <v-card>
+             <p>ROUND : {{audition.round}}</p>
+              <p>STATUS : {{audition.status}}</p>
+           </v-card>
           <v-card>
             <v-card>
               <v-tabs
@@ -14,10 +19,10 @@
               >
                 <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
-                <v-tab v-for="i in round" :key="i"> Round {{ i }} </v-tab>
+                <v-tab v-for="role in roles" :key="role"> {{ role }} </v-tab>
               </v-tabs>
               <v-tabs-items v-model="tab">
-                <v-tab-item v-for="i in round" :key="i">
+                 <v-tab-item :key="su"> 
                   <v-container>
                     <v-data-table
                       :headers="headers"
@@ -26,7 +31,72 @@
                       class="elevation-1"
                     >
                       <template v-slot:item="row">
-                        <tr v-show="row.item.round >= tab + 1">
+                        <tr v-show="row.item.role === 'su'" >
+                          <td>{{ row.item.name }}</td>
+                          <td>{{ row.item.status }}</td>
+
+                          <td>{{ row.item.role }}</td>
+
+                          <td>
+                            <template>
+                              <v-btn
+                                class="mx-2"
+                                light
+                                small
+                                v-on:click="(dialog = true), (item = row.item)"
+                              >
+                                SET ROLE
+                              </v-btn>
+                            </template>
+                          </td>
+                        </tr>
+                      </template>
+                    </v-data-table>
+                  </v-container>
+                </v-tab-item>
+                 <v-tab-item :key="m"> 
+                  <v-container>
+                    <v-data-table
+                      :headers="headers"
+                      hide-default-footer
+                      :items="items"
+                      class="elevation-1"
+                    >
+                      <template v-slot:item="row">
+                        <tr v-show="row.item.role === 'm'" >
+                          <td>{{ row.item.name }}</td>
+                          <td>{{ row.item.status }}</td>
+
+                          <td>{{ row.item.role }}</td>
+
+                          <td>
+                            <template>
+                              <v-btn
+                                class="mx-2"
+                                light
+                                small
+                                v-on:click="(dialog = true), (item = row.item)"
+                              >
+                                SET ROLE
+                              </v-btn>
+                            </template>
+                          </td>
+                        </tr>
+                      </template>
+                    </v-data-table>
+                  </v-container>
+                </v-tab-item>
+                
+                <v-tab-item :key="s"> 
+                  <v-container>
+                    <v-data-table
+                      :headers="headers"
+                      hide-default-footer
+                      :items="items"
+                      class="elevation-1"
+                    >
+                      <template v-slot:item="row">
+                        <tr v-show="row.item.role === 's'" >
                           <td>{{ row.item.name }}</td>
                           <td>{{ row.item.status }}</td>
 
@@ -108,10 +178,13 @@ export default {
       items: [],
       expand: false,
       darkmode: false,
+      roles: ['su', 'm' , 's'],
       item: [],
       round: null,
       dialog: false,
+      audition: [],
       role: "",
+      btntext: '',
       clearance: 0,
 
       headers: [
@@ -133,7 +206,14 @@ export default {
     console.log(this.adminUser);
     common.getAuditionStatus().then((res) => {
       console.log(res);
-      this.round = res.data.round;
+      this.audition = res.data;
+      if(this.audition.status === 'ong'){
+        this.btntext = 'STOP ROUND'
+      }else if (this.audition.status === 'res'){
+        this.btntext = 'PUSH ROUND'
+      }else if (this.audition.status === 'def'){
+        this.btntext = 'PUBLISH RESULT'
+      }
     });
     common.getUsers().then((res) => {
       if (res.status === 200) {
@@ -162,6 +242,26 @@ export default {
     }
   },
   methods: {
+    btnHandler(){
+      if(this.audition.status === 'ong'){
+        
+        common.stopRound().then(()=>{
+          this.btntext = 'PUBLISH RESULT'
+          this.audition.status = 'def'
+        })
+      }else if (this.audition.status === 'res'){
+       common.pushRound().then(()=>{
+          this.btntext = 'START ROUND'
+          this.audition.status = 'ong'
+        })
+      }else if (this.audition.status === 'def'){
+        common.pushResult().then(()=>{
+          this.btntext = 'PUSH ROUND'
+          this.audition.status = 'res'
+        })
+      }
+      
+    },
     closedialog() {
       (this.dialog = false), (this.clearance = 0), (this.role = "");
     },
