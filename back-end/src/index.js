@@ -10,7 +10,7 @@ var morgan = require('morgan')
 let cors = require('cors')
 var passport = require('passport')
 const cookieSession = require('cookie-session');
-const mongoSanitize = require('express-mongo-sanitize');
+//const mongoSanitize = require('express-mongo-sanitize');
 
 
 require('dotenv').config()
@@ -20,9 +20,9 @@ require('dotenv').config()
 // console.log('email sent ✓')
 
 
-app.use(mongoSanitize())
+//app.use(mongoSanitize())
 app.use(xss())
-app.use(express.json({ limit: '4kb' }))
+app.use(express.json({ limit: '100kb' }))
 app.use(cors())
 app.use(helmet());
 app.use(bodyParser.json())

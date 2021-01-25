@@ -77,7 +77,12 @@ pushResult(){
   })
 },
 
+getstudentRound(){ 
+  return Api().get('student/getRound',{
+   headers: { Authorization: localStorage.getItem("token") }
+   
+  })
 
-  
+}
 }
 

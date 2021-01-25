@@ -13,10 +13,10 @@
 									<v-container fluid>
 										<v-radio-group v-model="radioGroup">
 											<v-radio
-												v-for="n in 4"
-												:key="n"
-												:label="`${n}`"
-												:value="n"
+												v-for="option in question.options.split(',')"
+												:key="option"
+												:label="option"
+												:value="option"
 												color="#00FFBF"
 											></v-radio>
 										</v-radio-group>
@@ -33,10 +33,12 @@
 
 <script>
 export default {
+	name: 'Mcq',
 	props: ["question"],
 	data() {
 		return {
-			radioGroup: ""
+			radioGroup: "",
+			option: [],
 		};
 	}
 };

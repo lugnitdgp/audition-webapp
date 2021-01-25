@@ -412,7 +412,7 @@ module.exports = function (app, passport) {
   app.post(
     "/protected/pushround",
     passport.authenticate("jwt", { session: false }),
-    async function (req, res) {
+     (req, res) => {
       if (req.user.role === "su") {
         let save = JSON.parse(
           fs.readFileSync(
@@ -423,19 +423,20 @@ module.exports = function (app, passport) {
         save.round = save.round + 1;
         save.status = "ong";
 
-        await RoundModel.findOne({ roundNo: save.round }).then((err, doc) => {
-          if(err){
+          RoundModel.findOne({ roundNo: save.round }).then((doc) => {
+          if(!doc){
             res.sendStatus(400)
-          }else
+          }else{
           save.time = doc.time;
+          save = JSON.stringify(save);
+          fs.writeFileSync(
+            path.resolve(__dirname + "../../../config/auditionConfig.json"),
+            save
+          );
+          res.sendStatus(200);
+          }
         });
 
-        save = JSON.stringify(save);
-        fs.writeFileSync(
-          path.resolve(__dirname + "../../../config/auditionConfig.json"),
-          save
-        );
-        res.sendStatus(200);
       } else {
         res.sendStatus(401);
       }
@@ -644,6 +645,9 @@ module.exports = function (app, passport) {
                 res.status(200).json({ round: round, time: doc.time });
               });
             }
+          }
+          else{
+            res.sendStatus(401);
           }
         });
       } else {

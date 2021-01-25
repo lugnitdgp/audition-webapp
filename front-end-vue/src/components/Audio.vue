@@ -11,7 +11,7 @@
 						<v-card align-center color="#121a26">
 							<v-container fluid>
 								<vuetify-audio
-									file="question.quesLink" 
+									:file="question.quesLink"
 									color="#00FFBF"
 									:ended="audioFinish"
 								></vuetify-audio>
