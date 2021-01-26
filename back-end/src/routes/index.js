@@ -172,9 +172,9 @@ module.exports = function (app, passport) {
               id: user._id,
               UserName: user.UserName,
               email: user.email,
-             // password: user.password,
+              // password: user.password,
               role: user.role,
-              clearance:user.clearance
+              clearance: user.clearance
             };
             var token = jwt.sign(payload, process.env.SECRET, {
               expiresIn: 600000,
@@ -223,7 +223,7 @@ module.exports = function (app, passport) {
         id: req.user._id,
         UserName: req.user.UserName,
         email: req.user.email,
-      //  password: req.user.password,
+        //  password: req.user.password,
         role: req.user.role,
         clearance: req.user.clearance
       };
@@ -253,7 +253,7 @@ module.exports = function (app, passport) {
         id: req.user._id,
         UserName: req.user.UserName,
         email: req.user.email,
-      //  password: req.user.password,
+        //  password: req.user.password,
         role: req.user.role,
         clearance: req.user.clearance
       };
@@ -351,6 +351,24 @@ module.exports = function (app, passport) {
     }
   );
 
+  app.put(
+    "/protected/feedback",
+    passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+      var a = req.body;
+      if (
+        req.user.role === "su" ||
+        (req.user.role === "m")
+      ) {
+        DashModel.replaceOne({ _id: req.body._id }, a).then((doc) => {
+          return res.status(202).json({ message: "Changes have been saved" });
+        });
+      } else {
+        return res.sendStatus(401);
+      }
+    }
+  );
+
   /// PURGE
 
 
@@ -371,10 +389,10 @@ module.exports = function (app, passport) {
           else {
             console.log(user);
           }
-        }).then(()=>{
-          DashModel.findOneAndUpdate({uid:id}, {role:role},(err,dash)=>{
-            if(err) throw err;
-            else{
+        }).then(() => {
+          DashModel.findOneAndUpdate({ uid: id }, { role: role }, (err, dash) => {
+            if (err) throw err;
+            else {
               console.log(dash)
               res.sendStatus(202)
             }
@@ -412,7 +430,7 @@ module.exports = function (app, passport) {
   app.post(
     "/protected/pushround",
     passport.authenticate("jwt", { session: false }),
-     (req, res) => {
+    (req, res) => {
       if (req.user.role === "su") {
         let save = JSON.parse(
           fs.readFileSync(
@@ -423,17 +441,17 @@ module.exports = function (app, passport) {
         save.round = save.round + 1;
         save.status = "ong";
 
-          RoundModel.findOne({ roundNo: save.round }).then((doc) => {
-          if(!doc){
+        RoundModel.findOne({ roundNo: save.round }).then((doc) => {
+          if (!doc) {
             res.sendStatus(400)
-          }else{
-          save.time = doc.time;
-          save = JSON.stringify(save);
-          fs.writeFileSync(
-            path.resolve(__dirname + "../../../config/auditionConfig.json"),
-            save
-          );
-          res.sendStatus(200);
+          } else {
+            save.time = doc.time;
+            save = JSON.stringify(save);
+            fs.writeFileSync(
+              path.resolve(__dirname + "../../../config/auditionConfig.json"),
+              save
+            );
+            res.sendStatus(200);
           }
         });
 
@@ -446,7 +464,7 @@ module.exports = function (app, passport) {
   app.post(
     "/protected/stopround",
     passport.authenticate("jwt", { session: false }),
-      (req, res) => {
+    (req, res) => {
       if (req.user.role === "su") {
         let save = JSON.parse(
           fs.readFileSync(
@@ -483,61 +501,69 @@ module.exports = function (app, passport) {
           round: save.round,
           status: "res",
         });
-        fs.writeFileSync(
-          path.resolve(__dirname + "../../../config/auditionConfig.json"),
-          save
-        );
         var rejected = "";
-        DashModel.find()
-          .then((doc) => {
-            doc.forEach((user) => {
-              if (user.status === "rejected") {
-                rejected += user.email + ",";
-              } else if (user.status === "selected") {
-                var userNew = user;
-                userNew.status = "unevaluated";
-                userNew.round = userNew.round + 1;
-                userNew.time = 0;
-                DashModel.findByIdAndUpdate(user._id, userNew).then((res) => {
-                  sendMail(
-                    "Congratulations!",
-                    `Hi ${user.name}.\nWe are glad to inform you that you will be moving ahead in the audition process. Further details will be let known very soon.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)`,
-                    user.email
-                  );
-                });
-              }
-            });
-          })
-          .then(() => {
-            const rejectedones = rejected.slice(0, -1);
-            sendMail(
-              "Thank you for your participation.",
-              "Hi there.\nWe announce with a heavy heart that you will not be moving ahead in the audition process. However, the GNU/Linux User's Group will always be there to help your every need to the best of our abilities.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)",
-              rejectedones
+        DashModel.find({$or:[{status: "review"},{status:"unevaluated"}]}).then((userdoc)=>{
+          console.log(userdoc)
+          if(!userdoc.length){
+            fs.writeFileSync(
+              path.resolve(__dirname + "../../../config/auditionConfig.json"),
+              save
             );
-          })
-          .then(() => {
-            return res.status(201).send({ message: "Purge completed" });
-          });
+            DashModel.find()
+            .then((doc) => {
+              doc.forEach((user) => {
+                if (user.status === "rejected") {
+                  rejected += user.email + ",";
+                } else if (user.status === "selected") {
+                  var userNew = user;
+                  userNew.status = "unevaluated";
+                  userNew.round = userNew.round + 1;
+                  userNew.time = 0;
+                  DashModel.findByIdAndUpdate(user._id, userNew).then((res) => {
+                    sendMail(
+                      "Congratulations!",
+                      `Hi ${user.name}.\nWe are glad to inform you that you will be moving ahead in the audition process. Further details will be let known very soon.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)`,
+                      user.email
+                    );
+                  });
+                }
+              });
+            })
+            .then(() => {
+              const rejectedones = rejected.slice(0, -1);
+              sendMail(
+                "Thank you for your participation.",
+                "Hi there.\nWe announce with a heavy heart that you will not be moving ahead in the audition process. However, the GNU/Linux User's Group will always be there to help your every need to the best of our abilities.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)",
+                rejectedones
+              );
+            })
+            .then(() => {
+              return res.status(201).send({ message: "Purge completed" });
+            })
+          }else{
+            res.sendStatus(300)
+          }
+        })
+      
       } else {
         res.sendStatus(401);
       }
     }
   );
 
-  app.get("/getResult",(req,res)=>{
+  app.get("/getResult", (req, res) => {
     let save = JSON.parse(
       fs.readFileSync(
         path.resolve(__dirname + "../../../config/auditionConfig.json")
       )
     );
 
-    if(save.status === "res"){
-      DashModel.find({status:"unevaluated",round:save.round+1}).then((doc)=>{
+    if (save.status === "res") {
+      DashModel.find({ status: "unevaluated", round: save.round + 1 }).then((doc) => {
         res.status(200).send(doc)
       })
     }
-    else{
+    else {
       res.sendStatus(401)
     }
   })
@@ -569,59 +595,60 @@ module.exports = function (app, passport) {
         );
 
         if (save.round === roundNo && save.status === "ong") {
+          var studentdata = []
           DashModel.findOne({ uid: req.user._id }).then((doc) => {
             if (!doc) throw err;
-            else if (doc.time >= currenttime && doc.round === roundNo ) {
-              console.log("1")
+            else if (doc.time >= currenttime && doc.round === roundNo) {
+              studentdata = doc;
+              studentdata.answers.forEach((round) => {
+                if (round.roundNo === roundNo) {
+                  var foundques = false;
+                  round.questions.forEach((question) => {
 
-              
-                console.log("11")
-                var studentdata = doc;
-                var foundround = false;
-                studentdata.answers.map((round) => {
-                  if (round.roundNo === roundNo) {
-                    foundround = true;
-                    if (
-                      Array.isArray(round.questions) &&
-                      round.questions.length
-                    ) {
-                      var foundques = false;
-                      round.questions.map((question) => {
-                        if (question.qid === qid) {
-                          question.answer = answer;
-                          foundques = true;
-                        }
-                      });
-                      if (foundques == false) {
-                        round.questions.push({
-                          qid: qid,
-                          answer: answer,
-                          qtype: qtype,
-                        });
-                      }
+                    if (question.qid === qid) {
+                      question.answer = answer;
+                      foundques = true;
                     }
-                  }
-                });
-                if (!foundround) res.sendStatus(500);
+                  });
+                  if (foundques == false) {
+                    round.questions.push({
+                      qid: qid,
+                      answer: answer,
+                      qtype: qtype,
+                    });
 
-                DashModel.findByIdAndUpdate(studentdata._id, studentdata).then(
-                  () => {
-                    res.sendStatus(200);
                   }
-                );
-              
+
+                }
+              })
+              if (studentdata.answers.length === 0) {
+                studentdata.answers = [
+                  {
+                    roundNo: roundNo,
+                    questions: [
+                      {
+                        qid: qid,
+                        answer: answer,
+                        qtype: qtype,
+                      }
+                    ]
+                  }
+                ]
+              }
             } else {
-            
               res.sendStatus(401);
-
             }
+          }).then(() => {
+            DashModel.findByIdAndUpdate(studentdata._id, studentdata).then(
+              () => {
+                res.sendStatus(200);
+              }
+            );
           });
         } else {
-          console.log("2")
           res.sendStatus(401);
         }
       } else {
-        console.log("3")
         res.sendStatus(401);
       }
     }
@@ -655,7 +682,7 @@ module.exports = function (app, passport) {
               });
             }
           }
-          else{
+          else {
             res.sendStatus(401);
           }
         });
@@ -679,29 +706,37 @@ module.exports = function (app, passport) {
           )
         );
 
+        console.log(round)
+
         if (save.round === round.roundNo && save.status === "ong") {
+          var studentdata = [];
           DashModel.findOne({ uid: req.user._id }).then((doc) => {
             if (!doc) throw err;
             else if (doc.time >= currenttime && doc.round === round.roundNo) {
-              ///
-              if (Array.isArray(doc.answers) && doc.answers.length) {
-                var studentdata = doc;
-                var foundround = false;
-                studentdata.answers.map((internalround) => {
-                  if (round.roundNo === internalround.roundNo) {
-                    foundround = true;
-                    internalround=round;
-                  }})
-                  if (!foundround) res.sendStatus(500);
-                  DashModel.findByIdAndUpdate(studentdata._id, studentdata).then(
-                    () => {
-                      res.sendStatus(200);
-                    }
-                  );
+              studentdata = doc;
+              var roundfound = false
+              studentdata.answers.map((internalround) => {
+                if (round.roundNo === internalround.roundNo) {
+                  internalround.questions = round.questions;
+                  roundfound = true
                 }
+              })
+
+              if(roundfound === false || studentdata.answers.length === 0){
+                studentdata.answers.push(round)
+              }
+
+
               ///
-            }})
-        }
+            }else res.sendStatus(401)
+          }).then(() => {
+            DashModel.findByIdAndUpdate(studentdata._id, studentdata).then(
+              () => {
+                res.sendStatus(200);
+              }
+            );
+          })
+        }else res.sendStatus(401);
       } else res.sendStatus(401);
     }
   );

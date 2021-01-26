@@ -9,37 +9,58 @@
     ></video>
     <v-card class="mx-auto overflow-hidden nav-bar">
       <v-app-bar class="nav-bar" fixed>
-        <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon
+          @click="drawer = true"
+          class="app-icon"
+        ></v-app-bar-nav-icon>
         <Basetimer :time="time" />
       </v-app-bar>
     </v-card>
 
     <v-navigation-drawer v-model="drawer" absolute temporary class="nav-drawer">
       <v-list nav dense>
-        <v-list-item-group v-model="group" active-class="deep-purple--text text--lighten-2">
+        <v-list-item-group
+          v-model="group"
+          active-class="deep-purple--text text--lighten-2"
+        >
           <v-btn @click="logout" color="#B2EBF2">
-            <span style="color: #000 !important;">Logout</span>
+            <span style="color: #000 !important">Logout</span>
           </v-btn>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
 
     <v-container class="question-cont">
-      <v-tabs dark background-color="teal darken-3" show-arrows v-model="tab">
+      <v-tabs dark show-arrows v-model="tab">
         <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
-        <v-tab v-for="(question, i) in questions" :key="i"  @click="submitanswer(question._id)">QUES {{ i+1 }}</v-tab>
+        <v-tab
+          style="background-color: green !important"
+          v-for="(question, i) in questions"
+          :key="i"
+          @click="submitanswer(question._id)"
+          >QUES {{ i + 1 }}</v-tab
+        >
       </v-tabs>
       <v-tabs-items v-model="tab">
         <v-tab-item v-for="(question, i) in questions" :key="i">
           <v-container>
-            <Normalques :question="question" v-if="question[`quesType`] === 'nor'" />
-            <Imageques :question="question" v-if="question[`quesType`] ===  'img'" />
-            <Mcq  :question="question" v-if="question[`quesType`] === 'mcq'" />
-            <Audio :question="question" v-if="question[`quesType`] ===  'aud'" />
+            <Normalques
+              :question="question"
+              v-if="question[`quesType`] === 'nor'"
+            />
+            <Imageques
+              :question="question"
+              v-if="question[`quesType`] === 'img'"
+            />
+            <Mcq :question="question" v-if="question[`quesType`] === 'mcq'" />
+            <Audio :question="question" v-if="question[`quesType`] === 'aud'" />
           </v-container>
         </v-tab-item>
       </v-tabs-items>
+      <v-btn @click="submitround" color="#B2EBF2">
+        <span style="color: #000 !important">Submit Round</span>
+      </v-btn>
     </v-container>
   </div>
 </template>
@@ -61,7 +82,6 @@ export default {
     Imageques,
     Normalques,
     Mcq,
-   
   },
   data: () => ({
     file: "",
@@ -84,16 +104,17 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
-      common.getstudentRound().then(res => {
+      common.getstudentRound().then((res) => {
         console.log(res.data);
         this.time = Math.round(
           (res.data.time - 2000 - new Date().getTime()) / 1000
         );
+       
         this.questions = res.data.round.questions;
-        this.round = res.data.round.roundNo
+        this.round = res.data.round.roundNo;
         this.currentab = this.questions[0]._id;
-        console.log(this.questions)
-        this.questions.forEach(question => {
+        console.log(this.questions);
+        this.questions.forEach((question) => {
           this.categorized(question);
         });
       });
@@ -101,6 +122,7 @@ export default {
   },
 
   created() {
+     setTimeout(this.submitround, this.time*1000);
     this.$vuetify.theme.dark = true;
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
@@ -116,7 +138,7 @@ export default {
   },
   methods: {
     logout() {
-      common.logout().then(res => {
+      common.logout().then((res) => {
         alert(res.data);
         this.$router.push("/StLog");
       });
@@ -137,29 +159,48 @@ export default {
 
       window.scrollTo(0, top);
     },
-    submitanswer(qid){
-     var payload = { 
-       qid : this.currentab ,
-       answer : JSON.parse(localStorage.getItem('answers')).find(answer => answer.qid ===  this.currentab).answer,
-       round : this.round,
-       qtype : JSON.parse(localStorage.getItem('answers')).find(answer => answer.qid ===  this.currentab).qtype
+    submitanswer(qid) {
+      var searchel = JSON.parse(localStorage.getItem("answers")).find(
+        (answer) => answer.qid === this.currentab
+      );
+      if (searchel !== undefined) {
+        var payload = {
+          qid: this.currentab,
+          answer: searchel.answer,
+          round: this.round,
+          qtype: searchel.qtype,
+        };
+        common.updateAnswer(payload).then(() => {
+          this.currentab = qid;
+        });
+      } else {
+        this.currentab = qid;
+      }
+    },
+    submitround() {
+      if (localStorage.getItem("answers") === null) {
+        alert("Try. ._. :/ ???");
+      } else {
+        var payload={round : {
+          questions: JSON.parse(localStorage.getItem("answers")),
+          roundNo: this.round
+          }}
 
-     }
-     common.updateAnswer(payload).then(() =>{
-       this.currentab = qid
-     })
-
-    }
+          common.submitRound(payload).then(()=>{
+            alert("Round Submitted")
+          })
+      }
+    },
   },
   watch: {
-		darkmode(newvalue) {
-			this.$vuetify.theme.dark = newvalue;
-		},
+    darkmode(newvalue) {
+      this.$vuetify.theme.dark = newvalue;
+    },
     group() {
       this.drawer = false;
-    }
-}
-}
+    },
+  },
+};
 </script>
 
 

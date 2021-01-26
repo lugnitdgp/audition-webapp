@@ -40,7 +40,7 @@
 <script>
 export default {
   name: "Mcq",
-  props: ["question"],
+  props: ["question","admin","studentanswer"],
   data() {
     return {
       option: [],

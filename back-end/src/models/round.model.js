@@ -20,7 +20,7 @@ const quesSchema = new Schema({
     },
     score:{
         type:Number,
-        required:true
+        required:false
     }
   });
 
