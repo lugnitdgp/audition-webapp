@@ -4,34 +4,32 @@
     <v-app id="inspire">
       <template>
         <v-container>
-           <v-btn color="primary" @click="btnHandler()">{{btntext}}</v-btn>
-           <v-card>
-             <p>ROUND : {{audition.round}}</p>
-              <p>STATUS : {{audition.status}}</p>
-           </v-card>
+          <v-btn color="primary" @click="btnHandler()">{{btntext}}</v-btn>
+          <v-card>
+            <p>ROUND : {{audition.round}}</p>
+            <p>STATUS : {{audition.status}}</p>
+          </v-card>
+
+          <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" hide-details></v-text-field>
           <v-card>
             <v-card>
-              <v-tabs
-                dark
-                background-color="teal darken-3"
-                show-arrows
-                v-model="tab"
-              >
+              <v-tabs dark background-color="teal darken-3" show-arrows v-model="tab">
                 <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
-                <v-tab v-for="role in roles" :key="role"> {{ role }} </v-tab>
+                <v-tab v-for="role in roles" :key="role">{{ role }}</v-tab>
               </v-tabs>
               <v-tabs-items v-model="tab">
-                 <v-tab-item :key="su"> 
+                <v-tab-item :key="su">
                   <v-container>
                     <v-data-table
                       :headers="headers"
                       hide-default-footer
                       :items="items"
+                      :search="search"
                       class="elevation-1"
                     >
                       <template v-slot:item="row">
-                        <tr v-show="row.item.role === 'su'" >
+                        <tr v-show="row.item.role === 'su'">
                           <td>{{ row.item.name }}</td>
                           <td>{{ row.item.status }}</td>
 
@@ -44,9 +42,7 @@
                                 light
                                 small
                                 v-on:click="(dialog = true), (item = row.item)"
-                              >
-                                SET ROLE
-                              </v-btn>
+                              >SET ROLE</v-btn>
                             </template>
                           </td>
                         </tr>
@@ -54,16 +50,17 @@
                     </v-data-table>
                   </v-container>
                 </v-tab-item>
-                 <v-tab-item :key="m"> 
+                <v-tab-item :key="m">
                   <v-container>
                     <v-data-table
                       :headers="headers"
                       hide-default-footer
                       :items="items"
+                      :search="search"
                       class="elevation-1"
                     >
                       <template v-slot:item="row">
-                        <tr v-show="row.item.role === 'm'" >
+                        <tr v-show="row.item.role === 'm'">
                           <td>{{ row.item.name }}</td>
                           <td>{{ row.item.status }}</td>
 
@@ -76,9 +73,7 @@
                                 light
                                 small
                                 v-on:click="(dialog = true), (item = row.item)"
-                              >
-                                SET ROLE
-                              </v-btn>
+                              >SET ROLE</v-btn>
                             </template>
                           </td>
                         </tr>
@@ -86,17 +81,18 @@
                     </v-data-table>
                   </v-container>
                 </v-tab-item>
-                
-                <v-tab-item :key="s"> 
+
+                <v-tab-item :key="s">
                   <v-container>
                     <v-data-table
                       :headers="headers"
                       hide-default-footer
                       :items="items"
+                      :search="search"
                       class="elevation-1"
                     >
                       <template v-slot:item="row">
-                        <tr v-show="row.item.role === 's'" >
+                        <tr v-show="row.item.role === 's'">
                           <td>{{ row.item.name }}</td>
                           <td>{{ row.item.status }}</td>
 
@@ -109,9 +105,7 @@
                                 light
                                 small
                                 v-on:click="(dialog = true), (item = row.item)"
-                              >
-                                SET ROLE
-                              </v-btn>
+                              >SET ROLE</v-btn>
                             </template>
                           </td>
                         </tr>
@@ -132,11 +126,7 @@
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6">
-                    <v-select
-                      v-model="role"
-                      :items="['su', 'm', 's']"
-                      label="ROLE"
-                    ></v-select>
+                    <v-select v-model="role" :items="['su', 'm', 's']" label="ROLE"></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
@@ -150,12 +140,8 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closedialog">
-                Close
-              </v-btn>
-              <v-btn color="blue darken-1" text @click="changeRole(item.uid)">
-                Save
-              </v-btn>
+              <v-btn color="blue darken-1" text @click="closedialog">Close</v-btn>
+              <v-btn color="blue darken-1" text @click="changeRole(item.uid)">Save</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -178,23 +164,24 @@ export default {
       items: [],
       expand: false,
       darkmode: false,
-      roles: ['su', 'm' , 's'],
+      roles: ["su", "m", "s"],
       item: [],
       round: null,
       dialog: false,
       audition: [],
       role: "",
-      btntext: '',
+      btntext: "",
+      search: "",
       clearance: 0,
 
       headers: [
         { text: "FULL NAME", align: "start", value: "name" },
         { text: "STATUS", align: "start", value: "status" },
         { text: "CURRENT ROLE", align: "start", value: "details" },
-        { text: "CHANGE ROLE", align: "start", value: "role" },
+        { text: "CHANGE ROLE", align: "start", value: "role" }
       ],
       tab: null,
-      rounds: ["web", "shopping", "videos", "images", "news"],
+      rounds: ["web", "shopping", "videos", "images", "news"]
     };
   },
 
@@ -204,18 +191,18 @@ export default {
     ).UserName;
 
     console.log(this.adminUser);
-    common.getAuditionStatus().then((res) => {
+    common.getAuditionStatus().then(res => {
       console.log(res);
       this.audition = res.data;
-      if(this.audition.status === 'ong'){
-        this.btntext = 'STOP ROUND'
-      }else if (this.audition.status === 'res'){
-        this.btntext = 'PUSH ROUND'
-      }else if (this.audition.status === 'def'){
-        this.btntext = 'PUBLISH RESULT'
+      if (this.audition.status === "ong") {
+        this.btntext = "STOP ROUND";
+      } else if (this.audition.status === "res") {
+        this.btntext = "PUSH ROUND";
+      } else if (this.audition.status === "def") {
+        this.btntext = "PUBLISH RESULT";
       }
     });
-    common.getUsers().then((res) => {
+    common.getUsers().then(res => {
       if (res.status === 200) {
         console.log(res.data);
         this.items = res.data.doc;
@@ -242,25 +229,23 @@ export default {
     }
   },
   methods: {
-    btnHandler(){
-      if(this.audition.status === 'ong'){
-        
-        common.stopRound().then(()=>{
-          this.btntext = 'PUBLISH RESULT'
-          this.audition.status = 'def'
-        })
-      }else if (this.audition.status === 'res'){
-       common.pushRound().then(()=>{
-          this.btntext = 'START ROUND'
-          this.audition.status = 'ong'
-        })
-      }else if (this.audition.status === 'def'){
-        common.pushResult().then(()=>{
-          this.btntext = 'PUSH ROUND'
-          this.audition.status = 'res'
-        })
+    btnHandler() {
+      if (this.audition.status === "ong") {
+        common.stopRound().then(() => {
+          this.btntext = "PUBLISH RESULT";
+          this.audition.status = "def";
+        });
+      } else if (this.audition.status === "res") {
+        common.pushRound().then(() => {
+          this.btntext = "START ROUND";
+          this.audition.status = "ong";
+        });
+      } else if (this.audition.status === "def") {
+        common.pushResult().then(() => {
+          this.btntext = "PUSH ROUND";
+          this.audition.status = "res";
+        });
       }
-      
     },
     closedialog() {
       (this.dialog = false), (this.clearance = 0), (this.role = "");
@@ -268,15 +253,15 @@ export default {
     changeRole(id) {
       var a = {
         _id: id,
-        role: this.role,
+        role: this.role
       };
       common.changeRole(a).then(() => {
         if (this.role === "m") {
           var b = {
             _id: id,
-            clearance: this.clearance,
+            clearance: this.clearance
           };
-          common.setClearance(b).then((res) => {
+          common.setClearance(b).then(res => {
             alert(res.data);
             this.dialog = false;
           });
@@ -285,7 +270,7 @@ export default {
           this.dialog = false;
         }
       });
-    },
+    }
   },
 
   watch: {
@@ -293,11 +278,11 @@ export default {
       handler() {
         console.log(this.tab);
       },
-      deep: true,
+      deep: true
     },
     darkmode(newvalue) {
       this.$vuetify.theme.dark = newvalue;
-    },
-  },
+    }
+  }
 };
 </script>

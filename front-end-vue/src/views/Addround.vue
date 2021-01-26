@@ -54,7 +54,7 @@
 								v-if="quesType === 'aud'"
 								show-size
 								color="deep-purple accent-4"
-								accept="audio/ogg, audio/mp3, audio/aac"
+								accept="audio/ogg, audio/mp3, audio/aac audio/wav"
 								placeholder="Pick a audio"
 								prepend-icon="mdi-music"
 								label="Sound"
@@ -102,7 +102,7 @@
 						<v-spacer />
 						<v-spacer />
 						<br />
-						<!-- <draggable group="people" @start="drag = true" @end="drag = false"> -->
+						
 							<v-container v-for="(question, index) in questions" :key="index">
 								<Normalques
 									:question="question"
@@ -113,7 +113,7 @@
 								<Audio :question="question" v-if="question[`quesType`] === 'aud'" />
 								
 							</v-container>
-						<!-- </draggable> -->
+
 					</v-container>
 				</v-card>
 			</v-container>
@@ -122,7 +122,6 @@
 </template>
 
 <script>
-// import draggable from "vuedraggable";
 import Audio from "../components/Audio";
 import Normalques from "../components/Normalques";
 import Imageques from "../components/Imageques";

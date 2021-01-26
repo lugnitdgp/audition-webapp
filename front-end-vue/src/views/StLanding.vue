@@ -9,7 +9,8 @@
         <v-row align="center" justify="center">
           <v-col class="text-center" cols="12">
             <h1 class="glitch">ATTEMPT</h1>
-            <h4 class="glitch">ROUND {{round}}</h4>
+            <h4 class="glitch">ROUND {{audition.round}}</h4>
+              <p>STATUS : {{audition.status}}</p>
             <v-btn @click="$router.push('/Audition')" color="#B2EBF2">
               <span style="color: #000 !important;">ATTEMPT</span>
             </v-btn>
@@ -42,13 +43,13 @@ export default {
   data: () => ({
     member: false,
     su: false,
-    round: null
+    audition: [],
   }),
   name: "Landing",
   beforeCreate() {
     common.getAuditionStatus().then(res => {
       console.log(res);
-      this.round = res.data.round;
+       this.audition = res.data;
     });
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
@@ -93,7 +94,8 @@ export default {
     endCallBack: function(x) {
       console.log(x);
     },
-  }
+  },
+  
 };
 </script>
 

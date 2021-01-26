@@ -10,6 +10,7 @@
     <v-card class="mx-auto overflow-hidden nav-bar">
       <v-app-bar class="nav-bar" fixed>
         <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
+         <Basetimer :time=time />
       </v-app-bar>
     </v-card>
     <v-navigation-drawer v-model="drawer" absolute temporary class="nav-drawer">
@@ -26,9 +27,8 @@
       <v-card>
        
       </v-card>
-       <v-card color="">
-        <Basetimer :time=time />
-      </v-card>
+   
+  
 
       <div v-for="question in imgques" :key="question.id">
        <Imageques :question="question"/>

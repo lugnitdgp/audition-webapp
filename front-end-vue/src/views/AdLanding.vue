@@ -99,6 +99,12 @@
 					<v-container>
 						<v-card>
 							<v-card>
+								<v-text-field
+									v-model="search"
+									append-icon="mdi-magnify"
+									label="Search"
+									hide-details
+								></v-text-field>
 								<v-tabs dark background-color="teal darken-3" show-arrows v-model="tab">
 									<v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
@@ -112,6 +118,7 @@
 										:headers="headers"
 										hide-default-footer
 										:items="items"
+										:search="search"
 										class="elevation-1"
 									>
 										<template v-slot:item="row">
@@ -137,6 +144,7 @@
 										:headers="headers"
 										hide-default-footer
 										:items="items"
+										:search="search"
 										class="elevation-1"
 									>
 										<template v-slot:item="row">
@@ -177,6 +185,7 @@ export default {
 	data() {
 		return {
 			drawer: false,
+			search: "",
 			adminUser: "",
 			items: [],
 			expand: false,
