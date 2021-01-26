@@ -571,8 +571,11 @@ module.exports = function (app, passport) {
         if (save.round === roundNo && save.status === "ong") {
           DashModel.findOne({ uid: req.user._id }).then((doc) => {
             if (!doc) throw err;
-            else if (doc.time >= currenttime && doc.round === roundNo) {
-              if (Array.isArray(doc.answers) && doc.answers.length) {
+            else if (doc.time >= currenttime && doc.round === roundNo ) {
+              console.log("1")
+
+              
+                console.log("11")
                 var studentdata = doc;
                 var foundround = false;
                 studentdata.answers.map((round) => {
@@ -606,13 +609,19 @@ module.exports = function (app, passport) {
                     res.sendStatus(200);
                   }
                 );
-              }
-            } else res.sendStatus(401);
+              
+            } else {
+            
+              res.sendStatus(401);
+
+            }
           });
         } else {
+          console.log("2")
           res.sendStatus(401);
         }
       } else {
+        console.log("3")
         res.sendStatus(401);
       }
     }

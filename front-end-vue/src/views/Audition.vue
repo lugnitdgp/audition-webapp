@@ -10,9 +10,10 @@
     <v-card class="mx-auto overflow-hidden nav-bar">
       <v-app-bar class="nav-bar" fixed>
         <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
-         <Basetimer :time=time />
+        <Basetimer :time="time" />
       </v-app-bar>
     </v-card>
+
     <v-navigation-drawer v-model="drawer" absolute temporary class="nav-drawer">
       <v-list nav dense>
         <v-list-item-group v-model="group" active-class="deep-purple--text text--lighten-2">
@@ -24,45 +25,43 @@
     </v-navigation-drawer>
 
     <v-container class="question-cont">
-      <v-card>
-       
-      </v-card>
-   
-  
+      <v-tabs dark background-color="teal darken-3" show-arrows v-model="tab">
+        <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
-      <div v-for="question in imgques" :key="question.id">
-       <Imageques :question="question"/>
-      </div>
-      <div v-for="question in norques" :key="question.id">
-       <Normalques :question="question"/>
-      </div>
-      
-       <div v-for="question in mcqques" :key="question.id">
-       <Mcq :question="question"/>
-      </div>
+        <v-tab v-for="(question, i) in questions" :key="i"  @click="submitanswer(question._id)">QUES {{ i+1 }}</v-tab>
+      </v-tabs>
+      <v-tabs-items v-model="tab">
+        <v-tab-item v-for="(question, i) in questions" :key="i">
+          <v-container>
+            <Normalques :question="question" v-if="question[`quesType`] === 'nor'" />
+            <Imageques :question="question" v-if="question[`quesType`] ===  'img'" />
+            <Mcq  :question="question" v-if="question[`quesType`] === 'mcq'" />
+            <Audio :question="question" v-if="question[`quesType`] ===  'aud'" />
+          </v-container>
+        </v-tab-item>
+      </v-tabs-items>
     </v-container>
   </div>
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import Audio from "../components/Audio";
 import common from "@/services/common.js";
 import VueJwtDecode from "vue-jwt-decode";
 import Basetimer from "../components/Basetimer";
-import Imageques from '../components/Imageques';
-import Normalques from '../components/Normalques';
-import Mcq from '../components/Mcq';
+import Imageques from "../components/Imageques";
+import Normalques from "../components/Normalques";
+import Mcq from "../components/Mcq";
 
 export default {
   name: "Audition",
   components: {
-  Basetimer,
-  Imageques,
-  Normalques,
-  Mcq,
-
-
-
-    // VuetifyAudio: () => import("vuetify-audio")
+    Basetimer,
+    Imageques,
+    Normalques,
+    Mcq,
+   
   },
   data: () => ({
     file: "",
@@ -73,27 +72,29 @@ export default {
     questions: [],
     time: null,
     imgques: [],
-    norques : [],
-    mcqques : [],
-    answers : [],
-    
-
+    norques: [],
+    mcqques: [],
+    answers: [],
+    round: null,
+    tab: null,
+    currentab: null,
   }),
-  watch: {
-    group() {
-      this.drawer = false;
-    }
-  },
+
   beforeCreate() {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
       common.getstudentRound().then(res => {
         console.log(res.data);
-        this.time = Math.round((res.data.time - 2000 - (new Date).getTime()) / 1000);
+        this.time = Math.round(
+          (res.data.time - 2000 - new Date().getTime()) / 1000
+        );
         this.questions = res.data.round.questions;
+        this.round = res.data.round.roundNo
+        this.currentab = this.questions[0]._id;
+        console.log(this.questions)
         this.questions.forEach(question => {
-          this.categorized(question)
+          this.categorized(question);
         });
       });
     }
@@ -108,7 +109,6 @@ export default {
       console.log(tok);
       if (tok.role === "m") {
         this.member = true;
-       
       } else if (tok.role === "su") {
         this.su = true;
       }
@@ -122,23 +122,44 @@ export default {
       });
     },
     categorized(question) {
-      if(question.quesType === 'img'){
-        this.imgques.push(question)
-      }else if(question.quesType === 'nor'){
-        this.norques.push(question)
-        console.log(this.norques)
-      }else if(question.quesType === 'mcq'){
-        this.mcqques.push(question)
+      if (question.quesType === "img") {
+        this.imgques.push(question);
+      } else if (question.quesType === "nor") {
+        this.norques.push(question);
+        console.log(this.norques);
+      } else if (question.quesType === "mcq") {
+        this.mcqques.push(question);
+      }
+    },
+    goto(refName) {
+      var element = this.$refs[refName];
+      var top = element.offsetTop - 100;
+
+      window.scrollTo(0, top);
+    },
+    submitanswer(qid){
+     var payload = { 
+       qid : this.currentab ,
+       answer : JSON.parse(localStorage.getItem('answers')).find(answer => answer.qid ===  this.currentab).answer,
+       round : this.round,
+       qtype : JSON.parse(localStorage.getItem('answers')).find(answer => answer.qid ===  this.currentab).qtype
+
+     }
+     common.updateAnswer(payload).then(() =>{
+       this.currentab = qid
+     })
+
     }
   },
-  goto(refName) {
-    var element = this.$refs[refName];
-    var top = element.offsetTop - 100;
-
-    window.scrollTo(0, top);
-  }
-  }
-};
+  watch: {
+		darkmode(newvalue) {
+			this.$vuetify.theme.dark = newvalue;
+		},
+    group() {
+      this.drawer = false;
+    }
+}
+}
 </script>
 
 
@@ -206,40 +227,3 @@ v-img {
 }
 </style>
 
-
-	methods: {
-		addQues() {
-			if(this.quesText !== ""){
-				this.questions.push({
-				quesText: this.quesText,
-				score : this.score,
-				quesLink: this.quesLink,
-				quesType: this.quesType,
-				options: this.options
-			});
-			this.quesText = "";
-			this.quesLink = "";
-			this.quesType = "";
-			this.options = "";
-		}
-		},
-		addRound(){ 
-			var round = {time : this.time , questions : this.questions }
-			common.addround(round).then((res ) =>{ 
-				console.log(res.data)
-			})
-		},
-		removeTodo(index) {
-			this.questions.splice(index, 1);
-		},
-		async uploadForm() {
-			this.loading = true;
-			const formdata = new FormData();
-			formdata.append("file", this.file, this.file.name);
-			await common.upload(formdata).then(res => {
-				console.log(res.data);
-				this.quesLink = res.data.link;
-				this.loading = false;
-			});
-		}
-	},

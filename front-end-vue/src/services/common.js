@@ -83,8 +83,8 @@ getstudentRound(){
    
   })
 },
-updateAnswer(){ 
-    return Api().put('student/answer',{
+updateAnswer(payload){ 
+    return Api().put('student/answer', payload,{
     headers: { Authorization: localStorage.getItem("token") }
     
 })
