@@ -75,6 +75,8 @@ export default {
     imgques: [],
     norques : [],
     mcqques : [],
+    answers : [],
+    
 
   }),
   watch: {
@@ -203,3 +205,41 @@ v-img {
   }
 }
 </style>
+
+
+	methods: {
+		addQues() {
+			if(this.quesText !== ""){
+				this.questions.push({
+				quesText: this.quesText,
+				score : this.score,
+				quesLink: this.quesLink,
+				quesType: this.quesType,
+				options: this.options
+			});
+			this.quesText = "";
+			this.quesLink = "";
+			this.quesType = "";
+			this.options = "";
+		}
+		},
+		addRound(){ 
+			var round = {time : this.time , questions : this.questions }
+			common.addround(round).then((res ) =>{ 
+				console.log(res.data)
+			})
+		},
+		removeTodo(index) {
+			this.questions.splice(index, 1);
+		},
+		async uploadForm() {
+			this.loading = true;
+			const formdata = new FormData();
+			formdata.append("file", this.file, this.file.name);
+			await common.upload(formdata).then(res => {
+				console.log(res.data);
+				this.quesLink = res.data.link;
+				this.loading = false;
+			});
+		}
+	},
