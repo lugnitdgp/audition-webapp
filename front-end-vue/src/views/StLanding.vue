@@ -10,7 +10,7 @@
             <h4 class="glitch">ROUND {{audition.round}}</h4>
               <p v-if="audition.status === 'res'">
                 The results for {{audition.round}} are out now
-                <v-btn color="#B2EBF2" style="margin: 6px;">
+                <v-btn @click="$router.push('/Result')" color="#B2EBF2" style="margin: 6px;">
                   <span style="color: #000 !important;">Results</span>
                 </v-btn>
               </p>
