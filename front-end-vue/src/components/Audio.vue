@@ -48,6 +48,16 @@
         color="#00FFBF"
         class="text"
       ></v-textarea>
+      <v-file-input
+        v-model="studentfile"
+        show-size
+        accept="image/png, image/jpeg, image/bmp, .zip"
+        color="success"
+        placeholder="Pick an image"
+        prepend-icon="mdi-camera"
+        label="Image"
+        filled
+      />
     </v-container>
   </div>
 </template>
@@ -64,6 +74,7 @@ export default {
     file: "",
     currentroute: String,
     answer: "",
+    studentfile: ""
   }),
   created() {
     this.currentroute = this.$route.name;

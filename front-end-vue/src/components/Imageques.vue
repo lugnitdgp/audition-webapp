@@ -45,6 +45,16 @@
       color="#00FFBF"
       class="text"
     ></v-textarea>
+    <v-file-input
+        v-model="file"
+        show-size
+        accept="image/png, image/jpeg, image/bmp, .zip"
+        color="success"
+        placeholder="Pick an image"
+        prepend-icon="mdi-camera"
+        label="Image"
+        filled
+      />
   </v-container>
 </template>
 
@@ -55,6 +65,7 @@ export default {
   data: () => ({
     currentroute: String,
     answer: "",
+    file: ""
   }),
 
   created() {

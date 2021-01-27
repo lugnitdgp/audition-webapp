@@ -11,7 +11,7 @@
             <h1 class="glitch">ATTEMPT</h1>
             <h4 class="glitch">ROUND {{audition.round}}</h4>
               <p>STATUS : {{audition.status}}</p>
-            <v-btn @click="$router.push('/Audition')" color="#B2EBF2">
+            <v-btn @click="$router.push('/Audition')" color="#B2EBF2" v-if="audition.status === 'ong'">
               <span style="color: #000 !important;">ATTEMPT</span>
             </v-btn>
             <v-btn @click="$router.push('/Adlanding')" v-if="member === true" color="#B2EBF2">
