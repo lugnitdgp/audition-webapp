@@ -502,49 +502,49 @@ module.exports = function (app, passport) {
           status: "res",
         });
         var rejected = "";
-        DashModel.find({$or:[{status: "review"},{status:"unevaluated"}]}).then((userdoc)=>{
+        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }] }).then((userdoc) => {
           console.log(userdoc)
-          if(!userdoc.length){
+          if (!userdoc.length) {
             fs.writeFileSync(
               path.resolve(__dirname + "../../../config/auditionConfig.json"),
               save
             );
             DashModel.find()
-            .then((doc) => {
-              doc.forEach((user) => {
-                if (user.status === "rejected") {
-                  rejected += user.email + ",";
-                } else if (user.status === "selected") {
-                  var userNew = user;
-                  userNew.status = "unevaluated";
-                  userNew.round = userNew.round + 1;
-                  userNew.time = 0;
-                  DashModel.findByIdAndUpdate(user._id, userNew).then((res) => {
-                    sendMail(
-                      "Congratulations!",
-                      `Hi ${user.name}.\nWe are glad to inform you that you will be moving ahead in the audition process. Further details will be let known very soon.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)`,
-                      user.email
-                    );
-                  });
-                }
-              });
-            })
-            .then(() => {
-              const rejectedones = rejected.slice(0, -1);
-              sendMail(
-                "Thank you for your participation.",
-                "Hi there.\nWe announce with a heavy heart that you will not be moving ahead in the audition process. However, the GNU/Linux User's Group will always be there to help your every need to the best of our abilities.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)",
-                rejectedones
-              );
-            })
-            .then(() => {
-              return res.status(201).send({ message: "Purge completed" });
-            })
-          }else{
+              .then((doc) => {
+                doc.forEach((user) => {
+                  if (user.status === "rejected") {
+                    rejected += user.email + ",";
+                  } else if (user.status === "selected") {
+                    var userNew = user;
+                    userNew.status = "unevaluated";
+                    userNew.round = userNew.round + 1;
+                    userNew.time = 0;
+                    DashModel.findByIdAndUpdate(user._id, userNew).then((res) => {
+                      sendMail(
+                        "Congratulations!",
+                        `Hi ${user.name}.\nWe are glad to inform you that you will be moving ahead in the audition process. Further details will be let known very soon.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)`,
+                        user.email
+                      );
+                    });
+                  }
+                });
+              })
+              .then(() => {
+                const rejectedones = rejected.slice(0, -1);
+                sendMail(
+                  "Thank you for your participation.",
+                  "Hi there.\nWe announce with a heavy heart that you will not be moving ahead in the audition process. However, the GNU/Linux User's Group will always be there to help your every need to the best of our abilities.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)",
+                  rejectedones
+                );
+              })
+              .then(() => {
+                return res.status(201).send({ message: "Purge completed" });
+              })
+          } else {
             res.sendStatus(300)
           }
         })
-      
+
       } else {
         res.sendStatus(401);
       }
@@ -658,34 +658,34 @@ module.exports = function (app, passport) {
     "/student/getRound",
     passport.authenticate("jwt", { session: false }),
     async function (req, res) {
-        let save = JSON.parse(
-          fs.readFileSync(
-            path.resolve(__dirname + "../../../config/auditionConfig.json")
-          )
-        );
-        await DashModel.findOne({ uid: req.user._id }).then((doc) => {
-          if (doc.round === save.round && save.status === "ong") {
-            if (doc.time === 0) {
-              var a = doc;
-              a.time = new Date().getTime() + save.time * 60000 + 2000;
-              DashModel.findOneAndUpdate({ uid: req.user._id }, a).then(() => {
-                RoundModel.findOne({ roundNo: save.round }).then((round) => {
-                  if (!round) res.sendStatus(404);
-                  res.status(200).json({ round: round, time: a.time });
-                });
-              });
-            } else {
+      let save = JSON.parse(
+        fs.readFileSync(
+          path.resolve(__dirname + "../../../config/auditionConfig.json")
+        )
+      );
+      await DashModel.findOne({ uid: req.user._id }).then((doc) => {
+        if (doc.round === save.round && save.status === "ong") {
+          if (doc.time === 0) {
+            var a = doc;
+            a.time = new Date().getTime() + save.time * 60000 + 2000;
+            DashModel.findOneAndUpdate({ uid: req.user._id }, a).then(() => {
               RoundModel.findOne({ roundNo: save.round }).then((round) => {
                 if (!round) res.sendStatus(404);
-                res.status(200).json({ round: round, time: doc.time });
+                res.status(200).json({ round: round, time: a.time });
               });
-            }
+            });
+          } else {
+            RoundModel.findOne({ roundNo: save.round }).then((round) => {
+              if (!round) res.sendStatus(404);
+              res.status(200).json({ round: round, time: doc.time });
+            });
           }
-          else {
-            res.sendStatus(401);
-          }
-        });
-     
+        }
+        else {
+          res.sendStatus(401);
+        }
+      });
+
     }
   );
 
@@ -719,13 +719,13 @@ module.exports = function (app, passport) {
                 }
               })
 
-              if(roundfound === false || studentdata.answers.length === 0){
+              if (roundfound === false || studentdata.answers.length === 0) {
                 studentdata.answers.push(round)
               }
 
 
               ///
-            }else res.sendStatus(401)
+            } else res.sendStatus(401)
           }).then(() => {
             DashModel.findByIdAndUpdate(studentdata._id, studentdata).then(
               () => {
@@ -733,8 +733,17 @@ module.exports = function (app, passport) {
               }
             );
           })
-        }else res.sendStatus(401);
+        } else res.sendStatus(401);
       } else res.sendStatus(401);
     }
   );
+
+  app.get("/student/get", passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+      DashModel.findOne({ uid: req.user._id }).then((kid)=>{
+        if (!round) res.sendStatus(404);
+        res.status(200).json({ studenttime:kid.time, studentround:kid.round});
+      })
+    }
+  )
 };
