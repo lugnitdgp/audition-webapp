@@ -87,9 +87,6 @@
             </v-card>
             <v-snackbar v-model="snackbar">
               The round has been succesfully pushed.
-              <template v-slot:action="{ attrs }">
-                <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">Close</v-btn>
-              </template>
             </v-snackbar>
             <v-spacer />
             <v-spacer />

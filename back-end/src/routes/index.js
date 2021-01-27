@@ -741,7 +741,7 @@ module.exports = function (app, passport) {
   app.get("/student/get", passport.authenticate("jwt", { session: false }),
     (req, res) => {
       DashModel.findOne({ uid: req.user._id }).then((kid)=>{
-        if (!round) res.sendStatus(404);
+        if (!kid) res.sendStatus(404);
         res.status(200).json({ studenttime:kid.time, studentround:kid.round});
       })
     }
