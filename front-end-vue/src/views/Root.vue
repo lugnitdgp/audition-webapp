@@ -251,6 +251,22 @@ export default {
   },
   methods: {
     btnHandler() {
+      if (this.audition.status === "ong") {
+        common.stopRound().then(() => {
+          this.btntext = "PUBLISH RESULT";
+          this.audition.status = "def";
+        });
+      } else if (this.audition.status === "res") {
+        common.pushRound().then(() => {
+          this.btntext = "START ROUND";
+          this.audition.status = "ong";
+        });
+      } else if (this.audition.status === "def") {
+        common.pushResult().then(() => {
+          this.btntext = "PUSH ROUND";
+          this.audition.status = "res";
+        });
+      }
       common.getAuditionStatus().then((res) => {
         console.log(res);
         this.audition = res.data;
