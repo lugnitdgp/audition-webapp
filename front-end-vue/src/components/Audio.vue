@@ -42,6 +42,18 @@
       <v-textarea
         v-model="answer"
         filled
+        v-if="admin != true"
+        name="input-7-4"
+        label="Answers"
+        auto-grow
+        color="#00FFBF"
+        class="text"
+      ></v-textarea>
+      <v-textarea
+        v-model="studentanswer"
+        filled
+        disabled
+        v-if="admin === true"
         name="input-7-4"
         label="Answers"
         auto-grow
@@ -50,6 +62,7 @@
       ></v-textarea>
       <v-file-input
         v-model="studentfile"
+        v-if="admin != true"
         show-size
         accept="image/png, image/jpeg, image/bmp, .zip"
         color="success"

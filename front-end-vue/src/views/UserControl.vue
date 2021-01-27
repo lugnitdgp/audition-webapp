@@ -20,7 +20,7 @@
                 <v-tabs v-model="tab" align-with-title color="#B2EBF2">
                   <v-tabs-slider color="#9fef00"></v-tabs-slider>
 
-                  <v-tab v-for="(round, index) in answers" :key="index">
+                  <v-tab v-for="round in answers" :key="round.roundNo">
                     Round {{ round.roundNo }}
                   </v-tab>
                 </v-tabs>
@@ -28,29 +28,34 @@
             </v-toolbar>
 
             <v-tabs-items v-model="tab">
-              <v-tab-item
-                v-for="round in details.answers"
-                :key="round.roundNo"
-              >
+              <v-tab-item v-for="round in answers" :key="round.roundNo">
                 <v-card
                   flat
                   v-for="question in round.questions"
-                  :key="question.qid"
+                  :key="question._id"
                 >
                   <Normalques
-                    :question="rounds[tab].questions"
+                    :question="question"
+                    :studentanswer="question.answer"
+                    :admin="true"
                     v-if="question[`quesType`] === 'nor'"
                   />
                   <Imageques
                     :question="question"
+                    :studentanswer="question.answer"
+                    :admin="true"
                     v-if="question[`quesType`] === 'img'"
                   />
                   <Mcq
                     :question="question"
+                    :studentanswer="question.answer"
+                    :admin="true"
                     v-if="question[`quesType`] === 'mcq'"
                   />
                   <Audio
                     :question="question"
+                    :studentanswer="question.answer"
+                    :admin="true"
                     v-if="question[`quesType`] === 'aud'"
                   />
                 </v-card>
@@ -177,6 +182,7 @@ export default {
       expand: false,
       answers: [],
       type: null,
+      tab: null,
       dialog: false,
       status: "",
       clearance: true,
@@ -215,28 +221,34 @@ export default {
 
           common.getRounds().then((response) => {
             this.rounds = response.data;
-			var dump = [];
             this.details.answers.forEach((round) => {
-				var dump
               var findround = this.rounds.find(
-                (roundfind) => roundfind.roundNo === round.roundNo
+                (element) => element.roundNo == round.roundNo
               );
+              var roundentry = {
+                roundNo: round.roundNo,
+                questions: [],
+              };
               round.questions.forEach((question) => {
-                findround.forEach((findques) => {
-                  if (findques._id === question.qid) {
-                    dump.questions.push({
-            
-                        question: findques,
-                        answer: question.answer,
-                      }
-                    );
-                  }
-                });
+                var foundques = findround.questions.find(
+                  (element) => element._id === question.qid
+                );
+                var a = {
+                  quesType: question.qtype,
+                  answer: question.answer,
+                  _id: question.qid,
+                  quesLink: foundques.quesLink,
+                  quesText: foundques.quesText,
+                  options: foundques.options,
+                };
+                roundentry.questions.push(a);
               });
-            });
 
-            this.answers = dump;
+              this.answers.push(roundentry);
+            });
           });
+          console.log("hbfjkfkkfn");
+          console.log(this.answers);
         } else if (res.status === 401) {
           alert("UNAUTHORISED ACCESS");
           localStorage.clear("token");

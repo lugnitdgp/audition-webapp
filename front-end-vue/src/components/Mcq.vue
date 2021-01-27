@@ -2,27 +2,48 @@
   <div>
     <v-container fluid>
       <v-card class="bord" color="#141d2b">
-        <v-btn v-if="currentroute === 'Addround' " class="ma-2" outlined fab color="teal">
+        <v-btn
+          v-if="currentroute === 'Addround'"
+          class="ma-2"
+          outlined
+          fab
+          color="teal"
+        >
           <v-icon>mdi-delete</v-icon>
         </v-btn>
-        <v-btn v-if="currentroute === 'Addround' " class="ma-2" outlined fab color="teal">
+        <v-btn
+          v-if="currentroute === 'Addround'"
+          class="ma-2"
+          outlined
+          fab
+          color="teal"
+        >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-card-text class="justify-center" id="text">{{ question.quesText }}</v-card-text>
+        <v-card-text class="justify-center" id="text">{{
+          question.quesText
+        }}</v-card-text>
         <v-layout>
           <v-flex xs12>
             <v-card align-center color="#121a26">
               <v-container fluid>
                 <template>
                   <v-container fluid>
-                    <v-radio-group v-model="answer">
+                    <v-radio-group v-if="admin != true" v-model="answer">
                       <v-radio
-                        
                         v-for="option in question.options.split(',')"
                         :key="option"
                         :label="option"
                         :value="option"
-                       
+                        color="#00FFBF"
+                      ></v-radio>
+                    </v-radio-group>
+                    <v-radio-group v-if="admin === true" v-model="studentanswer">
+                      <v-radio
+                        v-for="option in question.options.split(',')"
+                        :key="option"
+                        :label="option"
+                        :value="option"
                         color="#00FFBF"
                       ></v-radio>
                     </v-radio-group>
@@ -40,21 +61,21 @@
 <script>
 export default {
   name: "Mcq",
-  props: ["question","admin","studentanswer"],
+  props: ["question", "admin", "studentanswer"],
   data() {
     return {
       option: [],
       currentroute: String,
-      answer :"",
+      answer: "",
     };
   },
 
   created() {
     this.currentroute = this.$route.name;
-      console.log(localStorage.getItem("answers"));
+    console.log(localStorage.getItem("answers"));
     if (localStorage.getItem("answers") != null) {
       var answers = JSON.parse(localStorage.getItem("answers"));
-      answers.forEach(answer => {
+      answers.forEach((answer) => {
         if (answer.qid === this.question._id) {
           this.answer = answer.answer;
         }
@@ -70,7 +91,7 @@ export default {
           var newanswer = {
             answer: this.answer,
             qid: this.question._id,
-            qtype: this.question.quesType
+            qtype: this.question.quesType,
           };
           var ans = [];
           ans.push(newanswer);
@@ -78,7 +99,7 @@ export default {
         } else {
           var answers = JSON.parse(localStorage.getItem("answers"));
           var foundanswer = false;
-          answers.forEach(answer => {
+          answers.forEach((answer) => {
             if (answer.qid === this.question._id) {
               answer.answer = this.answer;
               foundanswer = true;
@@ -88,7 +109,7 @@ export default {
             var newans = {
               answer: this.answer,
               qid: this.question._id,
-              qtype: this.question.quesType
+              qtype: this.question.quesType,
             };
             answers.push(newans);
           }
@@ -96,9 +117,9 @@ export default {
           localStorage.setItem("answers", JSON.stringify(answers));
         }
       },
-      deep: true
-    }
-  }
+      deep: true,
+    },
+  },
 };
 </script>
 
