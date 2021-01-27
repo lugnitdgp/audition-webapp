@@ -658,7 +658,6 @@ module.exports = function (app, passport) {
     "/student/getRound",
     passport.authenticate("jwt", { session: false }),
     async function (req, res) {
-      if (req.user.role === "s") {
         let save = JSON.parse(
           fs.readFileSync(
             path.resolve(__dirname + "../../../config/auditionConfig.json")
@@ -686,9 +685,7 @@ module.exports = function (app, passport) {
             res.sendStatus(401);
           }
         });
-      } else {
-        res.sendStatus(401);
-      }
+     
     }
   );
 
