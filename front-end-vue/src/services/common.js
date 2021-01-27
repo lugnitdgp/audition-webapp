@@ -106,6 +106,9 @@ export default {
       headers: { Authorization: localStorage.getItem("token") }
 
     })
+  },
+  getResult() {
+    return Api().get('getResult')
   }
 }
 

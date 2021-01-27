@@ -97,10 +97,10 @@
             <br />
 
             <v-container v-for="(question, index) in questions" :key="index">
-              <Normalques :question="question" :admin=true v-if="question[`quesType`] === 'nor'" />
-              <Imageques :question="question" :admin=true v-if="question[`quesType`] === 'img'" />
-              <Mcq :question="question" :admin=true v-if="question[`quesType`] === 'mcq'" />
-              <Audio :question="question" :admin=true v-if="question[`quesType`] === 'aud'" />
+              <Normalques :question="question" :admin="true" v-if="question[`quesType`] === 'nor'" />
+              <Imageques :question="question" :admin="true" v-if="question[`quesType`] === 'img'" />
+              <Mcq :question="question" :admin="true" v-if="question[`quesType`] === 'mcq'" />
+              <Audio :question="question" :admin="true" v-if="question[`quesType`] === 'aud'" />
             </v-container>
           </v-container>
         </v-card>
@@ -169,9 +169,9 @@ export default {
       common.addround(round).then(res => {
         console.log(res.data);
         this.loading1 = false;
-		this.snackbar = true;
-		this.questions = [];
-		localStorage.clear();
+        this.snackbar = true;
+        this.questions = [];
+        localStorage.clear();
       });
     },
     removeTodo(index) {

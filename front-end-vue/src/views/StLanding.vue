@@ -8,7 +8,20 @@
           <v-col class="text-center" cols="12">
             <h1 class="glitch">ATTEMPT</h1>
             <h4 class="glitch">ROUND {{audition.round}}</h4>
-              <p>STATUS : {{audition.status}}</p>
+              <p v-if="audition.status === 'res'">
+                The results for {{audition.round}} are out now
+                <v-btn color="#B2EBF2" style="margin: 6px;">
+                  <span style="color: #000 !important;">Results</span>
+                </v-btn>
+              </p>
+              <p v-if="audition.status === 'def'">
+                The results for {{audition.round}} will be out soon
+              </p>
+              <p v-if="audition.status === 'ong'">
+                <v-btn @click="$router.push('/Audition')" color="#B2EBF2" v-if="audition.status === 'ong'" style="margin: 6px;">
+                  <span style="color: #000 !important;">ATTEMPT</span>
+                </v-btn>
+              </p>
             <div class="rules">
               RULES<br/>
               1) Sample rule here, like lorem ipsum.<br/>
@@ -21,9 +34,6 @@
               1) Sample rule here, like lorem ipsum.<br/>
               1) Sample rule here, like lorem ipsum.<br/>
             </div>
-            <v-btn @click="$router.push('/Audition')" color="#B2EBF2" v-if="audition.status === 'ong'" style="margin: 6px;">
-              <span style="color: #000 !important;">ATTEMPT</span>
-            </v-btn>
             <v-btn @click="$router.push('/Adlanding')" v-if="member === true" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">MEMBER</span>
             </v-btn>

@@ -10,7 +10,6 @@
     <v-card class="mx-auto overflow-hidden nav-bar">
       <v-app-bar class="nav-bar" fixed>
         <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
-        <Basetimer :time="time" />
       </v-app-bar>
     </v-card>
 
@@ -32,7 +31,6 @@
           style="background-color: green !important"
           v-for="(question, i) in questions"
           :key="i"
-          @click="submitanswer(question._id)"
         >QUES {{ i + 1 }}</v-tab>
       </v-tabs>
       <v-tabs-items v-model="tab">
@@ -45,9 +43,6 @@
           </v-container>
         </v-tab-item>
       </v-tabs-items>
-      <v-btn @click="submitround" color="#B2EBF2">
-        <span style="color: #000 !important">Save Round</span>
-      </v-btn>
     </v-container>
   </div>
 </template>
@@ -57,50 +52,59 @@
 import Audio from "../components/Audio";
 import common from "@/services/common.js";
 import VueJwtDecode from "vue-jwt-decode";
-import Basetimer from "../components/Basetimer";
 import Imageques from "../components/Imageques";
 import Normalques from "../components/Normalques";
 import Mcq from "../components/Mcq";
 
 export default {
-  name: "Audition",
+  name: "Test",
   components: {
-    Basetimer,
     Imageques,
     Normalques,
-    Mcq
+    Mcq,
+    Audio
   },
   data: () => ({
-    file: "",
+    questions: [],
+    tab: null,
     drawer: false,
     group: null,
-    member: false,
-    su: false,
-    questions: [],
-    time: null,
-    round: null,
-    tab: null,
-    currentab: null
   }),
 
   beforeCreate() {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
-      common.getstudentRound().then(res => {
-        console.log(res.data);
-        let t = res.data.time - 2000 - new Date().getTime();
-        if (t > 0) {
-          this.time = Math.round(t / 1000);
-          this.questions = res.data.round.questions;
-          this.round = res.data.round.roundNo;
-          this.currentab = this.questions[0]._id;
-          console.log(this.questions);
-          setTimeout(this.submitround, this.time * 1000);
-        } else {
-          this.$router.push("/");
-        }
-      });
+      this.questions = [
+          { 
+            _id: 1,
+            quesText: 'Lorem Ipsum is simply dummy text of',
+            quesLink: 'https://media.giphy.com/media/h8a5YM9X3mIXOkSfWh/giphy.gif',
+            quesType: 'img',
+            options: '1,2,3,4' 
+          },
+          {
+            _id: 2, 
+            quesText: 'Lorem Ipsum is simply dummy text of',
+            quesLink: 'https://media.giphy.com/media/h8a5YM9X3mIXOkSfWh/giphy.gif',
+            quesType: 'nor',
+            options: '1,2,3,4' 
+          },
+          { 
+            _id: 3,
+            quesText: 'Lorem Ipsum is simply dummy text of',
+            quesLink: 'https://media.giphy.com/media/h8a5YM9X3mIXOkSfWh/giphy.gif',
+            quesType: 'mcq',
+            options: '1,2,3,4' 
+          },
+          {
+            _id: 4, 
+            quesText: 'Lorem Ipsum is simply dummy text of',
+            quesLink: 'http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Sevish_-__nbsp_.mp3',
+            quesType: 'aud',
+            options: '1,2,3,4' 
+          },
+        ]   
     }
   },
 
@@ -131,41 +135,6 @@ export default {
 
       window.scrollTo(0, top);
     },
-    submitanswer(qid) {
-      var searchel = JSON.parse(localStorage.getItem("answers")).find(
-        answer => answer.qid === this.currentab
-      );
-      if (searchel !== undefined) {
-        var payload = {
-          qid: this.currentab,
-          answer: searchel.answer,
-          round: this.round,
-          qtype: searchel.qtype
-        };
-        common.updateAnswer(payload).then(() => {
-          this.currentab = qid;
-        });
-      } else {
-        this.currentab = qid;
-      }
-    },
-    submitround() {
-      if (localStorage.getItem("answers") === null) {
-        // alert("Try. ._. :/ ???");
-      } else {
-        var payload = {
-          round: {
-            questions: JSON.parse(localStorage.getItem("answers")),
-            roundNo: this.round
-          }
-        };
-
-        common.submitRound(payload).then(() => {
-          alert("Round Submitted");
-          this.$router.push("/Thanks");
-        });
-      }
-    }
   },
   watch: {
     darkmode(newvalue) {
