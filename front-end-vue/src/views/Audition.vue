@@ -8,12 +8,15 @@
       muted
     ></video>
     <v-card class="mx-auto overflow-hidden nav-bar">
-      <v-app-bar class="nav-bar" fixed>
-
+      <v-app-bar class="nav-bar" fixed style="backdrop-filter: blur(8px); background-color:rgba(255,255,255,0.08)">
+        <div style="width: 50%; text-align: left">
         <Basetimer :time="time" />
+        </div>
+        <div style="width: 50%; text-align: right">
         <v-btn @click="logout" color="#B2EBF2">
             <span style="color: #000 !important">Logout</span>
           </v-btn>
+          </div>
       </v-app-bar>
     </v-card>
 

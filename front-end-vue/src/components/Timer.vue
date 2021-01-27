@@ -12,7 +12,8 @@
       :day-txt="'days'"
       :hour-txt="'hours'"
       :minutes-txt="'minutes'"
-      :seconds-txt="'seconds'">
+      :seconds-txt="'seconds'"
+      >
     </vue-countdown-timer>
 </template>
 

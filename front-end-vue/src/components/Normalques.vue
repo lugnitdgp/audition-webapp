@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <v-card class="bord" color="#141d2b">
+      <div class="bord" style="background-color: rgba(0,0,0,0); width: 95%; max-width:700px; margin: 0 auto;">
         <v-btn
           @click="deleteques"
           v-if="currentroute === 'Addround'"
@@ -20,19 +20,19 @@
           question.quesText
           }}
         </v-card-text>
-      </v-card>
-      <v-spacer />
-      <v-spacer />
-      <v-textarea
+      </div>
+<div class="bord" style="background-color: rgba(0,0,0,0); width: 96%; max-width:700px; margin: 0 auto;">
+      <textarea
         v-model="answer"
         filled
         v-if="admin != true"
         name="input-7-4"
         label="Answers"
+        placeholder="Answers"
         auto-grow
         color="#00FFBF"
         class="text"
-      ></v-textarea>
+      ></textarea>
       <v-textarea
         v-model="studentanswer"
         filled
@@ -55,6 +55,7 @@
         label="Image"
         filled
       />
+      </div>
     </v-container>
   </div>
 </template>
@@ -147,10 +148,16 @@ export default {
 </script>
 
 <style scoped>
-#text {
-  color: aquamarine !important;
+.text {
+  resize: none;
+  outline: none;
+  height: 150px;
+  border-radius: 20px;
+  width: 100%;
+  border: 1px solid white;
+  color: #fff !important;
   text-align: center !important;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 400;
 }
 </style>

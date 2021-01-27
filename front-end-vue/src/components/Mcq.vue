@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <v-card class="bord" style="background-color: rgba(0,0,0,0);">
+      <div class="bord" style="background-color: rgba(0,0,0,0); width: 95%; max-width:700px; margin: 0 auto;">
         <v-btn
           v-if="currentroute === 'Addround'"
           class="ma-2"
@@ -20,12 +20,12 @@
         >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-card-text class="justify-center" id="text">{{
+        <v-card-text class="justify-center" id="text" style="color: #fff ;">{{
           question.quesText
         }}</v-card-text>
         <v-layout>
           <v-flex xs12>
-            <v-card align-center style="background-color: rgba(0,0,0,0);">
+            <div align-center style="background-color: rgba(0,0,0,0);">
               <v-container fluid>
                 <template>
                   <v-container fluid>
@@ -50,10 +50,10 @@
                   </v-container>
                 </template>
               </v-container>
-            </v-card>
+            </div>
           </v-flex>
         </v-layout>
-      </v-card>
+      </div>
     </v-container>
   </div>
 </template>
@@ -125,7 +125,7 @@ export default {
 
 <style scoped>
 #text {
-  color: aquamarine !important;
+  color: white;
   text-align: center !important;
   font-size: 1rem;
   font-weight: 700;

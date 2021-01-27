@@ -117,7 +117,7 @@ export default {
 .base-timer {
   position: relative;
   width: 300px;
-  height: 300px;
+  height: 80px;
 
   &__svg {
     transform: scaleX(-1);
@@ -157,8 +157,8 @@ export default {
 
   &__label {
     position: absolute;
-    width: 300px;
-    height: 300px;
+    width: 200px;
+    height: 80px;
     top: 0;
     display: flex;
     align-items: center;
