@@ -2,30 +2,44 @@
   <div id="app">
     <span class="bg"></span>
     <v-app id="inspire">
-      <v-content>
-        <v-btn @click="logout" color="#B2EBF2">
-          <span style="color: #000 !important;">Logout</span>
-        </v-btn>
+      <div class="login-box">
+        
         <v-row align="center" justify="center">
           <v-col class="text-center" cols="12">
             <h1 class="glitch">ATTEMPT</h1>
             <h4 class="glitch">ROUND {{audition.round}}</h4>
               <p>STATUS : {{audition.status}}</p>
-            <v-btn @click="$router.push('/Audition')" color="#B2EBF2" v-if="audition.status === 'ong'">
+            <div class="rules">
+              RULES<br/>
+              1) Sample rule here, like lorem ipsum.<br/>
+              1) Sample rule here, like lorem ipsum.<br/>
+              1) Sample rule here, like lorem ipsum.<br/>
+              1) Sample rule here, like lorem ipsum.<br/>
+              1) Sample rule here, like lorem ipsum.<br/>
+              1) Sample rule here, like lorem ipsum.<br/>
+              1) Sample rule here, like lorem ipsum.<br/>
+              1) Sample rule here, like lorem ipsum.<br/>
+              1) Sample rule here, like lorem ipsum.<br/>
+            </div>
+            <v-btn @click="$router.push('/Audition')" color="#B2EBF2" v-if="audition.status === 'ong'" style="margin: 6px;">
               <span style="color: #000 !important;">ATTEMPT</span>
             </v-btn>
-            <v-btn @click="$router.push('/Adlanding')" v-if="member === true" color="#B2EBF2">
+            <v-btn @click="$router.push('/Adlanding')" v-if="member === true" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">MEMBER</span>
             </v-btn>
-            <v-btn @click="$router.push('/root')" v-show="su" color="#B2EBF2">
+            <v-btn @click="$router.push('/root')" v-show="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">ROOT</span>
             </v-btn>
-            <v-btn @click="$router.push('/Adlanding')" v-show="su" color="#B2EBF2">
+            <v-btn @click="$router.push('/Adlanding')" v-show="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">DASHBOARD</span>
             </v-btn>
+            <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
+          <span style="color: #000 !important;">Logout</span>
+        </v-btn>
           </v-col>
         </v-row>
-      </v-content>
+        
+      </div>
     </v-app>
   </div>
 </template>
@@ -106,17 +120,44 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
+  background: url("../assets/img/f.gif") no-repeat center center;
   background-size: cover;
-  background-color: #141d2b;
-  opacity: 0.4;
+  filter: blur(0px);
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.7;
+}
+.login-box {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 90%;
+	max-width: 400px;
+	padding: 20px;
+	transform: translate(-50%, -50%);
+	backdrop-filter: blur(9px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  box-shadow: 0px 0px 40px rgb(0, 2, 26);
+  border: 0px solid rgb(1, 0, 46);
+  border-bottom: 8px solid rgb(161, 183, 255);
+}
+.rules{
+  color: #fff;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 20px;
+  border: 1px solid #fff;
+  font-size: 14px;
+  margin: 0 auto;
+  padding: 10px;
 }
 
 .glitch {
-  font-size: 3rem;
+  font-size: 1.7rem;
   font-weight: 700;
   text-transform: uppercase;
   position: relative;
-
+letter-spacing: 3px;
   text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
     -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
     0.025em 0.05em 0 rgba(0, 0, 255, 0.75);

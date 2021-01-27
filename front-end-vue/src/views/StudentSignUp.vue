@@ -4,7 +4,7 @@
 			<span class="bg"></span>
 			<Sidenav />
 			<div class="login-box">
-				<h2>REGISTER</h2>
+				<h2 class="glitch">REGISTER</h2>
 				<v-form class="elevation-24">
 					<v-text-field
 						v-model="UserName"
@@ -37,25 +37,25 @@
 				<v-card-actions>
 					<v-container align="center">
 						<v-row align="center" justify="center">
-							<v-col cols="12">
-						
+							<v-col cols="8">
 								<v-btn
 								block
 								outlined
-								color="cyan"
+								color="blue"
 								@click="signup" 
+								style="border-radius: 20px;"
 								>
 								REGISTER
 								</v-btn>
 							</v-col>
 						</v-row>
 						<v-row align="center" justify="center">
-							<v-col cols="3" align="center" justify="center">
+							<v-col cols="6" align="center" justify="center" style="display:flex; justify-content: flex-end;">
 								<v-btn color="red" outlined fab large @click="goauth">
 									<v-icon>mdi-google</v-icon>
 								</v-btn>
 							</v-col>
-							<v-col cols="3" align="center" justify="center">
+							<v-col cols="6" align="center" justify="center" style="display:flex; justify-content: flex-start;">
 								<v-btn color="blue" outlined fab large @click="githuboauth">
 									<i class="fab fa-github"></i>
 								</v-btn>
@@ -67,14 +67,9 @@
 							justify="center"
 						>
 							<p align="center">Already have an account ? <a @click="$router.push('/StLog')" style="color: cyan !important;">Login</a></p>
-						</v-row>
-						
+						</v-row>			
 					</v-container>
-				</v-card-actions>
-				
-
-								
-
+				</v-card-actions>			
 			</div>
 		</v-content>
 	</v-app>
@@ -84,9 +79,7 @@
 /* eslint-disable */
 import common from "@/services/common.js";
 import Sidenav from "../components/layout/Sidenav";
-
 import axios from "axios";
-
 export default {
 	components: {
 		Sidenav
@@ -141,23 +134,81 @@ export default {
   left: 0;
   background: url("../assets/img/f.gif") no-repeat center center;
   background-size: cover;
-  filter: blur(3px);
+  filter: blur(0px);
   background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0.4;
+  opacity: 0.7;
 }
 .login-box {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	width: 400px;
+	width: 90%;
+	max-width: 400px;
 	padding: 40px;
 	transform: translate(-50%, -50%);
-	background: rgba(0, 0, 0, 0.5);
-	box-sizing: border-box;
-	box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
-	border-radius: 10px;
+	backdrop-filter: blur(9px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  box-shadow: 0px 0px 40px rgb(0, 2, 26);
+  border: 0px solid rgb(1, 0, 46);
+  border-bottom: 8px solid rgb(161, 183, 255);
+}
+.glitch {
+  font-size: 2.3rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  position: relative;
+  letter-spacing: 9px;
+  font-family: 'Bebas Neue', cursive;
+  text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+    -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+    0.025em 0.05em 0 rgba(37, 37, 39, 0.75);
+  animation: glitch 500ms infinite;
+}
+@media only screen and (max-width: 700px){
+  .glitch {
+    font-size: 2.1rem;
+  }
+  .login-box{
+	  padding: 10px 20px;
+  }
 }
 
+@keyframes glitch {
+  0% {
+    text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  14% {
+    text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  15% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+      0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+      0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  50% {
+    text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+      0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  99% {
+    text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+      0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  100% {
+    text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75),
+      -0.025em -0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+}
 .login-box h2 {
 	margin: 0 0 30px;
 	padding: 0;

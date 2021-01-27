@@ -26,13 +26,23 @@
             
               <router-link tag="span" to="/StLog">
             
-              <div class="button fire">LOGIN</div>
+              <div class="button">
+		<span>LOGIN</span>
+		<svg>
+		<polyline class="o1" points="0 0, 150 0, 150 55, 0 55, 0 0"></polyline>
+		<polyline class="o2" points="0 0, 150 0, 150 55, 0 55, 0 0"></polyline>
+	</svg>
+	</div>
     
               </router-link>
-            
-            
               <router-link tag="span" to="/StSign">
-              <div class="button ice">REGISTER</div>
+              <div class="button2">
+		<span>REGISTER</span>
+		<svg>
+		<polyline class="o1" points="0 0, 150 0, 150 55, 0 55, 0 0"></polyline>
+		<polyline class="o2" points="0 0, 150 0, 150 55, 0 55, 0 0"></polyline>
+	</svg>
+	</div>
               </router-link>
             
           </v-row>
@@ -75,10 +85,10 @@ export default {
 <style scoped>
 #app {
   height: 100vh;
-  
+  font-family: 'Ubuntu', sans-serif;
 }
 .btns span{
-  padding: 30px 20px;
+  padding: 10px 20px;
 }
 .nav-wrap{
  height: 10vh;
@@ -86,7 +96,7 @@ export default {
 .home-wrap{
   height: 90vh;
   width: 100vw;
-display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -98,14 +108,13 @@ display: flex;
 .home-card{
   width: 90%;
   max-width: 700px;
-  padding: 80px 30px;
-  backdrop-filter: blur(5px);
+  padding: 70px 30px;
+  backdrop-filter: blur(9px);
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
-  border-top-left-radius: 50px;
-  border-bottom-right-radius: 50px;
+  border-radius: 20px;
   box-shadow: 0px 0px 40px rgb(0, 2, 26);
-  border: 0.5px solid rgb(1, 0, 46);
+  border: 0px solid rgb(1, 0, 46);
+  border-bottom: 8px solid rgb(161, 183, 255);
 }
 .bg {
   width: 100%;
@@ -119,34 +128,29 @@ display: flex;
   opacity: 0.7;
 }
 .glitch {
-  font-family: 'Audiowide', cursive;
-  font-size: 2.5rem;
-  font-weight: 400;
+  font-size: 3rem;
+  font-weight: 600;
   text-transform: uppercase;
   position: relative;
-
+  letter-spacing: 9px;
+  font-family: 'Bebas Neue', cursive;
   text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
     -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
-    0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
-
+    0.025em 0.05em 0 rgba(37, 37, 39, 0.75);
   animation: glitch 500ms infinite;
 }
 
 @media only screen and (max-width: 700px){
   .glitch {
-    font-size: 1.8rem;
+    font-size: 2.1rem;
   }
   .home-card{
   width: 90%;
   max-width: 700px;
-  padding: 40px 10px;
-  backdrop-filter: blur(5px);
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
-  border-top-left-radius: 50px;
-  border-bottom-right-radius: 50px;
-  box-shadow: 0px 0px 40px rgb(0, 2, 26);
-  border: 0.5px solid rgb(1, 0, 46);
+  padding: 90px 30px;
+}
+.btns{
+  margin-top: 20px;
 }
 }
 
@@ -186,108 +190,77 @@ display: flex;
   }
 }
 .button {
-  border: 1px solid green;
-  -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
-  transform: skewX(-10deg);
-  height: 50px;
-  width: 200px;
-  border-radius: 20px 5px 20px 0px;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  font: 15px sans-serif;
-  font-weight: 300;
-  text-shadow: 0 0 20px #fff;
+  cursor: pointer;
+  
+}
+.button svg {
+  height: 55px;
+  width: 150px;
+  fill: none;
+  stroke-width: 5;
+  border-radius: 3px;
+}
+.button svg .o1 {
+  stroke: rgba(25, 59, 255, 0.7);
+  fill: rgba(25, 59, 255, 0.7);
+  transition: all 1s ease-in-out;
+}
+.button svg .o2 {
+  stroke: white;
+  stroke-dasharray: 20 420;
+  stroke-dashoffset: 20;
+  transition: all 1s ease-in-out;
+}
+.button span {
+  position: absolute;
+  margin: auto 0;
   text-transform: uppercase;
-  -webkit-animation: breath2 2s 0.5s infinite alternate;
-          animation: breath2 2s 0.5s infinite alternate;
-  transition: all 0.2s ease;
+  letter-spacing: 3px;
+}
+.button:hover .o1 {
+  fill: rgba(16, 60, 204, 0.3);
+}
+.button:hover .o2 {
+  stroke-dashoffset: -420;
+}
+
+.button2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
-.button:before {
-  content: "";
-  display: block;
-  width: calc(100% - 22px);
-  height: calc(50px - 8px);
-  -webkit-animation: breath 2s infinite alternate;
-          animation: breath 2s infinite alternate;
-  left: 10px;
-  top: 3px;
+.button2 svg {
+  height: 55px;
+  width: 150px;
+  fill: none;
+  stroke-width: 5;
+  border-radius: 3px;
+}
+.button2 svg .o1 {
+  stroke: rgba(255, 24, 101, 0.7);
+  fill: rgba(255, 24, 101, 0.7);
+  transition: all 1s ease-in-out;
+}
+.button2 svg .o2 {
+  stroke: white;
+  stroke-dasharray: 20 420;
+  stroke-dashoffset: 20;
+  transition: all 1s ease-in-out;
+}
+.button2 span {
   position: absolute;
-  background-color: transparent;
-  border: 1px solid #fff;
-  border-radius: 15px 3px 15px 3px;
+  margin: auto 0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
 }
-.button.fire {
-  border-color: #ffa8ec;
-  background-image: linear-gradient(to bottom, rgba(255, 48, 127, 0.6), rgba(240, 29, 159, 0.6));
-  box-shadow: 0 0 70px rgba(255, 48, 176, 0.6), 0 5px 20px rgba(255, 48, 186, 0.6), inset 0 1px #ffeca8, inset 0 -1px #ffeca8;
-  color: #ffa8e9;
+.button2:hover .o1 {
+  fill: rgba(204, 16, 163, 0.3);
 }
-.button.fire:before {
-  box-shadow: inset 0 0 30px 0 #ffa8ec;
-}
-.button.ice {
-  border-color: #a8ecff;
-  background-image: linear-gradient(to bottom, rgba(48, 138, 255, 0.5), rgba(29, 96, 240, 0.5));
-  box-shadow: 0 0 70px rgba(48, 138, 255, 0.5), 0 5px 20px rgba(48, 138, 255, 0.5), inset 0 1px #ffeca8, inset 0 -1px #ffeca8;
-  color: #a8ecff;
-}
-.button.ice:before {
-  box-shadow: inset 0 0 30px 0 #a8ecff;
-}
-.button:hover.fire {
-  box-shadow: 0 0 70px rgba(255, 48, 169, 0.8), 0 5px 20px rgba(255, 48, 203, 0.8), inset 0 1px #ffa8e5, inset 0 -1px #ffa8ec;
-}
-.button:hover.fire:before {
-  box-shadow: inset 0 0 50px 0 #ffa8e2;
-}
-.button:hover.ice {
-  box-shadow: 0 0 70px rgba(48, 138, 255, 0.8), 0 5px 20px rgba(48, 138, 255, 0.8), inset 0 1px #a8ecff, inset 0 -1px #a8ecff;
-}
-.button:hover.ice:before {
-  box-shadow: inset 0 0 50px 0 #a8ecff;
-}
-.button + .button {
-  margin-top: 15px;
-  -webkit-animation-delay: 0.3s;
-          animation-delay: 0.3s;
-}
-
-@-webkit-keyframes breath {
-  0% {
-    transform: scaleX(1);
-  }
-  100% {
-    transform: scaleX(0.95);
-  }
-}
-
-@keyframes breath {
-  0% {
-    transform: scaleX(1);
-  }
-  100% {
-    transform: scaleX(0.95);
-  }
-}
-@-webkit-keyframes breath2 {
-  0% {
-    transform: skewX(-10deg) scaleX(1);
-  }
-  100% {
-    transform: skewX(-10deg) scaleX(0.95);
-  }
-}
-@keyframes breath2 {
-  0% {
-    transform: skewX(-10deg) scaleX(1);
-  }
-  100% {
-    transform: skewX(-10deg) scaleX(0.95);
-  }
+.button2:hover .o2 {
+  stroke-dashoffset: -420;
 }
 </style>
