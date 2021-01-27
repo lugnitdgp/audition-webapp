@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <v-card class="bord" color="#141d2b">
+      <v-card class="bord" style="background-color: rgba(0,0,0,0);">
         <v-btn
           v-if="currentroute === 'Addround'"
           class="ma-2"
@@ -25,7 +25,7 @@
         }}</v-card-text>
         <v-layout>
           <v-flex xs12>
-            <v-card align-center color="#121a26">
+            <v-card align-center style="background-color: rgba(0,0,0,0);">
               <v-container fluid>
                 <template>
                   <v-container fluid>

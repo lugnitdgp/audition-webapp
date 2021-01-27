@@ -9,33 +9,25 @@
     ></video>
     <v-card class="mx-auto overflow-hidden nav-bar">
       <v-app-bar class="nav-bar" fixed>
-        <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
+
         <Basetimer :time="time" />
+        <v-btn @click="logout" color="#B2EBF2">
+            <span style="color: #000 !important">Logout</span>
+          </v-btn>
       </v-app-bar>
     </v-card>
 
-    <v-navigation-drawer v-model="drawer" absolute temporary class="nav-drawer">
-      <v-list nav dense>
-        <v-list-item-group v-model="group" active-class="deep-purple--text text--lighten-2">
-          <v-btn @click="logout" color="#B2EBF2">
-            <span style="color: #000 !important">Logout</span>
-          </v-btn>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
-
     <v-container class="question-cont">
-      <v-tabs dark show-arrows v-model="tab">
-        <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
+      <v-tabs dark show-arrows v-model="tab" class="vtab">
+        <v-tabs-slider color="teal lighten-3" ></v-tabs-slider>
 
         <v-tab
-          style="background-color: green !important"
           v-for="(question, i) in questions"
           :key="i"
           @click="submitanswer(question._id)"
         >QUES {{ i + 1 }}</v-tab>
       </v-tabs>
-      <v-tabs-items v-model="tab">
+      <v-tabs-items v-model="tab" class="qbody">
         <v-tab-item v-for="(question, i) in questions" :key="i">
           <v-container>
             <Normalques :question="question" v-if="question[`quesType`] === 'nor'" />
@@ -45,9 +37,11 @@
           </v-container>
         </v-tab-item>
       </v-tabs-items>
+      <div class="submit"> 
       <v-btn @click="submitround" color="#B2EBF2">
         <span style="color: #000 !important">Save Round</span>
       </v-btn>
+      </div>
     </v-container>
   </div>
 </template>
@@ -68,7 +62,8 @@ export default {
     Basetimer,
     Imageques,
     Normalques,
-    Mcq
+    Mcq,
+    Audio
   },
   data: () => ({
     file: "",
@@ -125,12 +120,12 @@ export default {
         this.$router.push("/StLog");
       });
     },
-    goto(refName) {
-      var element = this.$refs[refName];
-      var top = element.offsetTop - 100;
+    // goto(refName) {
+    //   var element = this.$refs[refName];
+    //   var top = element.offsetTop - 100;
 
-      window.scrollTo(0, top);
-    },
+    //   window.scrollTo(0, top);
+    // },
     submitanswer(qid) {
       var searchel = JSON.parse(localStorage.getItem("answers")).find(
         answer => answer.qid === this.currentab
@@ -195,8 +190,12 @@ video {
   color: white;
 }
 .question-cont {
-  margin-top: 11rem;
-  margin-bottom: 11rem;
+  margin-top: 100px;
+  text-align: center;
+}
+
+.vtab{
+background-color: rgba(206, 205, 255, 0.075) !important;
 }
 #text {
   color: #b2ebf2 !important;
@@ -204,42 +203,26 @@ video {
   font-size: 1.3rem;
   font-weight: 700;
 }
+.qbody{
+  background-color: rgba(206, 205, 255, 0.075);
+  backdrop-filter: blur(8px);
+  border-right: 1px solid white;
+  border-left: 1px solid white;
+}
+.submit{
+  width: 100%;
+   background-color:  rgba(206, 205, 255, 0.075);
+  backdrop-filter: blur(8px);
+  border-right: 1px solid white;
+  border-left: 1px solid white;
+  border-bottom: 10px solid white;
+  padding-bottom: 20px;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
 v-img {
   text-align: center !important;
 }
-@media only screen and (max-width: 1264px) and (min-width: 992px) {
-  #text {
-    font-size: 1.1rem;
-  }
-  .question-cont {
-    margin-bottom: 8rem;
-  }
-}
-@media only screen and (max-width: 992px) and (min-width: 764px) {
-  #text {
-    font-size: 1.1rem;
-  }
-  .question-cont {
-    margin-bottom: 8rem;
-  }
-}
-@media only screen and (max-width: 764px) and (min-width: 576px) {
-  #text {
-    font-size: 1rem;
-  }
-  .question-cont {
-    margin-top: 9rem;
-    margin-bottom: 8rem;
-  }
-}
-@media only screen and (max-width: 576px) {
-  #text {
-    font-size: 0.9rem;
-  }
-  .question-cont {
-    height: 100vh;
-    margin-top: 3rem;
-  }
-}
+
 </style>
 
