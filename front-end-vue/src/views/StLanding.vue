@@ -1,5 +1,12 @@
 <template>
   <div id="app">
+    <video
+      src="https://video.wixstatic.com/video/b0567a_9aed8193b5b742d5ac48c51a8e5f9f4e/1080p/mp4/file.mp4"
+      autoplay
+      loop
+      playsinline
+      muted
+    ></video>
     <span class="bg"></span>
     <v-app id="inspire">
       <v-content>
@@ -100,6 +107,14 @@ export default {
 </script>
 
 <style scoped>
+video {
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
 .bg {
   width: 100%;
   height: 100%;

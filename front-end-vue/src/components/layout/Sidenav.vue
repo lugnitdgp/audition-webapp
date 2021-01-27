@@ -58,6 +58,10 @@ export default {
 .v-list-item {
 	cursor: pointer !important;
 }
+.nav-drawer{
+	background-color: rgba(0,0,0,0);
+	backdrop-filter: blur(6px);
+}
 
 #nav-bar {
   background-color: transparent;
