@@ -2,9 +2,8 @@
   <div id="app">
     <span class="bg"></span>
     <v-app id="inspire">
-      <div class="login-box">
-        
-        <v-row align="center" justify="center">
+      <div class="login-box" v-if="(((student.studentround >= audition.round) && (audition.status != 'res'))  || (su) || (member))">        
+        <v-row align="center" justify="center" v-if="audition.round != 0">
           <v-col class="text-center" cols="12">
             <h1 class="glitch">ATTEMPT</h1>
             <h4 class="glitch">ROUND {{audition.round}}</h4>
@@ -48,7 +47,27 @@
         </v-btn>
           </v-col>
         </v-row>
-        
+
+        <v-row align="center" justify="center" v-if="audition.round === 0">
+          <v-col class="text-center" cols="12">
+            <h1 class="glitch">AUDITIONS WILL START SOON</h1>
+          </v-col>
+        </v-row>  
+      </div>
+
+      <div class="login-box" v-if="((student.studentround < audition.round) || ((student.studentround === audition.round) && (audition.status === 'res')) && (!su && !member))">        
+        <v-row align="center" justify="center">
+          <v-col class="text-center" cols="12">
+            <h1 class="glitch">THANK YOU FOR YOUR PARTICIPATION</h1>
+            <h4 class="glitch">WE HOPE TO SEE YOU IN FURTHER GLUG EVENTS</h4>
+            <p v-if="audition.status === 'res'" class="glitch">
+              The results for {{audition.round}} are out now
+              <v-btn color="#B2EBF2" style="margin: 6px;">
+                <span style="color: #000 !important;">Results</span>
+              </v-btn>
+            </p>
+          </v-col>
+        </v-row>
       </div>
     </v-app>
   </div>
@@ -58,8 +77,6 @@
 import common from "@/services/common.js";
 import VueJwtDecode from "vue-jwt-decode";
 
-
-import axios from "axios";
 export default {
   components: {
    
@@ -68,25 +85,21 @@ export default {
     member: false,
     su: false,
     audition: [],
+    student: null,
   }),
   name: "Landing",
   beforeCreate() {
+    common.getStudent().then(res => {
+      this.student = res.data
+      console.log(this.student)
+    })
     common.getAuditionStatus().then(res => {
       console.log(res);
-       this.audition = res.data;
+      this.audition = res.data;
+      console.log(this.audition)
     });
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
-    } else {
-      axios.get().then(res => {
-        console.log(res.data);
-        if (res.data.isAdmin === false) {
-          console.log(res.data);
-        } else {
-          alert("You are the Admin. Accessing wrong route, re-routing");
-          this.$router.push("/AdLog");
-        }
-      });
     }
   },
 

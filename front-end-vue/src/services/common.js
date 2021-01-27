@@ -104,11 +104,15 @@ export default {
   submitRound(payload) {
     return Api().put('/student/answerround', payload, {
       headers: { Authorization: localStorage.getItem("token") }
-
     })
   },
   getResult() {
     return Api().get('getResult')
+  },
+  getStudent() {
+    return Api().get('/student/get', {
+      headers: { Authorization: localStorage.getItem("token") }
+  })
   }
 }
 
