@@ -69,7 +69,9 @@
 								<v-list-item three-line>
 									<v-list-item-content>
 										<div class="subtitle-2">COMPLETED</div>
-										<v-list-item-title class="display-2"></v-list-item-title>
+										<v-list-item-title class="display-2">
+											{{ completed.length }}
+										</v-list-item-title>
 										<v-list-item-subtitle></v-list-item-subtitle>
 									</v-list-item-content>
 
@@ -84,7 +86,9 @@
 								<v-list-item three-line>
 									<v-list-item-content>
 										<div class="subtitle-2">PENDING</div>
-										<v-list-item-title class="display-2"></v-list-item-title>
+										<v-list-item-title class="display-2">
+											{{ items.length - completed.length }}
+										</v-list-item-title>
 									</v-list-item-content>
 
 									<v-list-item-avatar tile size="90">
@@ -120,7 +124,7 @@
 										:items="items"
 										:search="search"
 										class="elevation-1"
-									>
+										>
 										<template v-slot:item="row">
 											<tr v-show="row.item.round >= tab + 1" >
 												<td>{{ row.item.name }}</td>
@@ -146,7 +150,7 @@
 										:items="items"
 										:search="search"
 										class="elevation-1"
-									>
+										>
 										<template v-slot:item="row">
 											<tr v-show="row.item.round >= tab + 1" @click="usercontrol(row.item)">
 												<td>{{ row.item.name }}</td>
@@ -188,6 +192,7 @@ export default {
 			search: "",
 			adminUser: "",
 			items: [],
+			completed: [],
 			expand: false,
 			darkmode: false,
 			round: null,
@@ -217,6 +222,8 @@ export default {
 			if (res.status === 200) {
 				console.log(res.data);
 				this.items = res.data.doc;
+				this.items = this.items.filter(item => item.role === 's')
+				this.completed = this.items.filter(item => ((item.status === 'selected') || (item.status === 'rejected')))
 			} else if (res.status === 401) {
 				alert("UNAUTHORISED ACCESS");
 				localStorage.clear("token");
