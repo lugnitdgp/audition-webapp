@@ -2,60 +2,80 @@
   <div id="app">
     <span class="bg"></span>
     <v-app id="inspire">
-      <div class="login-box" v-if="(((student.studentround >= audition.round) && (audition.status != 'res'))  || (su) || (member))">        
+      <div
+        class="login-box"
+        v-if="(((student.studentround >= audition.round) && (audition.status != 'res'))  || (su) || (member))"
+      >
         <v-row align="center" justify="center" v-if="audition.round != 0">
           <v-col class="text-center" cols="12">
             <h1 class="glitch">ATTEMPT</h1>
             <h4 class="glitch">ROUND {{audition.round}}</h4>
-              <p v-if="audition.status === 'res'">
-                The results for {{audition.round}} are out now
-                <v-btn @click="$router.push('/Result')" color="#B2EBF2" style="margin: 6px;">
-                  <span style="color: #000 !important;">Results</span>
-                </v-btn>
-              </p>
-              <p v-if="audition.status === 'def'">
-                The results for {{audition.round}} will be out soon
-              </p>
-              <p v-if="audition.status === 'ong'">
-                <v-btn @click="$router.push('/Audition')" color="#B2EBF2" v-if="audition.status === 'ong'" style="margin: 6px;">
-                  <span style="color: #000 !important;">ATTEMPT</span>
-                </v-btn>
-              </p>
+            <p v-if="audition.status === 'res'">
+              The results for {{audition.round}} are out now
+              <v-btn @click="$router.push('/Result')" color="#B2EBF2" style="margin: 6px;">
+                <span style="color: #000 !important;">Results</span>
+              </v-btn>
+            </p>
+            <p v-if="audition.status === 'def'">The results for {{audition.round}} will be out soon</p>
+            <p v-if="audition.status === 'ong'">
+              <v-btn
+                @click="$router.push('/Audition')"
+                color="#B2EBF2"
+                v-if="audition.status === 'ong'"
+                style="margin: 6px;"
+              >
+                <span style="color: #000 !important;">ATTEMPT</span>
+              </v-btn>
+            </p>
             <div class="rules">
-              RULES<br/>
-              1) Sample rule here, like lorem ipsum.<br/>
-              1) Sample rule here, like lorem ipsum.<br/>
-              1) Sample rule here, like lorem ipsum.<br/>
-              1) Sample rule here, like lorem ipsum.<br/>
-              1) Sample rule here, like lorem ipsum.<br/>
-              1) Sample rule here, like lorem ipsum.<br/>
-              1) Sample rule here, like lorem ipsum.<br/>
-              1) Sample rule here, like lorem ipsum.<br/>
-              1) Sample rule here, like lorem ipsum.<br/>
+              RULES
+              <br />1) Sample rule here, like lorem ipsum.
+              <br />1) Sample rule here, like lorem ipsum.
+              <br />1) Sample rule here, like lorem ipsum.
+              <br />1) Sample rule here, like lorem ipsum.
+              <br />1) Sample rule here, like lorem ipsum.
+              <br />1) Sample rule here, like lorem ipsum.
+              <br />1) Sample rule here, like lorem ipsum.
+              <br />1) Sample rule here, like lorem ipsum.
+              <br />1) Sample rule here, like lorem ipsum.
+              <br />
             </div>
-            <v-btn @click="$router.push('/Adlanding')" v-if="member === true" color="#B2EBF2" style="margin: 6px;">
+            <v-btn
+              @click="$router.push('/Adlanding')"
+              v-if="member === true"
+              color="#B2EBF2"
+              style="margin: 6px;"
+            >
               <span style="color: #000 !important;">MEMBER</span>
             </v-btn>
             <v-btn @click="$router.push('/root')" v-show="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">ROOT</span>
             </v-btn>
-            <v-btn @click="$router.push('/Adlanding')" v-show="su" color="#B2EBF2" style="margin: 6px;">
+            <v-btn
+              @click="$router.push('/Adlanding')"
+              v-show="su"
+              color="#B2EBF2"
+              style="margin: 6px;"
+            >
               <span style="color: #000 !important;">DASHBOARD</span>
             </v-btn>
             <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
-          <span style="color: #000 !important;">Logout</span>
-        </v-btn>
+              <span style="color: #000 !important;">Logout</span>
+            </v-btn>
           </v-col>
         </v-row>
-
+      </div>
+      <div class="login-box">
         <v-row align="center" justify="center" v-if="audition.round === 0">
           <v-col class="text-center" cols="12">
             <h1 class="glitch">AUDITIONS WILL START SOON</h1>
           </v-col>
-        </v-row>  
+        </v-row>
       </div>
-
-      <div class="login-box" v-if="((student.studentround < audition.round) || ((student.studentround === audition.round) && (audition.status === 'res')) && (!su && !member))">        
+      <div
+        class="login-box"
+        v-if="((student.studentround < audition.round) || ((student.studentround === audition.round) && (audition.status === 'res')) && (!su && !member))"
+      >
         <v-row align="center" justify="center">
           <v-col class="text-center" cols="12">
             <h1 class="glitch">THANK YOU FOR YOUR PARTICIPATION</h1>
@@ -78,25 +98,23 @@ import common from "@/services/common.js";
 import VueJwtDecode from "vue-jwt-decode";
 
 export default {
-  components: {
-   
-  },
+  components: {},
   data: () => ({
     member: false,
     su: false,
     audition: [],
-    student: null,
+    student: null
   }),
   name: "Landing",
   beforeCreate() {
     common.getStudent().then(res => {
-      this.student = res.data
-      console.log(this.student)
-    })
+      this.student = res.data;
+      console.log(this.student);
+    });
     common.getAuditionStatus().then(res => {
       console.log(res);
       this.audition = res.data;
-      console.log(this.audition)
+      console.log(this.audition);
     });
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
@@ -124,15 +142,14 @@ export default {
         alert(res.data);
         this.$router.push("/StLog");
       });
-	},
-	startCallBack: function(x) {
+    },
+    startCallBack: function(x) {
       console.log(x);
     },
     endCallBack: function(x) {
       console.log(x);
-    },
-  },
-  
+    }
+  }
 };
 </script>
 
@@ -150,21 +167,21 @@ export default {
   opacity: 0.7;
 }
 .login-box {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 90%;
-	max-width: 400px;
-	padding: 20px;
-	transform: translate(-50%, -50%);
-	backdrop-filter: blur(9px);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  max-width: 400px;
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(9px);
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 20px;
   box-shadow: 0px 0px 40px rgb(0, 2, 26);
   border: 0px solid rgb(1, 0, 46);
   border-bottom: 8px solid rgb(161, 183, 255);
 }
-.rules{
+.rules {
   color: #fff;
   width: 90%;
   max-width: 400px;
@@ -180,7 +197,7 @@ export default {
   font-weight: 700;
   text-transform: uppercase;
   position: relative;
-letter-spacing: 3px;
+  letter-spacing: 3px;
   text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
     -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
     0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
