@@ -84,7 +84,6 @@ export default {
 		source: String
 	},
 	created() {
-		localStorage.clear();
 		this.$vuetify.theme.dark = true;
 	},
 	methods: {

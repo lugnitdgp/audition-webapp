@@ -175,22 +175,7 @@ export default {
     };
   },
   beforeCreate() {
-    common.getUsers().then(res => {
-      if (res.status === 200) {
-        console.log(res.data);
-        this.items = res.data.doc;
-        this.items = this.items.filter(item => item.role === "s");
-        this.completed = this.items.filter(
-          item => item.status === "selected" || item.status === "rejected"
-        );
-      } else if (res.status === 401) {
-        alert("d0n'7 be 0v3r5m4r7");
-        localStorage.clear("token");
-        this.$router.push("/");
-      } else {
-        alert("No data");
-      }
-    });
+   
 
     common.getRounds().then(res => {
       console.log(res);
@@ -248,15 +233,7 @@ export default {
       common.updateRound(payload).then(res => {
         console.log(res);
       });
-      // this.loading1 = !this.loading1;
-      // var round = { time: this.time, questions: this.questions };
-      // common.addround(round).then(res => {
-      //   console.log(res.data);
-      //   this.loading1 = false;
-      //   this.snackbar = true;
-      //   this.questions = [];
-      //   localStorage.clear();
-      // });
+    
     }
   }
 };

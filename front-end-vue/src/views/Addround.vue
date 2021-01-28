@@ -183,7 +183,7 @@ export default {
         this.loading1 = false;
         this.snackbar = true;
         this.questions = [];
-        localStorage.clear();
+        localStorage.removeItem("questions");
       });
     },
     deleteques(index) {

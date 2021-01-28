@@ -9,9 +9,8 @@
         <v-row align="center" justify="center"  v-if="audition.round != 0">
 
           <v-col class="text-center" cols="12">
-            <h1 class="glitch">ATTEMPT</h1>
             <h4 class="glitch">ROUND {{audition.round}}</h4>
-            <p v-if="audition.status === 'res'">
+            <p  class="glitch" v-if="audition.status === 'res'">
               The results for {{audition.round}} are out now
               <v-btn @click="$router.push('/Result')" color="#B2EBF2" style="margin: 6px;">
                 <span style="color: #000 !important;">Results</span>
@@ -109,7 +108,7 @@
       </div>
       <div
         class="login-box"
-        v-if="((student.studentround < audition.round) || ((student.studentround === audition.round) && (audition.status === 'res')) && (!su && !member))"
+        v-if="(((student.studentround < audition.round) || ((student.studentround === audition.round) && (audition.status === 'res'))) && (!su && !member))"
       >
         <v-row align="center" justify="center">
           <v-col class="text-center" cols="12">
@@ -121,6 +120,22 @@
                 <span style="color: #000 !important;">Results</span>
               </v-btn>
             </p>
+          </v-col>
+        </v-row>
+      </div>
+       <div
+        class="login-box"
+        v-if="((student.studentround > audition.round) && ((audition.status === 'res')) && (!su && !member))"
+      >
+        <v-row align="center" justify="center">
+          <v-col class="text-center" cols="12">
+            <h1 class="glitch">The results for {{audition.round}} are out now </h1>
+              <v-btn color="#B2EBF2" style="margin: 6px;"  @click="$router.push('/Result')">
+                <span style="color: #000 !important;">Results</span>
+              </v-btn>
+               <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
+              <span style="color: #000 !important;">Logout</span>
+            </v-btn>
           </v-col>
         </v-row>
       </div>

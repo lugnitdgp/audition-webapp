@@ -94,7 +94,7 @@ export default {
           this.round = res.data.round.roundNo;
           this.currentab = this.questions[0]._id;
           console.log(this.questions);
-          setTimeout(this.submitround, this.time * 1000);
+          setTimeout(this.autosubmit, this.time * 1000);
         } else {
           this.$router.push("/");
         }
@@ -160,9 +160,22 @@ export default {
 
         common.submitRound(payload).then(() => {
           alert("Round Submitted");
-          this.$router.push("/Thanks");
+          // this.$router.push("/Thanks");
         });
       }
+    },
+    autosubmit(){ 
+     var payload = {
+          round: {
+            questions: JSON.parse(localStorage.getItem("answers")),
+            roundNo: this.round
+          }
+        };
+
+        common.submitRound(payload).then(() => {
+          alert("Round Submitted");
+          this.$router.push("/Thanks");
+        });
     }
   },
   watch: {
