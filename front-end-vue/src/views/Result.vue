@@ -3,20 +3,6 @@
     <span class="bg"></span>
     <h1 class="glitch" style="text-align: center;">Results for Round {{ audition.round }}</h1>
     <div class="table-wrap">
-    <!-- <v-data-table
-    dense
-      :headers="headers"
-      hide-default-footer
-      :items="items"
-      color="red"
-     class="elevation-1"
-    >
-      <template v-slot:item="row">
-        <tr v-show="row.item.status === 'unevaluated'">
-          <td>{{ row.item.name }}</td>
-        </tr>
-      </template>
-    </v-data-table> -->
     <div class="trowhead">selected students</div>
     <div v-for="(item,i) in items" :key="i">
       <div v-show="item.status === 'unevaluated'" class="trow">{{item.name}}</div>

@@ -113,6 +113,13 @@ export default {
     return Api().get('/student/get', {
       headers: { Authorization: localStorage.getItem("token") }
   })
+  },
+  updateRound(round){
+    return Api().put('updateRound', round, {
+      headers: { Authorization: localStorage.getItem("token") }
+    })
+
+
   }
 }
 

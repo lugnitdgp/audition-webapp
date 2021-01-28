@@ -35,16 +35,16 @@ module.exports = function (app, passport) {
   //      FLAG
   ///////////////////////////////
 
-  app.post("/flag", (req, res) => {
-    console.log("backend" + req.body._id);
-    const id = req.body._id;
-    UserModel.findByIdAndUpdate(id, { flag: true }, (err, user) => {
-      if (err) throw err;
-      else {
-        return res.json("done");
-      }
-    });
-  });
+  // app.post("/flag", (req, res) => {
+  //   console.log("backend" + req.body._id);
+  //   const id = req.body._id;
+  //   UserModel.findByIdAndUpdate(id, { flag: true }, (err, user) => {
+  //     if (err) throw err;
+  //     else {
+  //       return res.json("done");
+  //     }
+  //   });
+  // });
 
   /////////////////////////////////////////////////
   //          Rounds
