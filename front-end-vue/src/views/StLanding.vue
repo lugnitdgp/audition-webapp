@@ -6,7 +6,8 @@
         class="login-box"
         v-if="(((student.studentround >= audition.round) && (audition.status != 'res'))  || (su) || (member))"
       >
-        <v-row align="center" justify="center" v-if="audition.round != 0">
+        <v-row align="center" justify="center"  v-if="audition.round != 0">
+
           <v-col class="text-center" cols="12">
             <h1 class="glitch">ATTEMPT</h1>
             <h4 class="glitch">ROUND {{audition.round}}</h4>
@@ -27,19 +28,53 @@
                 <span style="color: #000 !important;">ATTEMPT</span>
               </v-btn>
             </p>
-            <div class="rules">
-              RULES
-              <br />1) Sample rule here, like lorem ipsum.
-              <br />1) Sample rule here, like lorem ipsum.
-              <br />1) Sample rule here, like lorem ipsum.
-              <br />1) Sample rule here, like lorem ipsum.
-              <br />1) Sample rule here, like lorem ipsum.
-              <br />1) Sample rule here, like lorem ipsum.
-              <br />1) Sample rule here, like lorem ipsum.
-              <br />1) Sample rule here, like lorem ipsum.
-              <br />1) Sample rule here, like lorem ipsum.
-              <br />
-            </div>
+          
+            <v-btn
+              @click="$router.push('/Adlanding')"
+              v-if="member === true"
+              color="#B2EBF2"
+              style="margin: 6px;"
+            >
+              <span style="color: #000 !important;">MEMBER</span>
+            </v-btn>
+            <v-btn @click="$router.push('/root')" v-show="su" color="#B2EBF2" style="margin: 6px;">
+              <span style="color: #000 !important;">ROOT</span>
+            </v-btn>
+            <v-btn
+              @click="$router.push('/Adlanding')"
+              v-show="su"
+              color="#B2EBF2"
+              style="margin: 6px;"
+            >
+              <span style="color: #000 !important;">DASHBOARD</span>
+            </v-btn>
+            <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
+              <span style="color: #000 !important;">Logout</span>
+            </v-btn>
+          </v-col>
+        </v-row>
+          <v-row align="center" justify="center"  v-if="audition.round === 0">
+          
+          <v-col class="text-center" cols="12">
+            <h1 class="glitch">START AUDITION PROCESS</h1>
+            <p v-if="audition.status === 'res'">
+             
+              <v-btn @click="$router.push('/Addround')" color="#B2EBF2" style="margin: 6px;">
+                <span style="color: #000 !important;">ADD ROUND</span>
+              </v-btn>
+            </p>
+            <p v-if="audition.status === 'def'">The results for {{audition.round}} will be out soon</p>
+            <p v-if="audition.status === 'ong'">
+              <v-btn
+                @click="$router.push('/Audition')"
+                color="#B2EBF2"
+                v-if="audition.status === 'ong'"
+                style="margin: 6px;"
+              >
+                <span style="color: #000 !important;">ATTEMPT</span>
+              </v-btn>
+            </p>
+       
             <v-btn
               @click="$router.push('/Adlanding')"
               v-if="member === true"
@@ -65,8 +100,8 @@
           </v-col>
         </v-row>
       </div>
-      <div class="login-box">
-        <v-row align="center" justify="center" v-if="audition.round === 0">
+      <div class="login-box"  v-if="((audition.round === 0) && (!su && !member))" >
+        <v-row align="center" justify="center">
           <v-col class="text-center" cols="12">
             <h1 class="glitch">AUDITIONS WILL START SOON</h1>
           </v-col>
