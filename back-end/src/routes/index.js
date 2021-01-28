@@ -502,7 +502,7 @@ module.exports = function (app, passport) {
           status: "res",
         });
         var rejected = "";
-        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }] }).then((userdoc) => {
+        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and:[{role: 's'}] }).then((userdoc) => {
           console.log(userdoc)
           if (!userdoc.length) {
             fs.writeFileSync(
@@ -585,6 +585,7 @@ module.exports = function (app, passport) {
         var qtype = req.body.qtype;
         var answer = req.body.answer;
         var roundNo = req.body.round;
+        var ansLink = req.body.ansLink;
 
         var currenttime = new Date().getTime();
 
