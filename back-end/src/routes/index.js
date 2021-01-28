@@ -19,8 +19,12 @@ module.exports = function (app, passport) {
   //////////////////////////////////////////
 
   app.post("/upload", upload.single("file"), (req, res) => {
-    if (req.file && req.file.path)
+    if (req.file && req.file.path) {
       return res.status(200).json({ link: req.file.path });
+    }
+    else{ 
+      return res.status(200).json({ link: false });
+    }
   });
 
   //////////////////////////////////

@@ -11,15 +11,6 @@ export default new Router({
       name: 'home',
       component: Home
     },
-    
-    {
-      path: '/AdLog',
-      name: 'AdminSignIn',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/AdminSignIn.vue')
-    },
     {
       path: '/StLog',
       name: 'StudentSignIn',
@@ -36,14 +27,7 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/StudentSignUp.vue')
     },
-    {
-      path: '/AdSign',
-      name: 'AdminSignUp',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/AdminSignUp.vue')
-    },
+  
     {
       path: '/Adlanding',
       name: 'AdLanding',
@@ -107,14 +91,6 @@ export default new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/Thanks.vue')
-    },
-    {
-      path: '/Test',
-      name: 'Test',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Test.vue')
     },
     {
       path: '/Result',
