@@ -34,7 +34,7 @@
       <v-file-input
         v-model="file"
         show-size
-        v-if="admin != true"
+        v-if="false"
         accept="image/png, image/jpeg, image/bmp, .zip"
         color="success"
         placeholder="Pick an image"

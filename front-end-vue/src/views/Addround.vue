@@ -276,21 +276,5 @@ export default {
     transform: rotate(360deg);
   }
 }
-/* .bg {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background: url("../assets/img/f.gif") no-repeat center center;
-	background-size: cover;
-	background-color: rgba(0, 0, 0, 0.5);
-	opacity: 0.4;
-} */
-/* 
-.bord {
-	border-left: 5px solid rgb(136, 255, 0) !important;
-	background-color: transparent !important;
-	box-shadow: -3px 0px 3px 0px rgb(6, 223, 6) !important;
-} */
+
 </style>

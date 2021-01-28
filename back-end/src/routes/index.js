@@ -19,8 +19,12 @@ module.exports = function (app, passport) {
   //////////////////////////////////////////
 
   app.post("/upload", upload.single("file"), (req, res) => {
-    if (req.file && req.file.path)
+    if (req.file && req.file.path) {
       return res.status(200).json({ link: req.file.path });
+    }
+    else{ 
+      return res.status(200).json({ link: false });
+    }
   });
 
   //////////////////////////////////
@@ -35,16 +39,16 @@ module.exports = function (app, passport) {
   //      FLAG
   ///////////////////////////////
 
-  app.post("/flag", (req, res) => {
-    console.log("backend" + req.body._id);
-    const id = req.body._id;
-    UserModel.findByIdAndUpdate(id, { flag: true }, (err, user) => {
-      if (err) throw err;
-      else {
-        return res.json("done");
-      }
-    });
-  });
+  // app.post("/flag", (req, res) => {
+  //   console.log("backend" + req.body._id);
+  //   const id = req.body._id;
+  //   UserModel.findByIdAndUpdate(id, { flag: true }, (err, user) => {
+  //     if (err) throw err;
+  //     else {
+  //       return res.json("done");
+  //     }
+  //   });
+  // });
 
   /////////////////////////////////////////////////
   //          Rounds

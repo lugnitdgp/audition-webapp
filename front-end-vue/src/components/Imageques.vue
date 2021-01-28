@@ -42,7 +42,7 @@
       ></v-textarea>
     <v-file-input
         v-model="file"
-        v-if="admin != true"
+        v-if="false"
         show-size
         accept="image/png, image/jpeg, image/bmp, .zip"
         color="success"
