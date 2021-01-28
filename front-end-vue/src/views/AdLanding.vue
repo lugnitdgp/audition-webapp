@@ -131,12 +131,6 @@
 												<td>{{ row.item.status }}</td>
 												
 												<td>{{ row.item.lastUser }}</td>
-											
-												<!-- <td>
-													<v-btn class="mx-2" light small @click="usercontrol(row.item)"
-														>Detail</v-btn
-													>
-												</td> -->
 											</tr>
 											
 										</template>
@@ -157,12 +151,7 @@
 												<td>{{ row.item.status }}</td>
 												
 												<td>{{ row.item.lastUser }}</td>
-											
-												<!-- <td>
-													<v-btn class="mx-2" light small @click="usercontrol(row.item)"
-														>Detail</v-btn
-													>
-												</td> -->
+								
 											</tr>
 											
 										</template>

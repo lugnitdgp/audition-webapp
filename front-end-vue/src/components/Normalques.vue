@@ -2,19 +2,6 @@
   <div>
     <v-container fluid>
       <div class="bord" style="background-color: rgba(0,0,0,0); width: 95%; max-width:700px; margin: 0 auto;">
-        <v-btn
-          @click="deleteques"
-          v-if="currentroute === 'Addround'"
-          class="ma-2"
-          outlined
-          fab
-          color="teal"
-        >
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-        <v-btn v-if="currentroute === 'Addround'" class="ma-2" outlined fab color="teal">
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
         <v-card-text class="justify-center" id="text">
           {{
           question.quesText
@@ -65,14 +52,12 @@ export default {
   name: "Normalques",
   props: ["question", "admin", "studentanswer"],
   data: () => ({
-    currentroute: String,
     test: [],
     answer: "",
     file: ""
   }),
 
   created() {
-    this.currentroute = this.$route.name;
     console.log(localStorage.getItem("answers"));
     if (localStorage.getItem("answers") != null) {
       var answers = JSON.parse(localStorage.getItem("answers"));
@@ -83,26 +68,7 @@ export default {
       });
     }
   },
-  // methods: {
-  //   deleteques() {
-  //     console.log(this.$props.question);
-  //     this.test = localStorage.getItem("questions");
-  //     console.log(this.test);
-  //     this.test = this.test.filter(
-  //       question => question.quesType !== this.$props.question.quesType
-  //     );
-
-  //     this.test.forEach((question, index) => {
-  //       if(question.quesType === this.$props.question.quesType){
-  //         this.test.splice(index, 1);
-  //         localStorage.setItem("questions", this.test);
-
-  //       }
-
-  //     });
-  //     console.log(this.test);
-  //   }
-  // },
+ 
 
   watch: {
     answer: {

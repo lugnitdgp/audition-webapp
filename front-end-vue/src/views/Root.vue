@@ -262,11 +262,20 @@ export default {
         });
       } else if (this.audition.status === "def") {
         this.loading = !this.loading;
-        common.pushResult().then(() => {
-          this.btntext = "PUSH ROUND";
+        common.pushResult().then(res => {
+          console.log(res)
+          if (res.data.status === true) {
+              this.btntext = "PUSH ROUND";
           this.audition.status = "res";
           this.loading = false;
           this.text = "Results published"
+
+          }else{
+            alert("n07 4ll s7uden75 ar3 3v4lu4t3d")
+          }
+        
+          
+          
         });
       }
       common.getAuditionStatus().then(res => {

@@ -538,10 +538,10 @@ module.exports = function (app, passport) {
                 );
               })
               .then(() => {
-                return res.status(201).send({ message: "Purge completed" });
+                return res.status(201).send({ status: true });
               })
           } else {
-            res.sendStatus(300)
+            res.status(200).send({ status: false })
           }
         })
 

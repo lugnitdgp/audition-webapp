@@ -6,11 +6,16 @@
       <v-container fluid>
         <v-card class="bord">
           <v-container>
-            <v-text-field v-model="time" label="time" solo></v-text-field>
+            <v-text-field
+            v-model="time"
+            label="round time"
+            outlined
+            color="error"
+            
+          ></v-text-field>
             <v-skeleton-loader class="mx-auto" v-if="loading === true" max-width="300" type="card"></v-skeleton-loader>
             <v-card v-if="loading === false">
               <v-textarea
-                name="input-7-4"
                 v-model="quesText"
                 label="Question text"
                 color="success"
@@ -51,7 +56,7 @@
               />
               <v-text-field v-model="options" v-if="quesType === 'mcq'" label="Options" solo></v-text-field>
               <v-spacer />
-              <v-text-field v-model="score" label="score" solo></v-text-field>
+              
               <v-spacer />
               <v-btn color="blue-grey" class="ma-2 white--text" @click="uploadForm">
                 Media
@@ -85,19 +90,29 @@
                 </template>
               </v-btn>
             </v-card>
-            <v-snackbar v-model="snackbar">
-              The round has been succesfully pushed.
-            </v-snackbar>
+            <v-snackbar v-model="snackbar">The round has been succesfully pushed.</v-snackbar>
             <v-spacer />
             <v-spacer />
             <v-spacer />
             <br />
 
             <v-container v-for="(question, index) in questions" :key="index">
+              <v-card>
+                <v-btn
+                  @click="deleteques(index)"
+                  class="ma-2"
+                  outlined
+                  fab
+                  color="teal"
+                >
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
               <Normalques :question="question" :admin="true" v-if="question[`quesType`] === 'nor'" />
               <Imageques :question="question" :admin="true" v-if="question[`quesType`] === 'img'" />
               <Mcq :question="question" :admin="true" v-if="question[`quesType`] === 'mcq'" />
               <Audio :question="question" :admin="true" v-if="question[`quesType`] === 'aud'" />
+              </v-card>
+
             </v-container>
           </v-container>
         </v-card>
@@ -171,7 +186,7 @@ export default {
         localStorage.clear();
       });
     },
-    removeTodo(index) {
+    deleteques(index) {
       this.questions.splice(index, 1);
     },
     async uploadForm() {

@@ -1,24 +1,7 @@
 <template>
   <v-container fluid>
     <div class="bord" style="background-color: rgba(0,0,0,0); width: 95%; max-width:700px; margin: 0 auto;">
-      <v-btn
-        v-if="currentroute === 'Addround'"
-        class="ma-2"
-        outlined
-        fab
-        color="teal"
-      >
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-      <v-btn
-        v-if="currentroute === 'Addround'"
-        class="ma-2"
-        outlined
-        fab
-        color="teal"
-      >
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
+  
       <v-card-text class="justify-center" id="text">{{
         question.quesText
       }}</v-card-text>
@@ -77,13 +60,13 @@ export default {
   name: "Imageques",
   props: ["question", "admin", "studentanswer"],
   data: () => ({
-    currentroute: String,
+    
     answer: "",
     file: ""
   }),
 
   created() {
-    this.currentroute = this.$route.name;
+    
     console.log(localStorage.getItem("answers"));
     if (localStorage.getItem("answers") != null) {
       var answers = JSON.parse(localStorage.getItem("answers"));
