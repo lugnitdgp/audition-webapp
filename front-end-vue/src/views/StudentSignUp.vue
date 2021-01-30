@@ -66,7 +66,7 @@
 							align="center"
 							justify="center"
 						>
-							<p align="center">Already have an account ? <a @click="$router.push('/StLog')" style="color: cyan !important;">Login</a></p>
+							<p align="center">Already have an account ? <a @click="$router.push('/login')" style="color: cyan !important;">Login</a></p>
 						</v-row>			
 					</v-container>
 				</v-card-actions>			
@@ -108,9 +108,9 @@ export default {
 			common.signup(user).then(res => {
 				alert(res.data.message);
 				if (res.data.success == true) {
-					this.$router.push("/StLog");
+					this.$router.push("/login");
 				} else {
-					this.$router.push("/StSign");
+					this.$router.push("/register");
 				}
 			});
 		},

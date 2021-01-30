@@ -6,20 +6,19 @@
         class="login-box"
         v-if="(((student.studentround >= audition.round) && (audition.status != 'res'))  || (su) || (member))"
       >
-        <v-row align="center" justify="center"  v-if="audition.round != 0">
-
+        <v-row align="center" justify="center" v-if="audition.round != 0">
           <v-col class="text-center" cols="12">
             <h4 class="glitch">ROUND {{audition.round}}</h4>
-            <p  class="glitch" v-if="audition.status === 'res'">
+            <p class="glitch" v-if="audition.status === 'res'">
               The results for {{audition.round}} are out now
-              <v-btn @click="$router.push('/Result')" color="#B2EBF2" style="margin: 6px;">
+              <v-btn @click="$router.push('/results')" color="#B2EBF2" style="margin: 6px;">
                 <span style="color: #000 !important;">Results</span>
               </v-btn>
             </p>
             <p v-if="audition.status === 'def'">The results for {{audition.round}} will be out soon</p>
             <p v-if="audition.status === 'ong'">
               <v-btn
-                @click="$router.push('/Audition')"
+                @click="$router.push('/audition')"
                 color="#B2EBF2"
                 v-if="audition.status === 'ong'"
                 style="margin: 6px;"
@@ -27,9 +26,9 @@
                 <span style="color: #000 !important;">ATTEMPT</span>
               </v-btn>
             </p>
-          
+
             <v-btn
-              @click="$router.push('/Adlanding')"
+              @click="$router.push('/admin')"
               v-if="member === true"
               color="#B2EBF2"
               style="margin: 6px;"
@@ -40,7 +39,7 @@
               <span style="color: #000 !important;">ROOT</span>
             </v-btn>
             <v-btn
-              @click="$router.push('/Adlanding')"
+              @click="$router.push('/admin')"
               v-show="su"
               color="#B2EBF2"
               style="margin: 6px;"
@@ -52,20 +51,18 @@
             </v-btn>
           </v-col>
         </v-row>
-          <v-row align="center" justify="center"  v-if="audition.round === 0">
-          
+        <v-row align="center" justify="center" v-if="audition.round === 0">
           <v-col class="text-center" cols="12">
             <h1 class="glitch">START AUDITION PROCESS</h1>
             <p v-if="audition.status === 'res'">
-             
-              <v-btn @click="$router.push('/Addround')" color="#B2EBF2" style="margin: 6px;">
+              <v-btn @click="$router.push('/addround')" color="#B2EBF2" style="margin: 6px;">
                 <span style="color: #000 !important;">ADD ROUND</span>
               </v-btn>
             </p>
             <p v-if="audition.status === 'def'">The results for {{audition.round}} will be out soon</p>
             <p v-if="audition.status === 'ong'">
               <v-btn
-                @click="$router.push('/Audition')"
+                @click="$router.push('/audition')"
                 color="#B2EBF2"
                 v-if="audition.status === 'ong'"
                 style="margin: 6px;"
@@ -73,20 +70,20 @@
                 <span style="color: #000 !important;">ATTEMPT</span>
               </v-btn>
             </p>
-       
+
             <v-btn
-              @click="$router.push('/Adlanding')"
+              @click="$router.push('/admin')"
               v-if="member === true"
               color="#B2EBF2"
               style="margin: 6px;"
             >
               <span style="color: #000 !important;">MEMBER</span>
             </v-btn>
-            <v-btn @click="$router.push('/root')" v-show="su" color="#B2EBF2" style="margin: 6px;">
+            <v-btn @click="$router.push('/root')" v-if="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">ROOT</span>
             </v-btn>
             <v-btn
-              @click="$router.push('/Adlanding')"
+              @click="$router.push('/admin')"
               v-show="su"
               color="#B2EBF2"
               style="margin: 6px;"
@@ -99,7 +96,7 @@
           </v-col>
         </v-row>
       </div>
-      <div class="login-box"  v-if="((audition.round === 0) && (!su && !member))" >
+      <div class="login-box" v-if="((audition.round === 0) && (!su && !member))">
         <v-row align="center" justify="center">
           <v-col class="text-center" cols="12">
             <h1 class="glitch">AUDITIONS WILL START SOON</h1>
@@ -114,7 +111,7 @@
           <v-col class="text-center" cols="12">
             <h1 class="glitch">THANK YOU FOR YOUR PARTICIPATION</h1>
             <h4 class="glitch">WE HOPE TO SEE YOU IN FURTHER GLUG EVENTS</h4>
-            <p v-if="audition.status === 'res'" class="glitch">
+            <p v-if="((audition.status === 'res') && (audition.round != 0))" class="glitch">
               The results for {{audition.round}} are out now
               <v-btn color="#B2EBF2" style="margin: 6px;">
                 <span style="color: #000 !important;">Results</span>
@@ -123,17 +120,17 @@
           </v-col>
         </v-row>
       </div>
-       <div
+      <div
         class="login-box"
-        v-if="((student.studentround > audition.round) && ((audition.status === 'res')) && (!su && !member))"
+        v-if="((student.studentround > audition.round) && ((audition.status === 'res')) && (!su && !member)) &&(audition.round != 0)"
       >
         <v-row align="center" justify="center">
           <v-col class="text-center" cols="12">
-            <h1 class="glitch">The results for {{audition.round}} are out now </h1>
-              <v-btn color="#B2EBF2" style="margin: 6px;"  @click="$router.push('/Result')">
-                <span style="color: #000 !important;">Results</span>
-              </v-btn>
-               <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
+            <h1 class="glitch">The results for {{audition.round}} are out now</h1>
+            <v-btn color="#B2EBF2" style="margin: 6px;" @click="$router.push('/results')">
+              <span style="color: #000 !important;">Results</span>
+            </v-btn>
+            <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">Logout</span>
             </v-btn>
           </v-col>
@@ -159,12 +156,10 @@ export default {
   beforeCreate() {
     common.getStudent().then(res => {
       this.student = res.data;
-      console.log(this.student);
     });
     common.getAuditionStatus().then(res => {
       console.log(res);
       this.audition = res.data;
-      console.log(this.audition);
     });
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
@@ -177,10 +172,9 @@ export default {
       this.$router.push("/");
     } else {
       var tok = VueJwtDecode.decode(localStorage.getItem("token").substring(6));
-      console.log(tok);
       if (tok.role === "m") {
         this.member = true;
-        console.log(this.member);
+        // console.log(this.member);
       } else if (tok.role === "su") {
         this.su = true;
       }
@@ -189,8 +183,9 @@ export default {
   methods: {
     logout() {
       common.logout().then(res => {
+        localStorage.clear();
         alert(res.data);
-        this.$router.push("/StLog");
+        this.$router.push("/login");
       });
     },
     startCallBack: function(x) {
@@ -215,6 +210,9 @@ export default {
   filter: blur(0px);
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0.7;
+}
+.nav-wrap {
+  height: 10vh;
 }
 .login-box {
   position: absolute;

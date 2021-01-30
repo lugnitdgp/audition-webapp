@@ -1,135 +1,141 @@
 <template>
-  <v-container>
-    <!-- <span class="bg"></span> -->
-    <h1 class="glitch" style="text-align: center;">RoundS</h1>
-    <div>
-      <v-expansion-panels v-model="panel">
-        <v-expansion-panel v-for="(item,i) in  rounds" :key="i">
-          <v-expansion-panel-header @click="datapopulate(item)">ROUND {{item.roundNo}}</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <v-container fluid>
-              <v-card class="bord">
-                <v-text-field v-model="time" label="round time" outlined color="error"></v-text-field>
-                <v-skeleton-loader
-                  class="mx-auto"
-                  v-if="loading === true"
-                  max-width="300"
-                  type="card"
-                ></v-skeleton-loader>
-                <v-card v-if="loading === false">
-                  <v-textarea
-                    v-model="quesText"
-                    label="Question text"
-                    color="success"
-                    outlined
-                    auto-grow
-                  ></v-textarea>
+  <v-app>
+    <Sidenav />
+    <v-container>
+      <h1 class="glitch" style="text-align: center;">RoundS</h1>
+      <div>
+        <v-expansion-panels v-model="panel">
+          <v-expansion-panel v-for="(item,i) in  rounds" :key="i">
+            <v-expansion-panel-header @click="datapopulate(item)">ROUND {{item.roundNo}}</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-container fluid>
+                <v-card class="bord">
+                  <v-text-field v-model="time" label="round time" outlined color="error"></v-text-field>
+                  <v-skeleton-loader
+                    class="mx-auto"
+                    v-if="loading === true"
+                    max-width="300"
+                    type="card"
+                  ></v-skeleton-loader>
+                  <v-card v-if="loading === false">
+                    <v-textarea
+                      v-model="quesText"
+                      label="Question text"
+                      color="success"
+                      outlined
+                      auto-grow
+                    ></v-textarea>
 
-                  <v-select
-                    :items="items"
-                    v-model="quesType"
-                    label="Question type"
-                    outlined
-                    color="success"
-                  ></v-select>
-                  <v-file-input
-                    :rules="rules"
-                    v-model="file"
-                    v-if="quesType === 'img'"
-                    show-size
-                    accept="image/png, image/jpeg, image/bmp"
-                    color="success"
-                    placeholder="Pick an image"
-                    prepend-icon="mdi-camera"
-                    label="Image"
-                    filled
-                  />
-                  <v-file-input
-                    :rules="rules"
-                    v-model="file"
-                    v-if="quesType === 'aud'"
-                    show-size
-                    color="deep-purple accent-4"
-                    accept="audio/ogg, audio/mp3, audio/aac audio/wav"
-                    placeholder="Pick a audio"
-                    prepend-icon="mdi-music"
-                    label="Sound"
-                    filled
-                  />
-                  <v-text-field v-model="options" v-if="quesType === 'mcq'" label="Options" solo></v-text-field>
-                  <v-spacer />
+                    <v-select
+                      :items="items"
+                      v-model="quesType"
+                      label="Question type"
+                      outlined
+                      color="success"
+                    ></v-select>
+                    <v-file-input
+                      :rules="rules"
+                      v-model="file"
+                      v-if="quesType === 'img'"
+                      show-size
+                      accept="image/png, image/jpeg, image/bmp"
+                      color="success"
+                      placeholder="Pick an image"
+                      prepend-icon="mdi-camera"
+                      label="Image"
+                      filled
+                    />
+                    <v-file-input
+                      :rules="rules"
+                      v-model="file"
+                      v-if="quesType === 'aud'"
+                      show-size
+                      color="deep-purple accent-4"
+                      accept="audio/ogg, audio/mp3, audio/aac audio/wav"
+                      placeholder="Pick a audio"
+                      prepend-icon="mdi-music"
+                      label="Sound"
+                      filled
+                    />
+                    <v-text-field v-model="options" v-if="quesType === 'mcq'" label="Options" solo></v-text-field>
+                    <v-spacer />
 
-                  <v-spacer />
-                  <v-btn color="blue-grey" class="ma-2 white--text" @click="uploadForm">
-                    Media
-                    <v-icon right dark>mdi-cloud-upload</v-icon>
-                  </v-btn>
-
-                  <v-spacer />
-                  <v-spacer />
-                  <v-btn
-                    color="blue-grey"
-                    :disabled="quesText === ''"
-                    class="ma-2 white--text"
-                    @click="addQues"
-                  >
-                    Question
-                    <v-icon right dark>mdi-plus</v-icon>
-                  </v-btn>
-                  <v-btn
-                    :loading="loading1"
-                    :disabled="loading1"
-                    color="blue-grey"
-                    class="ma-2 white--text"
-                    @click="saveRound(item)"
-                  >
-                    Save Round
-                    <v-icon right dark>mdi-plus</v-icon>
-                    <template v-slot:loader>
-                      <span class="custom-loader">
-                        <v-icon light>mdi-cached</v-icon>
-                      </span>
-                    </template>
-                  </v-btn>
-                </v-card>
-                <v-snackbar v-model="snackbar">The round has been succesfully pushed.</v-snackbar>
-                <v-spacer />
-                <v-spacer />
-                <v-spacer />
-                <br />
-
-                <v-container v-for="(question, index) in questions" :key="index">
-                  <v-card>
-                    <v-btn @click="deleteques(index)" class="ma-2" outlined fab color="teal">
-                      <v-icon>mdi-delete</v-icon>
+                    <v-spacer />
+                    <v-btn color="blue-grey" class="ma-2 white--text" @click="uploadForm">
+                      Media
+                      <v-icon right dark>mdi-cloud-upload</v-icon>
                     </v-btn>
-                    <Normalques
-                      :question="question"
-                      :admin="true"
-                      v-if="question[`quesType`] === 'nor'"
-                    />
-                    <Imageques
-                      :question="question"
-                      :admin="true"
-                      v-if="question[`quesType`] === 'img'"
-                    />
-                    <Mcq :question="question" :admin="true" v-if="question[`quesType`] === 'mcq'" />
-                    <Audio
-                      :question="question"
-                      :admin="true"
-                      v-if="question[`quesType`] === 'aud'"
-                    />
-                  </v-card>
-                </v-container>
-              </v-card>
-            </v-container>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </div>
 
-    <v-snackbar v-model="snackbar">Be patient</v-snackbar>
-  </v-container>
+                    <v-spacer />
+                    <v-spacer />
+                    <v-btn
+                      color="blue-grey"
+                      :disabled="quesText === ''"
+                      class="ma-2 white--text"
+                      @click="addQues"
+                    >
+                      Question
+                      <v-icon right dark>mdi-plus</v-icon>
+                    </v-btn>
+                    <v-btn
+                      :loading="loading1"
+                      :disabled="loading1"
+                      color="blue-grey"
+                      class="ma-2 white--text"
+                      @click="saveRound(item)"
+                    >
+                      Save Round
+                      <v-icon right dark>mdi-plus</v-icon>
+                      <template v-slot:loader>
+                        <span class="custom-loader">
+                          <v-icon light>mdi-cached</v-icon>
+                        </span>
+                      </template>
+                    </v-btn>
+                  </v-card>
+                  <v-snackbar v-model="snackbar">The round has been succesfully pushed.</v-snackbar>
+                  <v-spacer />
+                  <v-spacer />
+                  <v-spacer />
+                  <br />
+
+                  <v-container v-for="(question, index) in questions" :key="index">
+                    <v-card>
+                      <v-btn @click="deleteques(index)" class="ma-2" outlined fab color="teal">
+                        <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                      <Normalques
+                        :question="question"
+                        :admin="true"
+                        v-if="question[`quesType`] === 'nor'"
+                      />
+                      <Imageques
+                        :question="question"
+                        :admin="true"
+                        v-if="question[`quesType`] === 'img'"
+                      />
+                      <Mcq
+                        :question="question"
+                        :admin="true"
+                        v-if="question[`quesType`] === 'mcq'"
+                      />
+                      <Audio
+                        :question="question"
+                        :admin="true"
+                        v-if="question[`quesType`] === 'aud'"
+                      />
+                    </v-card>
+                  </v-container>
+                </v-card>
+              </v-container>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </div>
+
+      <v-snackbar v-model="snackbar">Be patient</v-snackbar>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
@@ -138,14 +144,15 @@ import Audio from "../components/Audio";
 import Normalques from "../components/Normalques";
 import Imageques from "../components/Imageques";
 import Mcq from "../components/Mcq";
+import Sidenav from "../components/layout/Sidenav";
 
 export default {
   components: {
     Audio,
-    // draggable,
     Normalques,
     Imageques,
-    Mcq
+    Mcq,
+    Sidenav
   },
   data() {
     return {
@@ -175,8 +182,6 @@ export default {
     };
   },
   beforeCreate() {
-   
-
     common.getRounds().then(res => {
       console.log(res);
       this.rounds = res.data;
@@ -233,25 +238,12 @@ export default {
       common.updateRound(payload).then(res => {
         console.log(res);
       });
-    
     }
   }
 };
 </script>
 
 <style scoped>
-/* .bg {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: url("../assets/img/f.gif") no-repeat center center;
-  background-size: cover;
-  filter: blur(0px);
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0.7;
-} */
 .table-wrap {
   width: 90%;
   max-width: 600px;

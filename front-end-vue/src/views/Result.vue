@@ -55,9 +55,9 @@ export default {
   left: 0;
   background: url("../assets/img/f.gif") no-repeat center center;
   background-size: cover;
-  filter: blur(0px);
+  filter: blur(2px);
   background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0.7;
+  opacity: 0.5;
 }
 .table-wrap{
   width: 90%;
@@ -77,6 +77,7 @@ export default {
   opacity: 1 !important;
   background-color: rgba(0, 2, 37, 0.787);
   backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(10px);
   border: 0px solid #fff;
   padding: 5px;
   text-transform: uppercase;
@@ -89,8 +90,8 @@ export default {
   color: #fff !important;
   width: 100%;
   opacity: 1 !important;
-  background-color: rgba(255,255,255,0.08);
   backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(10px);
   border: 0px solid #fff;
   padding: 10px;
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <span class="bg"></span>
+    <Sidenav />
     <v-app id="inspire">
       <template>
         <v-container>
@@ -152,9 +152,8 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-snackbar v-model="snackbar">
-          {{ text }}
-        </v-snackbar>
+        <v-snackbar v-model="snackbar">{{ text }}</v-snackbar>
+        <v-snackbar v-model="roleSnackbar" class="text-center" color="success" :timeout="2000">Role Changed</v-snackbar>
       </template>
     </v-app>
   </div>
@@ -163,10 +162,13 @@
 <script>
 import common from "@/services/common.js";
 import VueJwtDecode from "vue-jwt-decode";
+import Sidenav from "../components/layout/Sidenav";
+
 export default {
   name: "Landing",
-  components: {},
-
+  components: {
+    Sidenav
+  },
   data() {
     return {
       drawer: false,
@@ -176,6 +178,7 @@ export default {
       darkmode: false,
       loading: false,
       snackbar: false,
+      roleSnackbar: false,
       text: "",
       roles: ["Super User", "Member", "Student"],
       item: [],
@@ -186,7 +189,6 @@ export default {
       btntext: "",
       search: "",
       clearance: 0,
-
       headers: [
         { text: "FULL NAME", align: "start", value: "name" },
         { text: "STATUS", align: "start", value: "status" },
@@ -243,13 +245,13 @@ export default {
   },
   methods: {
     btnHandler() {
+      this.loading = !this.loading;
       if (this.audition.status === "ong") {
-        this.loading = !this.loading;
         common.stopRound().then(() => {
           this.btntext = "PUBLISH RESULT";
           this.audition.status = "def";
           this.loading = false;
-          this.text = "Round has been stopped"
+          this.text = "Round has been stopped";
         });
       } else if (this.audition.status === "res") {
         this.loading = !this.loading;
@@ -258,24 +260,20 @@ export default {
           this.audition.round += 1;
           this.audition.status = "ong";
           this.loading = false;
-          this.text = "Round has been successfully pushed"
+          this.text = "Round has been successfully pushed";
         });
       } else if (this.audition.status === "def") {
         this.loading = !this.loading;
         common.pushResult().then(res => {
-          console.log(res)
+          console.log(res);
           if (res.data.status === true) {
-              this.btntext = "PUSH ROUND";
-          this.audition.status = "res";
-          this.loading = false;
-          this.text = "Results published"
-
-          }else{
-            alert("n07 4ll s7uden75 ar3 3v4lu4t3d")
+            this.btntext = "PUSH ROUND";
+            this.audition.status = "res";
+            this.loading = false;
+            this.text = "Results published";
+          } else {
+            alert("n07 4ll s7uden75 ar3 3v4lu4t3d");
           }
-        
-          
-          
         });
       }
       common.getAuditionStatus().then(res => {
@@ -305,20 +303,19 @@ export default {
             clearance: this.clearance
           };
           common.setClearance(b).then(res => {
-            alert(res.data);
+            console.log(res.data)
+            this.roleSnackbar = true
             this.dialog = false;
           });
 
-          ///
           common.getUsers().then(res => {
             if (res.status === 200) {
               console.log(res.data);
               this.items = res.data.doc;
             }
           });
-          //
         } else {
-          alert("Accepted");
+          this.roleSnackbar = true
           this.dialog = false;
           common.getUsers().then(res => {
             if (res.status === 200) {

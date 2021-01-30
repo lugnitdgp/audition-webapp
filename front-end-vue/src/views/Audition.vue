@@ -120,15 +120,9 @@ export default {
     logout() {
       common.logout().then(res => {
         alert(res.data);
-        this.$router.push("/StLog");
+        this.$router.push("/login");
       });
     },
-    // goto(refName) {
-    //   var element = this.$refs[refName];
-    //   var top = element.offsetTop - 100;
-
-    //   window.scrollTo(0, top);
-    // },
     submitanswer(qid) {
       var searchel = JSON.parse(localStorage.getItem("answers")).find(
         answer => answer.qid === this.currentab
@@ -160,7 +154,6 @@ export default {
 
         common.submitRound(payload).then(() => {
           alert("Round Submitted");
-          // this.$router.push("/Thanks");
         });
       }
     },
@@ -174,7 +167,7 @@ export default {
 
         common.submitRound(payload).then(() => {
           alert("Round Submitted");
-          this.$router.push("/Thanks");
+          this.$router.push("/thanks");
         });
     }
   },

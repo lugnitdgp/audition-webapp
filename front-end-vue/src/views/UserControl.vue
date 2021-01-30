@@ -9,15 +9,11 @@
     </v-container>
     <v-container fluid>
       <v-row>
-        <v-col md="9">
+        <v-col md="8">
           <v-card>
-            <v-toolbar color="cyan" dark flat>
-              <v-toolbar-title color="info"
-                >Answers across all rounds</v-toolbar-title
-              >
-
+            <v-toolbar dark flat>
               <template v-slot:extension>
-                <v-tabs v-model="tab" align-with-title color="#B2EBF2">
+                <v-tabs v-model="tab" align-with-title color="#B2EBF2" show-arrows>
                   <v-tabs-slider color="#9fef00"></v-tabs-slider>
 
                   <v-tab v-for="round in answers" :key="round.roundNo">
@@ -63,7 +59,7 @@
             </v-tabs-items>
           </v-card>
         </v-col>
-        <v-col md="3">
+        <v-col md="4">
           <div>
             <v-alert outlined color="#00FFFF">
               <div class="title"></div>

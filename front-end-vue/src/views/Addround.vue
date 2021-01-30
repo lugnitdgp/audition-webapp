@@ -3,7 +3,7 @@
     <span class="bg"></span>
     <Sidenav />
     <v-content>
-      <v-container fluid>
+      <v-container>
         <v-card class="bord">
           <v-container>
             <v-text-field
@@ -133,7 +133,6 @@ export default {
   components: {
     Sidenav,
     Audio,
-    // draggable,
     Normalques,
     Imageques,
     Mcq
@@ -207,7 +206,6 @@ export default {
     else localStorage.removeItem("questions");
   },
   beforeCreate() {
-    console.log(localStorage.getItem("token"));
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else if (
@@ -223,7 +221,6 @@ export default {
   watch: {
     questions: {
       handler() {
-        console.log("Questions changed!");
         localStorage.setItem("questions", JSON.stringify(this.questions));
       },
       deep: true

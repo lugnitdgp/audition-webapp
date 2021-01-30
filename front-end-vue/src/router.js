@@ -12,7 +12,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/StLog',
+      path: '/login',
       name: 'StudentSignIn',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -20,7 +20,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/StudentSignIn.vue')
     },
     {
-      path: '/StSign',
+      path: '/register',
       name: 'StudentSignUp',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -29,7 +29,7 @@ export default new Router({
     },
   
     {
-      path: '/Adlanding',
+      path: '/admin',
       name: 'AdLanding',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -37,7 +37,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/AdLanding.vue')
     },
     {
-      path: '/Stlanding',
+      path: '/event',
       name: 'StLanding',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -45,7 +45,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/StLanding.vue')
     },
     {
-      path: '/UserControl',
+      path: '/user',
       name: 'UserControl',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -53,7 +53,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/UserControl.vue')
     },
     {
-      path: '/Addround',
+      path: '/addround',
       name: 'Addround',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -62,7 +62,7 @@ export default new Router({
     },
  
     {
-      path: '/Audition',
+      path: '/audition',
       name: 'Audition',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -78,7 +78,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/Root.vue')
     },
     {
-      path: '/Thanks',
+      path: '/thanks',
       name: 'Thanks',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -86,7 +86,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/Thanks.vue')
     },
     {
-      path: '/Result',
+      path: '/results',
       name: 'Result',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -94,7 +94,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/Result.vue')
     },
     {
-      path: '/rounds',
+      path: '/edit',
       name: 'Rounds',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
