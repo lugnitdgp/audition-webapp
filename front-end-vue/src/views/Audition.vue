@@ -20,7 +20,14 @@
       </v-app-bar>
     </v-card>
 
+
     <v-container class="question-cont">
+      <v-tabs v-model="tab" vertical>
+             <v-tab
+          v-for="(question, i) in questions"
+          :key="i"
+          @click="submitanswer(question._id)"
+        >QUES {{ i + 1 }}</v-tab></v-tabs>
       <v-tabs dark show-arrows v-model="tab" class="vtab">
         <v-tabs-slider color="teal lighten-3" ></v-tabs-slider>
 
