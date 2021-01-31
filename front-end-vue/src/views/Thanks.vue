@@ -37,16 +37,16 @@ export default {
   name: "Landing",
   beforeCreate() {
     common.getAuditionStatus().then(res => {
-      console.log(res);
+      // console.log(res);
       this.audition = res.data;
     });
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
       axios.get().then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.isAdmin === false) {
-          console.log(res.data);
+          // console.log(res.data);
         } else {
           alert("You are the Admin. Accessing wrong route, re-routing");
           this.$router.push("/");

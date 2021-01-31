@@ -158,7 +158,6 @@ export default {
       this.student = res.data;
     });
     common.getAuditionStatus().then(res => {
-      console.log(res);
       this.audition = res.data;
     });
     if (localStorage.getItem("token") === null) {
@@ -174,7 +173,6 @@ export default {
       var tok = VueJwtDecode.decode(localStorage.getItem("token").substring(6));
       if (tok.role === "m") {
         this.member = true;
-        // console.log(this.member);
       } else if (tok.role === "su") {
         this.su = true;
       }
@@ -182,9 +180,9 @@ export default {
   },
   methods: {
     logout() {
+      // eslint-disable-next-line no-unused-vars
       common.logout().then(res => {
         localStorage.clear();
-        alert(res.data);
         this.$router.push("/login");
       });
     },

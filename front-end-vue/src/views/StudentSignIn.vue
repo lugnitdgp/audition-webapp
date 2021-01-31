@@ -120,8 +120,6 @@ export default {
           this.$router.push("/event");
         } else {
           this.loading = false;
-          alert(res.data.message);
-          this.$router.push("/");
         }
       });
     },

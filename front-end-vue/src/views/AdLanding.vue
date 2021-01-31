@@ -54,10 +54,23 @@
                     <div class="subtitle-2">PENDING</div>
                     <v-list-item-title class="display-2">{{ items.length - completed.length }}</v-list-item-title>
                   </v-list-item-content>
-
                   <v-list-item-avatar tile size="90">
                     <v-img src="../assets/img/w.png"></v-img>
                   </v-list-item-avatar>
+                </v-list-item>
+              </v-alert>
+            </v-col>
+          </v-row>
+          <v-row
+            align="center"
+            justify="center"
+          >
+            <v-col cols="12" sm="6" lg="3" align="center" justify="center">
+              <v-alert outlined color="success">
+                <v-list-item v-for="(item,i) in round" :key="i">
+                  <v-list-item-content>
+                    <div class="subtitle-3">ROUND {{ i+1 }} - {{ count(i) }}</div>
+                  </v-list-item-content>
                 </v-list-item>
               </v-alert>
             </v-col>
@@ -222,20 +235,11 @@ export default {
       });
       window.open(routeData.href, "_blank");
     },
-    purge() {
-      common.purge().then(res => {
-        alert(res.data.message);
-        location.reload();
-      });
+    count(index) {
+      return (this.items.filter(item => item.round >= index + 1)).length;
     }
   },
   watch: {
-    tab: {
-      handler() {
-        console.log(this.tab);
-      },
-      deep: true
-    },
     darkmode(newvalue) {
       this.$vuetify.theme.dark = newvalue;
     }
@@ -246,6 +250,9 @@ export default {
 <style scoped>
 tr, .details {
   cursor: pointer;
+}
+.subtitle-3 {
+  font-size: 1.5rem;
 }
 
 </style>

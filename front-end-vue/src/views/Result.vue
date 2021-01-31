@@ -28,14 +28,13 @@ export default {
   },
   beforeCreate() {
     common.getAuditionStatus().then((res) => {
-      console.log(res);
+      // console.log(res);
       this.audition = res.data;
       if (this.audition.status !== "res") {
         console.log("lol");
       }
     });
     common.getResult().then((res) => {
-      console.log(res);
       this.items = res.data;
       console.log(this.items);
     });

@@ -53,6 +53,7 @@
       </v-btn>
       </div>
     </v-container>
+    <v-snackbar v-model="submitSnackbar" elevation="12" success>ROund Submitted</v-snackbar>
   </div>
 </template>
 
@@ -85,7 +86,8 @@ export default {
     time: null,
     round: null,
     tab: null,
-    currentab: null
+    currentab: null,
+    submitSnackbar: false
   }),
 
   beforeCreate() {
@@ -93,14 +95,12 @@ export default {
       this.$router.push("/");
     } else {
       common.getstudentRound().then(res => {
-        console.log(res.data);
         let t = res.data.time - 2000 - new Date().getTime();
         if (t > 0) {
           this.time = Math.round(t / 1000);
           this.questions = res.data.round.questions;
           this.round = res.data.round.roundNo;
           this.currentab = this.questions[0]._id;
-          console.log(this.questions);
           setTimeout(this.autosubmit, this.time * 1000);
         } else {
           this.$router.push("/");
@@ -115,7 +115,6 @@ export default {
       this.$router.push("/");
     } else {
       var tok = VueJwtDecode.decode(localStorage.getItem("token").substring(6));
-      console.log(tok);
       if (tok.role === "m") {
         this.member = true;
       } else if (tok.role === "su") {
@@ -126,7 +125,6 @@ export default {
   methods: {
     logout() {
       common.logout().then(res => {
-        alert(res.data);
         this.$router.push("/login");
       });
     },
@@ -160,7 +158,7 @@ export default {
         };
 
         common.submitRound(payload).then(() => {
-          alert("Round Submitted");
+          this.submitSnackbar = true
         });
       }
     },

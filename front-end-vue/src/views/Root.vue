@@ -12,10 +12,14 @@
               </span>
             </template>
           </v-btn>
-          <v-card>
-            <p>ROUND : {{ audition.round }}</p>
-            <p>STATUS : {{ audition.status }}</p>
-          </v-card>
+          <v-container>
+            <v-alert outlined color="error">
+              <div class="title">Round: {{ audition.round }}</div>
+            </v-alert>
+            <v-alert outlined color="purple">
+              <div class="title">Status: {{ audition.status }}</div>
+            </v-alert>
+          </v-container>
 
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" hide-details></v-text-field>
           <v-card>
@@ -153,7 +157,12 @@
           </v-card>
         </v-dialog>
         <v-snackbar v-model="snackbar">{{ text }}</v-snackbar>
-        <v-snackbar v-model="roleSnackbar" class="text-center" color="success" :timeout="2000">Role Changed</v-snackbar>
+        <v-snackbar
+          v-model="roleSnackbar"
+          class="text-center"
+          color="success"
+          :timeout="2000"
+        >Role Changed</v-snackbar>
       </template>
     </v-app>
   </div>
@@ -303,8 +312,8 @@ export default {
             clearance: this.clearance
           };
           common.setClearance(b).then(res => {
-            console.log(res.data)
-            this.roleSnackbar = true
+            console.log(res.data);
+            this.roleSnackbar = true;
             this.dialog = false;
           });
 
@@ -315,7 +324,7 @@ export default {
             }
           });
         } else {
-          this.roleSnackbar = true
+          this.roleSnackbar = true;
           this.dialog = false;
           common.getUsers().then(res => {
             if (res.status === 200) {

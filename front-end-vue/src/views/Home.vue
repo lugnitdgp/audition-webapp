@@ -78,7 +78,6 @@ export default {
   },
   beforeCreate() {
     var token = this.$route.query.token;
-    console.log(token);
     if (token != null) {
       token = "Bearer " + token;
       localStorage.setItem("token", token);

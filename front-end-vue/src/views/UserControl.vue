@@ -3,7 +3,7 @@
     <v-container fluid>
       <v-alert outlined color="#00FFFF">
         <h2 class="text-center">
-          WELCOME TO THE DETAILS OF {{ details.name.toUpperCase() }}
+          {{ details.name.toUpperCase() }} - {{ details.email }}
         </h2>
       </v-alert>
     </v-container>
@@ -149,6 +149,7 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-snackbar v-model="statusSnackbar" color="success" elevation="12" app>{{ statusUpdate }}</v-snackbar>
   </v-app>
 </template>
 
@@ -183,6 +184,8 @@ export default {
       status: "",
       clearance: true,
       options: ["unevaluated", "selected", "review", "rejected"],
+      statusSnackbar: false,
+      statusUpdate: ""
     };
   },
   beforeCreate() {
@@ -279,9 +282,11 @@ export default {
       }
     },
     updateEntry() {
+      this.statusSnackbar = true;
       var a = this.details;
       common.updateEntry(a).then((res) => {
-        alert(res.data.message);
+        this.statusUpdate = res.data.message;
+        // alert(res.data.message);
       });
     },
   },
