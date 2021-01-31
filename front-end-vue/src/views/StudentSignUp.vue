@@ -2,7 +2,6 @@
   <v-app id="inspire">
     <v-content>
       <span class="bg"></span>
-      <Sidenav />
       <div class="login-box">
         <h2 class="glitch">REGISTER</h2>
         <v-form class="elevation-24">
@@ -97,12 +96,9 @@
 <script>
 /* eslint-disable */
 import common from "@/services/common.js";
-import Sidenav from "../components/layout/Sidenav";
-import axios from "axios";
+
 export default {
-  components: {
-    Sidenav
-  },
+  components: {},
   data: () => ({
     drawer: false,
     UserName: "",

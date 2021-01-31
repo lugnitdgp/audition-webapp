@@ -2,7 +2,6 @@
   <v-app id="inspire">
     <v-content>
       <span class="bg"></span>
-      <Sidenav />
       <div class="login-box">
         <h2 class="glitch">LOGIN</h2>
         <v-form class="elevaton-23">
@@ -88,12 +87,9 @@
 
 <script>
 import common from "@/services/common.js";
-import Sidenav from "../components/layout/Sidenav";
 
 export default {
-  components: {
-    Sidenav
-  },
+  components: {},
   data: () => ({
     drawer: false,
     email: "",

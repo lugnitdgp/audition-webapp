@@ -37,7 +37,7 @@
       </v-list>
       <v-list nav dense v-if="!su || !member">
         <v-list-item-group active-class="deep-purple--text text--lighten-2">
-			<router-link tag="span" to="/event">
+          <router-link tag="span" to="/event">
             <v-list-item>
               <v-list-item-icon>
                 <v-icon>mdi-home</v-icon>
@@ -77,6 +77,12 @@
               <v-list-item-title>Dashboard</v-list-item-title>
             </v-list-item>
           </router-link>
+          <v-list-item @click="logout">
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -85,6 +91,7 @@
 
 <script>
 import VueJwtDecode from "vue-jwt-decode";
+import common from "@/services/common.js";
 
 export default {
   name: "Sidenav",
@@ -100,6 +107,14 @@ export default {
       this.member = true;
     } else if (tok.role === "su") {
       this.su = true;
+    }
+  },
+  methods : {
+    logout() {
+      // eslint-disable-next-line no-unused-vars
+      common.logout().then(res => {
+        this.$router.push("/login");
+      });
     }
   }
 };

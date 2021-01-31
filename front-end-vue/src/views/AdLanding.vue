@@ -61,10 +61,7 @@
               </v-alert>
             </v-col>
           </v-row>
-          <v-row
-            align="center"
-            justify="center"
-          >
+          <v-row align="center" justify="center" v-if="round != 0">
             <v-col cols="12" sm="6" lg="3" align="center" justify="center">
               <v-alert outlined color="success">
                 <v-list-item v-for="(item,i) in round" :key="i">
@@ -86,56 +83,75 @@
                   label="Search"
                   hide-details
                 ></v-text-field>
-                <v-tabs dark background-color="teal darken-3" show-arrows v-model="tab">
-                  <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
+                <div v-if="round > 0">
+                  <v-tabs dark background-color="teal darken-3" show-arrows v-model="tab">
+                    <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
-                  <v-tab v-for="i in round" :key="i">Round {{ i }}</v-tab>
-                </v-tabs>
-                <v-tabs-items v-model="tab">
-                  <v-tab-item v-for="i in round" :key="i">
-                    <v-container v-if="i < round">
-                      <v-data-table
-                        :headers="headers"
-                        hide-default-footer
-                        :items="items"
-                        :search="search"
-                        class="elevation-1"
-                      >
-                        <template v-slot:item="row">
-                          <tr v-show="row.item.round >= tab + 1">
-                            <td>{{ row.item.name }}</td>
-                            <td>{{ row.item.status }}</td>
-                            <td>{{ row.item.lastUser }}</td>
-                            <td @click="usercontrol(row.item)" class="details">
-                              <v-icon>mdi-open-in-new</v-icon>
-                            </td>
-                          </tr>
-                        </template>
-                      </v-data-table>
-                    </v-container>
-                    <v-container v-if="i === round ">
-                      <v-data-table
-                        :headers="headers"
-                        hide-default-footer
-                        :items="items"
-                        :search="search"
-                        class="elevation-1"
-                      >
-                        <template v-slot:item="row">
-                          <tr v-show="row.item.round >= tab + 1" @click="usercontrol(row.item)">
-                            <td>{{ row.item.name }}</td>
-                            <td>{{ row.item.status }}</td>
+                    <v-tab v-for="i in round" :key="i">Round {{ i }}</v-tab>
+                  </v-tabs>
+                  <v-tabs-items v-model="tab">
+                    <v-tab-item v-for="i in round" :key="i">
+                      <v-container v-if="i < round">
+                        <v-data-table
+                          :headers="headers"
+                          hide-default-footer
+                          :items="items"
+                          :search="search"
+                          class="elevation-1"
+                        >
+                          <template v-slot:item="row">
+                            <tr v-show="row.item.round >= tab + 1">
+                              <td>{{ row.item.name }}</td>
+                              <td>{{ row.item.status }}</td>
+                              <td>{{ row.item.lastUser }}</td>
+                              <td @click="usercontrol(row.item)" class="details">
+                                <v-icon>mdi-open-in-new</v-icon>
+                              </td>
+                            </tr>
+                          </template>
+                        </v-data-table>
+                      </v-container>
+                      <v-container v-if="i === round ">
+                        <v-data-table
+                          :headers="headers"
+                          hide-default-footer
+                          :items="items"
+                          :search="search"
+                          class="elevation-1"
+                        >
+                          <template v-slot:item="row">
+                            <tr v-show="row.item.round >= tab + 1" @click="usercontrol(row.item)">
+                              <td>{{ row.item.name }}</td>
+                              <td>{{ row.item.status }}</td>
 
-                            <td>{{ row.item.lastUser }}</td>
-                            <td @click="usercontrol(row.item)" class="details">
-                              <v-icon>mdi-open-in-new</v-icon>
-                            </td>
-                          </tr>
-                        </template>
-                      </v-data-table>
-                    </v-container>
-                  </v-tab-item>
-                </v-tabs-items>
+                              <td>{{ row.item.lastUser }}</td>
+                              <td @click="usercontrol(row.item)" class="details">
+                                <v-icon>mdi-open-in-new</v-icon>
+                              </td>
+                            </tr>
+                          </template>
+                        </v-data-table>
+                      </v-container>
+                    </v-tab-item>
+                  </v-tabs-items>
+                </div>
+                <div v-if="round ===0">
+                  <v-container>
+                    <v-data-table
+                      :headers="headers1"
+                      hide-default-footer
+                      :items="items"
+                      :search="search"
+                      class="elevation-1"
+                    >
+                      <template v-slot:item="row">
+                        <tr align="center" justify="center">
+                          <td>{{ row.item.name }}</td>
+                        </tr>
+                      </template>
+                    </v-data-table>
+                  </v-container>
+                </div>
               </v-card>
             </v-card>
           </v-container>
@@ -172,6 +188,7 @@ export default {
         { text: "LAST VIEWED", align: "start", value: "details" },
         { text: "DETAILS", align: "start", value: "details" }
       ],
+      headers1: [{ text: "FULL NAME", align: "center", value: "name" }],
       tab: null,
       rounds: ["web", "shopping", "videos", "images", "news"]
     };
@@ -236,7 +253,7 @@ export default {
       window.open(routeData.href, "_blank");
     },
     count(index) {
-      return (this.items.filter(item => item.round >= index + 1)).length;
+      return this.items.filter(item => item.round >= index + 1).length;
     }
   },
   watch: {
@@ -248,11 +265,11 @@ export default {
 </script>
 
 <style scoped>
-tr, .details {
+tr,
+.details {
   cursor: pointer;
 }
 .subtitle-3 {
   font-size: 1.5rem;
 }
-
 </style>
