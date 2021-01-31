@@ -124,6 +124,7 @@ export default {
   },
   methods: {
     logout() {
+      // eslint-disable-next-line no-unused-vars
       common.logout().then(res => {
         this.$router.push("/login");
       });
