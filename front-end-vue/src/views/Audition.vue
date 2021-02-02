@@ -8,52 +8,71 @@
       muted
     ></video>
     <v-card class="mx-auto overflow-hidden nav-bar">
-      <v-app-bar class="nav-bar" fixed style="backdrop-filter: blur(8px); background-color:rgba(255,255,255,0.08)">
+      <v-app-bar
+        class="nav-bar"
+        fixed
+        style="
+          backdrop-filter: blur(8px);
+          background-color: rgba(255, 255, 255, 0.08);
+        "
+      >
         <div style="width: 50%; text-align: left">
-        <Basetimer :time="time" />
+          <Basetimer :time="time" />
         </div>
         <div style="width: 50%; text-align: right">
-        <v-btn @click="logout" color="#B2EBF2">
+          <v-btn @click="logout" color="#B2EBF2">
             <span style="color: #000 !important">Logout</span>
           </v-btn>
-          </div>
+        </div>
       </v-app-bar>
     </v-card>
 
-
     <v-container class="question-cont">
       <v-tabs v-model="tab" vertical>
-             <v-tab
+        <v-tab
           v-for="(question, i) in questions"
           :key="i"
+          v-bind:class="classObject(question._id)"
           @click="submitanswer(question._id)"
-        >QUES {{ i + 1 }}</v-tab></v-tabs>
+          >QUES {{ i + 1 }}</v-tab
+        ></v-tabs
+      >
       <v-tabs dark show-arrows v-model="tab" class="vtab">
-        <v-tabs-slider color="teal lighten-3" ></v-tabs-slider>
+        <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
         <v-tab
           v-for="(question, i) in questions"
           :key="i"
+          v-bind:class="classObject(question._id)"
           @click="submitanswer(question._id)"
-        >QUES {{ i + 1 }}</v-tab>
+          >QUES {{ i + 1 }}</v-tab
+        >
       </v-tabs>
       <v-tabs-items v-model="tab" class="qbody">
         <v-tab-item v-for="(question, i) in questions" :key="i">
           <v-container>
-            <Normalques :question="question" v-if="question[`quesType`] === 'nor'" />
-            <Imageques :question="question" v-if="question[`quesType`] === 'img'" />
+            <Normalques
+              :question="question"
+              v-if="question[`quesType`] === 'nor'"
+            />
+            <Imageques
+              :question="question"
+              v-if="question[`quesType`] === 'img'"
+            />
             <Mcq :question="question" v-if="question[`quesType`] === 'mcq'" />
             <Audio :question="question" v-if="question[`quesType`] === 'aud'" />
           </v-container>
         </v-tab-item>
       </v-tabs-items>
-      <div class="submit"> 
-      <v-btn @click="submitround" color="#B2EBF2">
-        <span style="color: #000 !important">Save Round</span>
-      </v-btn>
+      <div class="submit">
+        <v-btn @click="submitround" color="#B2EBF2">
+          <span style="color: #000 !important">Save Round</span>
+        </v-btn>
       </div>
     </v-container>
-    <v-snackbar v-model="submitSnackbar" elevation="12" success>ROund Submitted</v-snackbar>
+    <v-snackbar v-model="submitSnackbar" elevation="12" success
+      >ROund Submitted</v-snackbar
+    >
   </div>
 </template>
 
@@ -74,7 +93,7 @@ export default {
     Imageques,
     Normalques,
     Mcq,
-    Audio
+    Audio,
   },
   data: () => ({
     file: "",
@@ -87,14 +106,14 @@ export default {
     round: null,
     tab: null,
     currentab: null,
-    submitSnackbar: false
+    submitSnackbar: false,
   }),
 
   beforeCreate() {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
-      common.getstudentRound().then(res => {
+      common.getstudentRound().then((res) => {
         let t = res.data.time - 2000 - new Date().getTime();
         if (t > 0) {
           this.time = Math.round(t / 1000);
@@ -105,6 +124,10 @@ export default {
         } else {
           this.$router.push("/");
         }
+      });
+      common.getAnswers().then((res) => {
+        console.log(res.data);
+        localStorage.setItem("answers", JSON.stringify(res.data.answers));
       });
     }
   },
@@ -123,22 +146,32 @@ export default {
     }
   },
   methods: {
+    classObject(qid) {
+      var a = JSON.parse(localStorage.getItem("answers")).find(
+        (ele) => ele.qid === qid
+      );
+      if (a === undefined) a = false;
+      else a = true;
+      return {
+        "done": a
+      };
+    },
     logout() {
       // eslint-disable-next-line no-unused-vars
-      common.logout().then(res => {
+      common.logout().then((res) => {
         this.$router.push("/login");
       });
     },
     submitanswer(qid) {
       var searchel = JSON.parse(localStorage.getItem("answers")).find(
-        answer => answer.qid === this.currentab
+        (answer) => answer.qid === this.currentab
       );
       if (searchel !== undefined) {
         var payload = {
           qid: this.currentab,
           answer: searchel.answer,
           round: this.round,
-          qtype: searchel.qtype
+          qtype: searchel.qtype,
         };
         common.updateAnswer(payload).then(() => {
           this.currentab = qid;
@@ -154,28 +187,28 @@ export default {
         var payload = {
           round: {
             questions: JSON.parse(localStorage.getItem("answers")),
-            roundNo: this.round
-          }
+            roundNo: this.round,
+          },
         };
 
         common.submitRound(payload).then(() => {
-          this.submitSnackbar = true
+          this.submitSnackbar = true;
         });
       }
     },
-    autosubmit(){ 
-     var payload = {
-          round: {
-            questions: JSON.parse(localStorage.getItem("answers")),
-            roundNo: this.round
-          }
-        };
+    autosubmit() {
+      var payload = {
+        round: {
+          questions: JSON.parse(localStorage.getItem("answers")),
+          roundNo: this.round,
+        },
+      };
 
-        common.submitRound(payload).then(() => {
-          alert("Round Submitted");
-          this.$router.push("/thanks");
-        });
-    }
+      common.submitRound(payload).then(() => {
+        alert("Round Submitted");
+        this.$router.push("/thanks");
+      });
+    },
   },
   watch: {
     darkmode(newvalue) {
@@ -183,8 +216,8 @@ export default {
     },
     group() {
       this.drawer = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -208,9 +241,12 @@ video {
   margin-top: 100px;
   text-align: center;
 }
+.done {
+  background-color: rgba(52, 170, 48, 0.247) !important;
+}
 
-.vtab{
-background-color: rgba(206, 205, 255, 0.075) !important;
+.vtab {
+  background-color: rgba(206, 205, 255, 0.075) !important;
 }
 #text {
   color: #b2ebf2 !important;
@@ -218,15 +254,15 @@ background-color: rgba(206, 205, 255, 0.075) !important;
   font-size: 1.3rem;
   font-weight: 700;
 }
-.qbody{
+.qbody {
   background-color: rgba(206, 205, 255, 0.075);
   backdrop-filter: blur(8px);
   border-right: 1px solid white;
   border-left: 1px solid white;
 }
-.submit{
+.submit {
   width: 100%;
-   background-color:  rgba(206, 205, 255, 0.075);
+  background-color: rgba(206, 205, 255, 0.075);
   backdrop-filter: blur(8px);
   border-right: 1px solid white;
   border-left: 1px solid white;
@@ -238,6 +274,5 @@ background-color: rgba(206, 205, 255, 0.075) !important;
 v-img {
   text-align: center !important;
 }
-
 </style>
 
