@@ -22,7 +22,7 @@ module.exports = function (app, passport) {
     if (req.file && req.file.path) {
       return res.status(200).json({ link: req.file.path });
     }
-    else{ 
+    else {
       return res.status(200).json({ link: false });
     }
   });
@@ -506,7 +506,7 @@ module.exports = function (app, passport) {
           status: "res",
         });
         var rejected = "";
-        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and:[{role: 's'}] }).then((userdoc) => {
+        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and: [{ role: 's' }] }).then((userdoc) => {
           console.log(userdoc)
           if (!userdoc.length) {
             fs.writeFileSync(
@@ -669,7 +669,7 @@ module.exports = function (app, passport) {
         )
       );
       await DashModel.findOne({ uid: req.user._id }).then((doc) => {
-        if (doc.round === save.round && save.status === "ong") {
+        if ((req.user.role === 's' && doc.round === save.round && save.status === "ong") || (req.user.role === 'su' || req.user.role === 'm')) {
           if (doc.time === 0) {
             var a = doc;
             a.time = new Date().getTime() + save.time * 60000 + 2000;
@@ -693,6 +693,26 @@ module.exports = function (app, passport) {
 
     }
   );
+
+  app.get("/student/getAnswers", passport.authenticate("jwt", { session: false }), async function (req, res) {
+    let save = JSON.parse(
+      fs.readFileSync(
+        path.resolve(__dirname + "../../../config/auditionConfig.json")
+      )
+    );
+
+    await DashModel.findOne({ uid: req.user._id }).then((doc) => {
+      if (!doc) res.sendStatus(401)
+      doc.answers.forEach((round) => {
+        if (round.roundNo === save.round) {
+          var a = round.questions
+          res.json({ answers: a })
+        }
+      })
+      res.sendStatus(404)
+    })
+
+  })
 
   app.put(
     "/student/answerround",
@@ -745,9 +765,9 @@ module.exports = function (app, passport) {
 
   app.get("/student/get", passport.authenticate("jwt", { session: false }),
     (req, res) => {
-      DashModel.findOne({ uid: req.user._id }).then((kid)=>{
+      DashModel.findOne({ uid: req.user._id }).then((kid) => {
         if (!kid) res.sendStatus(404);
-        res.status(200).json({ studenttime:kid.time, studentround:kid.round});
+        res.status(200).json({ studenttime: kid.time, studentround: kid.round });
       })
     }
   )
