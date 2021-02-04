@@ -16,6 +16,7 @@
           background-color: rgba(255, 255, 255, 0.08);
         "
       >
+       <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
         <div style="width: 50%; text-align: left">
           <Basetimer :time="time" />
         </div>
@@ -26,10 +27,11 @@
         </div>
       </v-app-bar>
     </v-card>
-
-    <v-container class="question-cont">
-      <v-tabs v-model="tab" vertical>
+    <v-navigation-drawer v-model="drawer" absolute temporary class="nav-drawer">
+      <v-list nav dense>
+        <v-tabs v-model="tab" class="quess-box" vertical>
         <v-tab
+          class="utab"
           v-for="(question, i) in questions"
           :key="i"
           v-bind:class="classObject(question._id)"
@@ -37,6 +39,21 @@
           >QUES {{ i + 1 }}</v-tab
         ></v-tabs
       >
+      </v-list>
+    </v-navigation-drawer>
+      <!-- <div class="quess">
+      <v-tabs v-model="tab" class="quess-box">
+        <v-tab
+          class="utab"
+          v-for="(question, i) in questions"
+          :key="i"
+          v-bind:class="classObject(question._id)"
+          @click="submitanswer(question._id)"
+          >QUES {{ i + 1 }}</v-tab
+        ></v-tabs
+      >
+      </div> -->
+      <v-container class="question-cont">
       <v-tabs dark show-arrows v-model="tab" class="vtab">
         <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
@@ -114,6 +131,7 @@ export default {
       this.$router.push("/");
     } else {
       common.getstudentRound().then((res) => {
+        console.log(res.data)
         let t = res.data.time - 2000 - new Date().getTime();
         if (t > 0) {
           this.time = Math.round(t / 1000);
@@ -147,11 +165,14 @@ export default {
   },
   methods: {
     classObject(qid) {
-      var a = JSON.parse(localStorage.getItem("answers")).find(
+      var a = false
+      if(localStorage.getItem("answers") != null){
+      a = JSON.parse(localStorage.getItem("answers")).find(
         (ele) => ele.qid === qid
       );
       if (a === undefined) a = false;
       else a = true;
+      }
       return {
         "done": a
       };
@@ -223,6 +244,19 @@ export default {
 
 
 <style scoped>
+.v-tabs-bar{
+    background-color: rgba(206, 205, 255, 0.075) !important;
+  backdrop-filter: blur(8px) !important;
+  border-top: 0px solid white !important;
+  border-right: 0px solid white !important;
+  border-left: 0px solid white !important;
+  border-top-right-radius: 0px !important;
+  border-top-left-radius: 0px !important;
+}
+.nav-drawer {
+  background-color: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(6px);
+}
 video {
   object-fit: cover;
   width: 100vw;
@@ -241,10 +275,29 @@ video {
   margin-top: 100px;
   text-align: center;
 }
+.quess{
+  margin: 50px auto;
+  margin-top: 100px;
+  text-align: center;
+}
+.quess-box{
+  background-color: rgba(206, 205, 255, 0.075);
+  backdrop-filter: blur(8px);
+  justify-content: center;
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+.utab{
+  width: 200px !important;
+  margin: 5px !important;
+  border: 1px solid white !important;
+}
 .done {
   background-color: rgba(52, 170, 48, 0.247) !important;
 }
-
 .vtab {
   background-color: rgba(206, 205, 255, 0.075) !important;
 }
