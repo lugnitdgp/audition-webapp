@@ -77,6 +77,39 @@ export default new Router({
       name: 'Result',
       component: Result
     },
+ 
+    {
+      path: '/audition',
+      name: 'Audition',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ './views/Audition.vue')
+    },
+    {
+      path: '/root',
+      name: 'Root',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ './views/Root.vue')
+    },
+    {
+      path: '/thanks',
+      name: 'Thanks',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ './views/Thanks.vue')
+    },
+    {
+      path: '/results',
+      name: 'Result',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ './views/Result.vue')
+    },
     {
       path: '/edit',
       name: 'EditRound',

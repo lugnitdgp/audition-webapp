@@ -103,7 +103,7 @@
             <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">Logout</span>
             </v-btn>
-          </v-col>
+            </v-col>
         </v-row>
       </div>
       <div
