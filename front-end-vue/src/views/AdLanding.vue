@@ -1,53 +1,13 @@
 <template>
   <v-app>
+    <Sidenav />
     <v-content>
-      <v-card class="mx-auto overflow-hidden">
-        <v-app-bar>
-          <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-
-          <v-toolbar-title>GLUG AUDITIONS 2020</v-toolbar-title>
-          <v-spacer></v-spacer><v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-          <v-spacer></v-spacer>
-
-          <v-btn @click="logout" color="light-blue darken-1">Logout</v-btn>
-          <v-spacer></v-spacer>
-          <v-btn @click="purge" color="light-blue darken-1">PURGE</v-btn>
-        </v-app-bar>
-      </v-card>
-
-      <v-navigation-drawer v-model="drawer" absolute temporary>
-        <v-list nav dense>
-          <v-list-item-group
-            v-model="group"
-            active-class="deep-purple--text text--lighten-2"
-          >
-            <router-link tag="span" to="/">
-              <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-home</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>Home</v-list-item-title>
-              </v-list-item>
-            </router-link>
-            <v-list-item>
-              <v-switch v-model="darkmode" label="Dark Mode"></v-switch>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-      </v-navigation-drawer>
-
       <v-container fluid>
         <div>
           <v-spacer>
-            <h1>Welcome, {{ adminUser.UserName }}</h1>
+            <v-alert outlined color="#00FFFF">
+              <h1 class="text-center">STUDENTS DASHBOARD</h1>
+            </v-alert>
           </v-spacer>
         </div>
         <v-spacer />
@@ -55,77 +15,147 @@
         <v-container absolute fluid>
           <v-row align="center" justify="center">
             <v-col cols="12" sm="6" lg="3">
-              <v-card class="mx-auto" outlined color="#2196F3">
+              <v-alert outlined color="#00FFFF">
                 <v-list-item three-line>
                   <v-list-item-content>
                     <div class="subtitle-2">TOTAL STUDENTS</div>
-                    <v-list-item-title class="display-2">{{
+                    <v-list-item-title class="display-2">
+                      {{
                       items.length
-                    }}</v-list-item-title>
+                      }}
+                    </v-list-item-title>
                   </v-list-item-content>
 
                   <v-list-item-avatar tile size="90">
                     <v-img src="../assets/img/stu.png"></v-img>
                   </v-list-item-avatar>
                 </v-list-item>
-              </v-card>
+              </v-alert>
             </v-col>
             <v-col cols="12" sm="6" lg="3">
-              <v-card class="mx-auto" outlined color="#76FF03">
+              <v-alert outlined color="success">
                 <v-list-item three-line>
                   <v-list-item-content>
                     <div class="subtitle-2">COMPLETED</div>
-                    <v-list-item-title class="display-2"></v-list-item-title>
-                    <v-list-item-subtitle>kk</v-list-item-subtitle>
+                    <v-list-item-title class="display-2">{{ completed.length }}</v-list-item-title>
+                    <v-list-item-subtitle></v-list-item-subtitle>
                   </v-list-item-content>
 
                   <v-list-item-avatar tile size="90">
-                    <v-img src="../assets/img/tick.png"></v-img>
+                    <v-img src="../assets/img/t.png"></v-img>
                   </v-list-item-avatar>
                 </v-list-item>
-              </v-card>
+              </v-alert>
             </v-col>
             <v-col cols="12" sm="6" lg="3">
-              <v-card class="mx-auto" outlined color="#FFAB00">
+              <v-alert outlined color="warning">
                 <v-list-item three-line>
                   <v-list-item-content>
                     <div class="subtitle-2">PENDING</div>
-                    <v-list-item-title class="display-2"></v-list-item-title>
+                    <v-list-item-title class="display-2">{{ items.length - completed.length }}</v-list-item-title>
                   </v-list-item-content>
-
                   <v-list-item-avatar tile size="90">
-                    <v-img src="../assets/img/pend.png"></v-img>
+                    <v-img src="../assets/img/w.png"></v-img>
                   </v-list-item-avatar>
                 </v-list-item>
-              </v-card>
+              </v-alert>
+            </v-col>
+          </v-row>
+          <v-row align="center" justify="center" v-if="round != 0">
+            <v-col cols="12" sm="6" lg="3" align="center" justify="center">
+              <v-alert outlined color="success">
+                <v-list-item v-for="(item,i) in round" :key="i">
+                  <v-list-item-content>
+                    <div class="subtitle-3">ROUND {{ i+1 }} - {{ count(i) }}</div>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-alert>
             </v-col>
           </v-row>
         </v-container>
+        <template>
+          <v-container>
+            <v-card>
+              <v-card>
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  hide-details
+                ></v-text-field>
+                <div v-if="round > 0">
+                  <v-tabs dark background-color="teal darken-3" show-arrows v-model="tab">
+                    <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
-        <v-data-table
-          :headers="headers"
-          hide-default-footer
-          :items="items"
-          class="elevation-1"
-        >
-          <template v-slot:item="row">
-            <tr>
-              <td>{{ row.item.name }}</td>
-              <td>{{ row.item.selected.status }}</td>
-              <td>{{ row.item.final.status }}</td>
-              <td>{{ row.item.selected.user }}</td>
-              <td>
-                <v-btn
-                  class="mx-2"
-                  light
-                  small
-                  @click="usercontrol(row.item._id)"
-                  >Detail</v-btn
-                >
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
+                    <v-tab v-for="i in round" :key="i">Round {{ i }}</v-tab>
+                  </v-tabs>
+                  <v-tabs-items v-model="tab">
+                    <v-tab-item v-for="i in round" :key="i">
+                      <v-container v-if="i < round">
+                        <v-data-table
+                          :headers="headers"
+                          hide-default-footer
+                          :items="items"
+                          :search="search"
+                          class="elevation-1"
+                        >
+                          <template v-slot:item="row">
+                            <tr v-show="row.item.round >= tab + 1">
+                              <td>{{ row.item.name }}</td>
+                              <td>{{ row.item.status }}</td>
+                              <td>{{ row.item.lastUser }}</td>
+                              <td @click="usercontrol(row.item)" class="details">
+                                <v-icon>mdi-open-in-new</v-icon>
+                              </td>
+                            </tr>
+                          </template>
+                        </v-data-table>
+                      </v-container>
+                      <v-container v-if="i === round ">
+                        <v-data-table
+                          :headers="headers"
+                          hide-default-footer
+                          :items="items"
+                          :search="search"
+                          class="elevation-1"
+                        >
+                          <template v-slot:item="row">
+                            <tr v-show="row.item.round >= tab + 1" @click="usercontrol(row.item)">
+                              <td>{{ row.item.name }}</td>
+                              <td>{{ row.item.status }}</td>
+
+                              <td>{{ row.item.lastUser }}</td>
+                              <td @click="usercontrol(row.item)" class="details">
+                                <v-icon>mdi-open-in-new</v-icon>
+                              </td>
+                            </tr>
+                          </template>
+                        </v-data-table>
+                      </v-container>
+                    </v-tab-item>
+                  </v-tabs-items>
+                </div>
+                <div v-if="round ===0">
+                  <v-container>
+                    <v-data-table
+                      :headers="headers1"
+                      hide-default-footer
+                      :items="items"
+                      :search="search"
+                      class="elevation-1"
+                    >
+                      <template v-slot:item="row">
+                        <tr align="center" justify="center">
+                          <td>{{ row.item.name }}</td>
+                        </tr>
+                      </template>
+                    </v-data-table>
+                  </v-container>
+                </div>
+              </v-card>
+            </v-card>
+          </v-container>
+        </template>
       </v-container>
     </v-content>
   </v-app>
@@ -133,72 +163,113 @@
 
 <script>
 import common from "@/services/common.js";
+import VueJwtDecode from "vue-jwt-decode";
+import Sidenav from "../components/layout/Sidenav";
+
 export default {
   name: "Landing",
-  components: {},
-
+  components: {
+    Sidenav
+  },
   data() {
     return {
       drawer: false,
-      adminUser: null,
+      search: "",
+      adminUser: "",
       items: [],
+      completed: [],
       expand: false,
       darkmode: false,
+      round: null,
       headers: [
         { text: "FULL NAME", align: "start", value: "name" },
         { text: "STATUS", align: "start", value: "status" },
-        { text: "FINAL STATUS", align: "start", value: "final status" },
-        { text: "LAST CHANGED", align: "start", value: "details" },
-        { text: "DETAILS", align: "start", value: "details" },
+
+        { text: "LAST VIEWED", align: "start", value: "details" },
+        { text: "DETAILS", align: "start", value: "details" }
       ],
+      headers1: [{ text: "FULL NAME", align: "center", value: "name" }],
+      tab: null,
+      rounds: ["web", "shopping", "videos", "images", "news"]
     };
+  },
+
+  created() {
+    this.adminUser = VueJwtDecode.decode(
+      localStorage.getItem("token").substring(6)
+    ).UserName;
+
+    console.log(this.adminUser);
+    common.getAuditionStatus().then(res => {
+      console.log(res);
+      this.round = res.data.round;
+    });
+    common.getUsers().then(res => {
+      if (res.status === 200) {
+        console.log(res.data);
+        this.items = res.data.doc;
+        this.items = this.items.filter(item => item.role === "s");
+        this.completed = this.items.filter(
+          item => item.status === "selected" || item.status === "rejected"
+        );
+      } else if (res.status === 401) {
+        alert("UNAUTHORISED ACCESS");
+        localStorage.clear("token");
+        this.$router.push("/");
+      } else {
+        alert("No data");
+      }
+    });
+
+    this.$vuetify.theme.dark = true;
+  },
+  beforeCreate() {
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/");
+    } else if (
+      VueJwtDecode.decode(localStorage.getItem("token").substring(6)).role ===
+      "s"
+    ) {
+      this.$router.push("/");
+    }
+  },
+  methods: {
+    logout() {
+      // eslint-disable-next-line no-unused-vars
+      common.logout().then(res => {
+        localStorage.clear();
+        this.$router.push("/");
+      });
+    },
+    usercontrol(a) {
+      var payload = a;
+      payload["lastUser"] = this.adminUser;
+      console.log(this.adminUser);
+      common.updateEntry(payload);
+      let routeData = this.$router.resolve({
+        name: "UserControl",
+        query: { id: a._id }
+      });
+      window.open(routeData.href, "_blank");
+    },
+    count(index) {
+      return this.items.filter(item => item.round >= index + 1).length;
+    }
   },
   watch: {
     darkmode(newvalue) {
       this.$vuetify.theme.dark = newvalue;
-    },
-  },
-  created() {
-    if (localStorage.getItem("token") === null) {
-      localStorage.clear();
-      this.$router.push("/");
-    } else {
-      common.getUsers().then((res) => {
-        if (res.status === 200) {
-          this.items = res.data.doc;
-          this.adminUser = res.data.user;
-        } else if (res.status === 401) {
-          alert("UNAUTHORISED ACCESS");
-          localStorage.clear("token");
-          this.$router.push("/");
-        } else {
-          alert("No data");
-        }
-      });
     }
-    this.$vuetify.theme.dark = true;
-  },
-  methods: {
-    logout() {
-      common.logout().then((res) => {
-        localStorage.clear();
-        alert(res.data);
-        this.$router.push("/AdLog");
-      });
-    },
-    usercontrol(a) {
-      let routeData = this.$router.resolve({
-        name: "UserControl",
-        query: { id: a },
-      });
-      window.open(routeData.href, "_blank");
-    },
-    purge() {
-      common.purge().then((res) => {
-        alert(res.data.message);
-        location.reload();
-      });
-    },
-  },
+  }
 };
 </script>
+
+<style scoped>
+tr,
+.details {
+  cursor: pointer;
+}
+.subtitle-3 {
+  font-size: 1.5rem;
+}
+</style>

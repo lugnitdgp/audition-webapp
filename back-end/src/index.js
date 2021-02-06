@@ -3,14 +3,14 @@ let app = express()
 var mongoose = require('mongoose')
 let path = require('path')
 let bodyParser = require('body-parser')
-let AuthRoute = require('./routes/auth')
+let Routes = require('./routes/index')
 let helmet= require('helmet')
 let xss= require('xss-clean')
 var morgan = require('morgan')
 let cors = require('cors')
 var passport = require('passport')
 const cookieSession = require('cookie-session');
-const mongoSanitize = require('express-mongo-sanitize');
+//const mongoSanitize = require('express-mongo-sanitize');
 
 
 require('dotenv').config()
@@ -20,9 +20,9 @@ require('dotenv').config()
 // console.log('email sent ✓')
 
 
-app.use(mongoSanitize())
+//app.use(mongoSanitize())
 app.use(xss())
-app.use(express.json({ limit: '4kb' }))
+app.use(express.json({ limit: '100kb' }))
 app.use(cors())
 app.use(helmet());
 app.use(bodyParser.json())
@@ -34,7 +34,8 @@ app.use(cookieSession({
     maxAge: 24*60*60*1000,
     keys: ["rohan"]
 }))
-require('./routes/auth')(app, passport)
+require('./routes/index')(app, passport)
+app.use(Routes)
 
 app.use((req,res,next) =>{
     console.log(`${new Date().toString()} =>${req.originalUrl}` , req.body)
@@ -42,7 +43,6 @@ app.use((req,res,next) =>{
     next()
 })
 
-app.use(AuthRoute)
 app.use(express.static('public'))
 //Handler for 404
 app.use((req, res, next) => {
@@ -65,4 +65,3 @@ mongoose.Promise = global.Promise;
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () =>console.log(`SERVER started on port ${PORT} ` ))
-

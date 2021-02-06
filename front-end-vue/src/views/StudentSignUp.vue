@@ -1,142 +1,415 @@
 <template>
-	<v-app id="inspire">
-		<v-content>
-			<Sidenav />
+  <v-app id="inspire">
+    <v-content>
+      <span class="bg"></span>
+      <div class="login-box">
+        <h2 class="glitch">REGISTER</h2>
+        <v-form class="elevation-24">
+          <v-text-field
+            v-model="UserName"
+            label="Full Name"
+            name="UserName"
+            prepend-icon="person"
+            type="text"
+            class="user-box"
+          />
+          <v-text-field
+            v-model="email"
+            class="user-box"
+            label="Email"
+            name="login"
+            prepend-icon="email"
+            type="text"
+          />
 
-			<Particle />
-
-			<v-container fluid class="centered">
-				<v-row align="center" justify="center">
-					<v-col cols="12" sm="8" md="4">
-						<v-card class="elevation-12">
-							<v-toolbar color="" dark flat>
-								<v-spacer></v-spacer>
-								<v-toolbar-title> STUDENT SIGNUP </v-toolbar-title>
-								<v-spacer />
-							</v-toolbar>
-							<v-card-text>
-								<v-form>
-									<v-text-field
-										v-model="UserName"
-										label="Full Name"
-										name="UserName"
-										prepend-icon="person"
-										type="text"
-									/>
-
-									<v-text-field
-										v-model="email"
-										label="E-mail"
-										name="email"
-										prepend-icon="email"
-										type="text"
-									/>
-
-									<v-text-field
-										v-model="password"
-										id="password"
-										label="Password"
-										name="password"
-										prepend-icon="lock"
-										type="password"
-									/>
-								</v-form>
-							</v-card-text>
-							<v-divider></v-divider>
-							<v-card-actions>
-								<v-container align="center">
-									<v-row align="center" justify="center">
-										<v-col cols="12">
-											<v-btn @click="signup" color="lime accent-4"  block 
-												>Sign Up</v-btn
-											>
-										</v-col>
-									</v-row>
-										<v-row align="center" justify="center">
-										<v-col cols="6">
-											<v-btn @click="goauth" color="red darken-2"  block>
-												<v-img dark left src="https://upload-icon.s3.us-east-2.amazonaws.com/uploads/icons/png/357916981530077752-512.png" max-height="30" max-width="30"></v-img> SIGN UP 
-											</v-btn>
-										</v-col>
-										<v-col cols="6">
-											<v-btn @click="fboauth" color="blue accent-4"  block>
-												<v-img dark left src="https://1000logos.net/wp-content/uploads/2016/11/Facebook-logo.png" max-height="50" max-width="50"></v-img>  SIGN UP 
-											</v-btn>
-										</v-col>
-										<v-spacer/>
-										<p class="subtitle-1" align="center">Already have account  <a @click="$router.push('/StLog')">Login</a></p>
-									</v-row>
-								</v-container>
-							</v-card-actions>
-						</v-card>
-					</v-col>
-				</v-row>
-			</v-container>
-		</v-content>
-	</v-app>
+          <v-text-field
+            v-model="password"
+            id="password"
+            label="Password"
+            name="password"
+            prepend-icon="lock"
+            type="password"
+            class="user-box"
+          />
+        </v-form>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-container align="center">
+            <v-row align="center" justify="center">
+              <v-col cols="8">
+                <v-btn
+                  :loading="loading"
+                  :disabled="loading"
+                  block
+                  outlined
+                  color="blue"
+                  @click="signup"
+                  style="border-radius: 20px;"
+                >
+                  REGISTER
+                  <template v-slot:loader>
+                    <span class="custom-loader">
+                      <v-icon color="blue">mdi-cached</v-icon>
+                    </span>
+                  </template>
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col
+                cols="6"
+                align="center"
+                justify="center"
+                style="display:flex; justify-content: flex-end;"
+              >
+                <v-btn color="red" outlined fab large @click="goauth">
+                  <v-icon>mdi-google</v-icon>
+                </v-btn>
+              </v-col>
+              <v-col
+                cols="6"
+                align="center"
+                justify="center"
+                style="display:flex; justify-content: flex-start;"
+              >
+                <v-btn color="blue" outlined fab large @click="githuboauth">
+                  <i class="fab fa-github"></i>
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row class="mt-4" align="center" justify="center">
+              <p align="center">
+                Already have an account ?
+                <a
+                  @click="$router.push('/login')"
+                  style="color: cyan !important;"
+                >Login</a>
+              </p>
+            </v-row>
+          </v-container>
+        </v-card-actions>
+      </div>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
 /* eslint-disable */
 import common from "@/services/common.js";
-import Particle from "../components/layout/Particle";
-import Sidenav from "../components/layout/Sidenav";
-
-import axios from "axios";
 
 export default {
-	components: {
-		Particle,
-		Sidenav
-	},
-	data: () => ({
-		drawer: false,
-		UserName: "",
-		email: "",
-		password: ""
-	}),
-	props: {
-		source: String
-	},
-	created() {
-		localStorage.clear();
-		this.$vuetify.theme.dark = true;
-	},
-	methods: {
-		signup() {
-			const user = {
-				UserName: this.UserName,
-				email: this.email,
-				password: this.password,
-				isAdmin: false
-			};
+  components: {},
+  data: () => ({
+    drawer: false,
+    UserName: "",
+    email: "",
+    password: "",
+    loading: false
+  }),
+  props: {
+    source: String
+  },
+  created() {
+    this.$vuetify.theme.dark = true;
+  },
+  methods: {
+    signup() {
+      this.loading = true;
+      const user = {
+        UserName: this.UserName,
+        email: this.email,
+        password: this.password,
+        isAdmin: false
+      };
 
-			common.signup(user).then(res => {
-				alert(res.data.message);
-				if (res.data.success == true) {
-					this.$router.push("/StLog");
-				} else {
-					this.$router.push("/StSign");
-				}
-			});
-		},
-		goauth() {
-			window.location.href = `${process.env.VUE_APP_BASE_URL}/auth/google/`;
-		},
-		fboauth() {
-			window.location.href = `${process.env.VUE_APP_BASE_URL}/auth/facebook/`;
-		}
-	}
+      common.signup(user).then(res => {
+        this.loading = false;
+        if (res.data.success == true) {
+          this.$router.push("/");
+        } else {
+          this.$router.push("/register");
+        }
+      });
+    },
+    goauth() {
+      window.location.href = `${process.env.VUE_APP_BASE_URL}auth/google/`;
+    },
+    githuboauth() {
+      window.location.href = `${process.env.VUE_APP_BASE_URL}auth/github/`;
+    }
+  }
 };
 </script>
 
 <style scoped>
-.centered {
-	color: #ffffff;
-	position: absolute;
-	text-align: center;
-	top: 20%;
-	width: 100%;
+.bg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: url("../assets/img/f.gif") no-repeat center center;
+  background-size: cover;
+  filter: blur(0px);
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.7;
+}
+.login-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  max-width: 400px;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(9px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  box-shadow: 0px 0px 40px rgb(0, 2, 26);
+  border: 0px solid rgb(1, 0, 46);
+  border-bottom: 8px solid rgb(161, 183, 255);
+}
+.glitch {
+  font-size: 2.3rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  position: relative;
+  letter-spacing: 9px;
+  font-family: "Bebas Neue", cursive;
+  text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+    -0.025em -0.05em 0 rgba(0, 255, 0, 0.75),
+    0.025em 0.05em 0 rgba(37, 37, 39, 0.75);
+  animation: glitch 500ms infinite;
+}
+@media only screen and (max-width: 700px) {
+  .glitch {
+    font-size: 2.1rem;
+  }
+  .login-box {
+    padding: 10px 20px;
+  }
 }
 
+@keyframes glitch {
+  0% {
+    text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  14% {
+    text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+      -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  15% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+      0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  49% {
+    text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+      0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  50% {
+    text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+      0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  99% {
+    text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+      0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+  100% {
+    text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75),
+      -0.025em -0.025em 0 rgba(0, 255, 0, 0.75),
+      -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
+  }
+}
+.login-box h2 {
+  margin: 0 0 30px;
+  padding: 0;
+  color: #fff;
+  text-align: center;
+}
+
+.login-box .user-box {
+  position: relative;
+}
+
+.fab {
+  font-size: 28px !important;
+}
+
+.login-box .user-box input {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 30px;
+  border: none;
+  border-bottom: 1px solid #fff;
+  outline: none;
+  background: transparent;
+}
+.login-box .user-box label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px 0;
+  font-size: 16px;
+  color: #fff;
+  pointer-events: none;
+  transition: 0.5s;
+}
+
+.login-box .user-box input:focus ~ label,
+.login-box .user-box input:valid ~ label {
+  top: -20px;
+  left: 0;
+  color: #03e9f4;
+  font-size: 12px;
+}
+
+.login-box form a {
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px;
+  color: #03e9f4;
+  font-size: 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow: hidden;
+  transition: 0.5s;
+  margin-top: 40px;
+  letter-spacing: 4px;
+}
+
+.login-box a:hover {
+  background: #03e9f4;
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4,
+    0 0 100px #03e9f4;
+}
+
+.login-box a span {
+  position: absolute;
+  display: block;
+}
+
+.login-box a span:nth-child(1) {
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #03e9f4);
+  animation: btn-anim1 1s linear infinite;
+}
+
+@keyframes btn-anim1 {
+  0% {
+    left: -100%;
+  }
+  50%,
+  100% {
+    left: 100%;
+  }
+}
+
+.login-box a span:nth-child(2) {
+  top: -100%;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, #03e9f4);
+  animation: btn-anim2 1s linear infinite;
+  animation-delay: 0.25s;
+}
+
+@keyframes btn-anim2 {
+  0% {
+    top: -100%;
+  }
+  50%,
+  100% {
+    top: 100%;
+  }
+}
+
+.login-box a span:nth-child(3) {
+  bottom: 0;
+  right: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(270deg, transparent, #03e9f4);
+  animation: btn-anim3 1s linear infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes btn-anim3 {
+  0% {
+    right: -100%;
+  }
+  50%,
+  100% {
+    right: 100%;
+  }
+}
+
+.login-box a span:nth-child(4) {
+  bottom: -100%;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(360deg, transparent, #03e9f4);
+  animation: btn-anim4 1s linear infinite;
+  animation-delay: 0.75s;
+}
+
+@keyframes btn-anim4 {
+  0% {
+    bottom: -100%;
+  }
+  50%,
+  100% {
+    bottom: 100%;
+  }
+}
+
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 </style>

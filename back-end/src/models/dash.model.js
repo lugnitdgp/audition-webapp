@@ -1,6 +1,36 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+questionstore = new Schema({
+    qid:{
+        type:String,
+        required:true
+    },
+    answer:{
+        type:String,
+        required:true
+    },
+    qtype:{
+        type:String,
+        required:true
+    },
+    score:{
+        type:Number,
+        required:false
+    },
+    ansLink:{
+        type: String,
+        required:false
+    }
+})
+
+const answerschema = new Schema({
+    roundNo:{
+        type:Number,
+        required:true
+    },
+    questions:[questionstore],
+  });
 
 var DashSchema = new Schema({
     uid:{
@@ -17,27 +47,34 @@ var DashSchema = new Schema({
         type: String,
         required : true
     },
-    selected:{
-         status : {type: Boolean, required: true, default: false},
-          user: {type:String}
+    status:{
+        type: String,
+        default: 'unevaluated',
+        required: false
+    },
+    role:{
+        type: String,
+        required: false,
+        default: 's'
     },
     round:{
         type:Number,
         required: true,
         default:1
     },
+    time:{
+        type:Number,
+        required:true,
+        default:0
+    },
     feedback:{
         type: Array,
         required:false
     },
-    final:{
-        status : {type: Boolean, required: true, default: false},
-          user: {type:String}
+    lastUser:{
+        type:String
     },
-    answers:{
-        type: Array,
-        required:false
-    }
+    answers:[answerschema]
 
 });
 
