@@ -130,6 +130,8 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
+              localStorage.removeItem("answers")
+              console.log("lol")
       common.getstudentRound().then((res) => {
         console.log(res.data)
         let t = res.data.time - 2000 - new Date().getTime();

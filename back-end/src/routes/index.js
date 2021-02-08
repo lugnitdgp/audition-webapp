@@ -605,8 +605,10 @@ module.exports = function (app, passport) {
             if (!doc) throw err;
             else if (doc.time >= currenttime && doc.round === roundNo) {
               studentdata = doc;
+              var foundround = false
               studentdata.answers.forEach((round) => {
                 if (round.roundNo === roundNo) {
+                  foundround = true
                   var foundques = false;
                   round.questions.forEach((question) => {
 
@@ -626,7 +628,7 @@ module.exports = function (app, passport) {
 
                 }
               })
-              if (studentdata.answers.length === 0) {
+             if (studentdata.answers.length === 0) {
                 studentdata.answers = [
                   {
                     roundNo: roundNo,
@@ -640,12 +642,25 @@ module.exports = function (app, passport) {
                   }
                 ]
               }
+              else if(foundround === false){
+                studentdata.answers.push({
+                  roundNo: roundNo,
+                  questions: [
+                    {
+                      qid: qid,
+                      answer: answer,
+                      qtype: qtype,
+                    }
+                  ]
+                })
+              }
             } else {
               res.sendStatus(401);
             }
           }).then(() => {
             DashModel.findByIdAndUpdate(studentdata._id, studentdata).then(
               () => {
+                console.log(studentdata)
                 res.sendStatus(200);
               }
             );

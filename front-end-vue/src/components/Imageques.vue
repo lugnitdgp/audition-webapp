@@ -32,7 +32,7 @@
     <v-textarea
         v-model="studentanswer"
         filled
-        disabled
+        readonly
         v-if="admin === true"
         name="input-7-4"
         label="Answers"
@@ -120,17 +120,11 @@ export default {
 
 	
 <style scoped>
-.text {
-  resize: none;
-  outline: none;
-  height: 150px;
-  border-radius: 20px;
-  width: 100%;
-  border: 1px solid white;
-  color: #fff !important;
+#text {
+  color: white;
   text-align: center !important;
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 1rem;
+  font-weight: 700;
 }
 v-img {
   text-align: center !important;

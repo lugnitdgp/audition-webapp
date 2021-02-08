@@ -10,17 +10,17 @@
           <v-col class="text-center" cols="12">
             <h4 class="glitch">ROUND {{audition.round}}</h4>
             <p class="glitch" v-if="audition.status === 'res'">
-              The results for {{audition.round}} are out now
+              The results are out now
               <v-btn @click="$router.push('/results')" color="#B2EBF2" style="margin: 6px;">
                 <span style="color: #000 !important;">Results</span>
               </v-btn>
             </p>
-            <p v-if="audition.status === 'def'">The results for {{audition.round}} will be out soon</p>
+            <p v-if="audition.status === 'def'">The results will be out soon</p>
             <p v-if="audition.status === 'ong'">
               <v-btn
                 @click="$router.push('/audition')"
                 color="#B2EBF2"
-                v-if="audition.status === 'ong'"
+                v-if="audition.status === 'ong' && (student.studenttime === 0 || (student.studenttime >0 && student.studenttime > (new Date())))"
                 style="margin: 6px;"
               >
                 <span style="color: #000 !important;">ATTEMPT</span>
@@ -116,7 +116,7 @@
             <h4 class="glitch">WE HOPE TO SEE YOU IN FURTHER GLUG EVENTS</h4>
             <p v-if="((audition.status === 'res') && (audition.round != 0))" class="glitch">
               The results for {{audition.round}} are out now
-              <v-btn color="#B2EBF2" style="margin: 6px;">
+              <v-btn @click="$router.push('/results')" color="#B2EBF2" style="margin: 6px;">
                 <span style="color: #000 !important;">Results</span>
               </v-btn>
             </p>

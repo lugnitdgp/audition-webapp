@@ -166,6 +166,7 @@ export default {
   name: "Landing",
   components: {
     Imageques,
+    Audio,
     Normalques,
     Mcq,
   },
