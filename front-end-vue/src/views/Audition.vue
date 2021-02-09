@@ -131,7 +131,6 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
-              localStorage.removeItem("answers")
               console.log("lol")
       common.getstudentRound().then((res) => {
         console.log(res.data)
@@ -230,6 +229,7 @@ export default {
 
       common.submitRound(payload).then(() => {
         alert("Round Submitted");
+        localStorage.removeItem("answers")
         this.$router.push("/thanks");
       });
     },

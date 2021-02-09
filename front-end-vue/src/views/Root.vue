@@ -268,7 +268,7 @@ export default {
       } else if (this.audition.status === "res") {
         this.loading = !this.loading;
         common.pushRound().then(() => {
-          this.btntext = "START ROUND";
+          this.btntext = "STOP ROUND";
           this.audition.round += 1;
           this.audition.status = "ong";
           this.loading = false;

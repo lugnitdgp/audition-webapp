@@ -20,7 +20,7 @@
               <v-btn
                 @click="$router.push('/audition')"
                 color="#B2EBF2"
-                v-if="audition.status === 'ong' && (student.studenttime === 0 || (student.studenttime >0 && student.studenttime > (new Date())))"
+                v-if="audition.status === 'ong' && (student.studenttime === 0 || (su) || (member) (student.studenttime >0 && student.studenttime > (new Date())))"
                 style="margin: 6px;"
               >
                 <span style="color: #000 !important;">ATTEMPT</span>

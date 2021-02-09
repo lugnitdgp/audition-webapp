@@ -506,7 +506,7 @@ module.exports = function (app, passport) {
           status: "res",
         });
         var rejected = "";
-        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and: [{ role: 's' }] }).then((userdoc) => {
+        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and: [{ role: 's' },{round : { $gt : save.round}}] }).then((userdoc) => {
           console.log(userdoc)
           if (!userdoc.length) {
             fs.writeFileSync(
