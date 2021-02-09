@@ -33,6 +33,7 @@
                 <v-tab-item :key="su">
                   <v-container>
                     <v-data-table
+                    disable-pagination
                       :headers="headers"
                       hide-default-footer
                       :items="items"
@@ -64,6 +65,7 @@
                 <v-tab-item :key="m">
                   <v-container>
                     <v-data-table
+                    disable-pagination
                       :headers="headers"
                       hide-default-footer
                       :items="items"
@@ -96,6 +98,7 @@
                 <v-tab-item :key="s">
                   <v-container>
                     <v-data-table
+                      disable-pagination
                       :headers="headers"
                       hide-default-footer
                       :items="items"

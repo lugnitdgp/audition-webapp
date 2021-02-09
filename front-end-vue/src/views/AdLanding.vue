@@ -93,7 +93,8 @@
                     <v-tab-item v-for="i in round" :key="i">
                       <v-container v-if="i < round">
                         <v-data-table
-                          :headers="headers"
+                          disable-pagination
+                          :headers="headers.slice(0,-1)"
                           hide-default-footer
                           :items="items"
                           :search="search"
@@ -104,15 +105,14 @@
                               <td>{{ row.item.name }}</td>
                               <td>{{ row.item.status }}</td>
                               <td>{{ row.item.lastUser }}</td>
-                              <td @click="usercontrol(row.item)" class="details">
-                                <v-icon>mdi-open-in-new</v-icon>
-                              </td>
+                
                             </tr>
                           </template>
                         </v-data-table>
                       </v-container>
                       <v-container v-if="i === round ">
                         <v-data-table
+                        disable-pagination
                           :headers="headers"
                           hide-default-footer
                           :items="items"
@@ -120,11 +120,11 @@
                           class="elevation-1"
                         >
                           <template v-slot:item="row">
-                            <tr v-show="row.item.round >= tab + 1" @click="usercontrol(row.item)">
-                              <td>{{ row.item.name }}</td>
-                              <td>{{ row.item.status }}</td>
+                            <tr v-show="row.item.round >= tab + 1">
+                              <td @click="usercontrol(row.item)">{{ row.item.name }}</td>
+                              <td @click="usercontrol(row.item)">{{ row.item.status }}</td>
 
-                              <td>{{ row.item.lastUser }}</td>
+                              <td @click="usercontrol(row.item)">{{ row.item.lastUser }}</td>
                               <td @click="usercontrol(row.item)" class="details">
                                 <v-icon>mdi-open-in-new</v-icon>
                               </td>
@@ -138,6 +138,7 @@
                 <div v-if="round ===0">
                   <v-container>
                     <v-data-table
+                    disable-pagination
                       :headers="headers1"
                       hide-default-footer
                       :items="items"

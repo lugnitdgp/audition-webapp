@@ -9,6 +9,7 @@
     ></video>
     <v-card class="mx-auto overflow-hidden nav-bar">
       <v-app-bar
+
         class="nav-bar"
         fixed
         style="
@@ -27,7 +28,7 @@
         </div>
       </v-app-bar>
     </v-card>
-    <v-navigation-drawer v-model="drawer" absolute temporary class="nav-drawer">
+    <v-navigation-drawer fixed v-model="drawer" absolute temporary class="nav-drawer">
       <v-list nav dense>
         <v-tabs v-model="tab" class="quess-box" vertical>
         <v-tab
@@ -283,6 +284,7 @@ video {
   text-align: center;
 }
 .quess-box{
+  overflow: scroll;
   background-color: rgba(206, 205, 255, 0.075);
   backdrop-filter: blur(8px);
   justify-content: center;
@@ -291,8 +293,14 @@ video {
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
+    -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.quess-box::-webkit-scrollbar {
+  display: none;
 }
 .utab{
+  min-height: 40px;
   width: 200px !important;
   margin: 5px !important;
   border: 1px solid white !important;
