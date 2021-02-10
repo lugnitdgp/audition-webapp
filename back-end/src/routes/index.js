@@ -242,10 +242,10 @@ module.exports = function (app, passport) {
           user.save();
           res.redirect(`${process.env.FRONTEND}?token=${token}`);
         } else {
-          if(req.user.mode === 'google')
-          res.redirect(`${process.env.FRONTEND}?token=${token}`);
+          if (req.user.mode === 'google')
+            res.redirect(`${process.env.FRONTEND}?token=${token}`);
           else
-          res.redirect(`${process.env.FRONTEND}register?error=email`);
+            res.redirect(`${process.env.FRONTEND}register?error=email`);
         }
       })
     }
@@ -279,10 +279,11 @@ module.exports = function (app, passport) {
           user.save();
           res.redirect(`${process.env.FRONTEND}?token=${token}`);
         } else {
-          if(req.user.mode === 'github')
-          res.redirect(`${process.env.FRONTEND}?token=${token}`);
+          if (req.user.mode === 'github')
+            res.redirect(`${process.env.FRONTEND}?token=${token}`);
           else
-          res.redirect(`${process.env.FRONTEND}register?error=email`);        }
+            res.redirect(`${process.env.FRONTEND}register?error=email`);
+        }
       })
     }
   );
@@ -567,6 +568,35 @@ module.exports = function (app, passport) {
       }
     }
   );
+
+  app.post("/profile", passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+      if (req.user.role === "s") {
+
+        UserModel.findByIdAndUpdate(
+          req.user._id,
+          { roll: req.body.roll, profilebool: true, phone: req.body.phone },
+          { upsert: true },
+          (err, user) => {
+            if (err) throw err;
+            else {
+              res.sendStatus(202);
+            }
+          }
+        );
+      } else res.sendStatus(401)
+    })
+
+  app.get("/profile", passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+      if (req.user.role === "s") {
+        res.status(200).json({
+          profilebool: req.user.profilebool,
+          phone: req.user.phone,
+          roll: req.user.roll
+        })
+      }
+    })
 
   app.get("/getResult", (req, res) => {
     let save = JSON.parse(
