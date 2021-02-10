@@ -150,6 +150,7 @@
       </v-row>
     </v-container>
     <v-snackbar v-model="statusSnackbar" color="success" elevation="12" app>{{ statusUpdate }}</v-snackbar>
+    <v-snackbar v-model="feedsnack" color="success" elevation="12" app>FEEDBACK SUBMITTED</v-snackbar>
   </v-app>
 </template>
 
@@ -186,7 +187,8 @@ export default {
       clearance: true,
       options: ["unevaluated", "selected", "review", "rejected"],
       statusSnackbar: false,
-      statusUpdate: ""
+      statusUpdate: "",
+      feedsnack: false ,
     };
   },
   beforeCreate() {
@@ -272,8 +274,9 @@ export default {
         round: this.details.round,
       };
       this.details.feedback.push(a);
-      common.updateFeedback(this.details).then((res) => {
-        alert(res.data.message);
+      common.updateFeedback(this.details).then(() => {
+        this.feedsnack = true
+        // alert(res.data.message);
       });
     },
     changeStatus() {

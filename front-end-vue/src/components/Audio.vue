@@ -21,17 +21,16 @@
         </v-layout>
       </div>
       <div class="bord" style="background-color: rgba(0,0,0,0); width: 96%; max-width:700px; margin: 0 auto;">
-      <textarea
+      <v-textarea
         v-model="answer"
         filled
         v-if="admin != true"
         name="input-7-4"
         label="Answers"
-        placeholder="Answers"
         auto-grow
         color="#00FFBF"
         class="text"
-      ></textarea>
+      ></v-textarea>
       <v-textarea
         v-model="studentanswer"
         filled

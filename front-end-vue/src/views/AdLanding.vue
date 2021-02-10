@@ -125,7 +125,7 @@
                               <td @click="usercontrol(row.item)">{{ row.item.status }}</td>
 
                               <td @click="usercontrol(row.item)">{{ row.item.lastUser }}</td>
-                              <td @click="usercontrol(row.item)" class="details">
+                              <td @click="popup(row.item)" class="details">
                                 <v-icon>mdi-open-in-new</v-icon>
                               </td>
                             </tr>
@@ -247,10 +247,21 @@ export default {
       payload["lastUser"] = this.adminUser;
       console.log(this.adminUser);
       common.updateEntry(payload);
+      this.$router.push({
+        name: "UserControl",
+        query: { id: a._id }
+      });
+    },
+      popup(a) {
+      var payload = a;
+      payload["lastUser"] = this.adminUser;
+      console.log(this.adminUser);
+      common.updateEntry(payload);
       let routeData = this.$router.resolve({
         name: "UserControl",
         query: { id: a._id }
       });
+      
       window.open(routeData.href, "_blank");
     },
     count(index) {

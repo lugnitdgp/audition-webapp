@@ -89,7 +89,7 @@
       </div>
     </v-container>
     <v-snackbar v-model="submitSnackbar" elevation="12" success
-      >ROund Submitted</v-snackbar
+      >Round Submitted</v-snackbar
     >
   </div>
 </template>
