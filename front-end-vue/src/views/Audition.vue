@@ -62,10 +62,12 @@
           </v-container>
         </v-tab-item>
       </v-tabs-items>
-      <div class="submit">
-        <v-btn @click="submitround" color="#B2EBF2">
-          <span style="color: #000 !important">Save Round</span>
-        </v-btn>
+      <div class="s-box">
+        <div class="submit">
+          <v-btn @click="submitround" color="#B2EBF2" :disabled="disabledTab">
+            <span style="color: #000 !important">Save Round</span>
+          </v-btn>
+        </div>
       </div>
     </v-container>
     <v-snackbar v-model="submitSnackbar" elevation="12" color="success">Round Submitted</v-snackbar>
@@ -175,7 +177,7 @@ export default {
           round: this.round,
           qtype: searchel.qtype
         };
-        this.disabledTab = true
+        this.disabledTab = true;
         common.updateAnswer(payload).then(() => {
           this.disabledTab = false;
           this.currentab = qid;
@@ -188,6 +190,7 @@ export default {
       if (localStorage.getItem("answers") === null) {
         // alert("Try. ._. :/ ???");
       } else {
+        this.disabledTab = true;
         var payload = {
           round: {
             questions: JSON.parse(localStorage.getItem("answers")),
@@ -197,10 +200,12 @@ export default {
 
         common.submitRound(payload).then(() => {
           this.submitSnackbar = true;
+          this.disabledTab = false;
         });
       }
     },
     autosubmit() {
+      this.disabledTab = true;
       var payload = {
         round: {
           questions: JSON.parse(localStorage.getItem("answers")),
@@ -210,6 +215,7 @@ export default {
 
       common.submitRound(payload).then(() => {
         this.submitSnackbar = true;
+        this.disabledTab = false;
         localStorage.removeItem("answers");
         setTimeout(() => {
           this.$router.push("/thanks");
@@ -272,6 +278,7 @@ video {
   backdrop-filter: blur(8px);
   justify-content: center;
   width: 90%;
+  position: relative;
   max-width: 1100px;
   margin: 0 auto;
   display: flex;
@@ -306,6 +313,10 @@ video {
   border-right: 1px solid white;
   border-left: 1px solid white;
 }
+.s-box {
+  position: relative;
+  width: 100%;
+}
 .submit {
   width: 100%;
   background-color: rgba(206, 205, 255, 0.075);
@@ -313,6 +324,7 @@ video {
   border-right: 1px solid white;
   border-left: 1px solid white;
   border-bottom: 10px solid white;
+  position: absolute;
   padding-bottom: 20px;
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;

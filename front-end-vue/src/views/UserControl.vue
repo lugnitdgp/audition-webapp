@@ -2,9 +2,9 @@
   <v-app>
     <v-container fluid>
       <v-alert outlined color="#00FFFF">
-        <h2 class="text-center">
-          {{ details.name.toUpperCase() }} - {{ details.email }}
-        </h2>
+        <h2 class="text-center">{{ details.name.toUpperCase() }} - {{ details.email }} -</h2>
+        <p class="text-center">{{ details.phone }}</p>
+        <p class="text-center">{{ details.roll }}</p>
       </v-alert>
     </v-container>
     <v-container fluid>
@@ -16,20 +16,14 @@
                 <v-tabs v-model="tab" align-with-title color="#B2EBF2" show-arrows>
                   <v-tabs-slider color="#9fef00"></v-tabs-slider>
 
-                  <v-tab v-for="round in answers" :key="round.roundNo">
-                    Round {{ round.roundNo }}
-                  </v-tab>
+                  <v-tab v-for="round in answers" :key="round.roundNo">Round {{ round.roundNo }}</v-tab>
                 </v-tabs>
               </template>
             </v-toolbar>
 
             <v-tabs-items v-model="tab">
               <v-tab-item v-for="round in answers" :key="round.roundNo">
-                <v-card
-                  flat
-                  v-for="question in round.questions"
-                  :key="question._id"
-                >
+                <v-card flat v-for="question in round.questions" :key="question._id">
                   <Normalques
                     :question="question"
                     :studentanswer="question.answer"
@@ -80,9 +74,7 @@
               <template>
                 <v-expansion-panels color="#B2EBF2" inset>
                   <v-expansion-panel>
-                    <v-expansion-panel-header>
-                      SUBMIT FEEDBACK
-                    </v-expansion-panel-header>
+                    <v-expansion-panel-header>SUBMIT FEEDBACK</v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <v-row align="center" justify="center">
                         <v-col>
@@ -97,9 +89,7 @@
 
                           <v-card-actions>
                             <v-spacer />
-                            <v-btn @click="submitFeedback" color="#00FFFF"
-                              >SUBMIT</v-btn
-                            >
+                            <v-btn @click="submitFeedback" color="#00FFFF">SUBMIT</v-btn>
                           </v-card-actions>
                         </v-col>
                       </v-row>
@@ -112,31 +102,17 @@
               <div class="title">FEEDBACKS</div>
 
               <div>
-                <v-data-iterator
-                  :items="details.feedback"
-                  item-key="_id"
-                  :single-expand="expand"
-                >
+                <v-data-iterator :items="details.feedback" item-key="_id" :single-expand="expand">
                   <template v-slot:default="{ items }">
                     <v-row>
-                      <v-col
-                        v-for="item in items"
-                        :key="item._id"
-                        cols="40"
-                        sm="12"
-                      >
+                      <v-col v-for="item in items" :key="item._id" cols="40" sm="12">
                         <v-alert outlined color="#00FFFF">
-                          <v-list-item-content>{{
-                            item.feedback
-                          }}</v-list-item-content>
-                          <v-divider
-                            class="my-4 info"
-                            style="opacity: 0.22"
-                          ></v-divider>
                           <v-list-item-content>
-                            <v-list-item-title>
-                              - {{ item.user }}</v-list-item-title
-                            >
+                            {{ item.feedback }}
+                          </v-list-item-content>
+                          <v-divider class="my-4 info" style="opacity: 0.22"></v-divider>
+                          <v-list-item-content>
+                            <v-list-item-title>- {{ item.user }} in Round {{ item.round }}</v-list-item-title>
                           </v-list-item-content>
                         </v-alert>
                       </v-col>
@@ -169,7 +145,7 @@ export default {
     Imageques,
     Audio,
     Normalques,
-    Mcq,
+    Mcq
   },
   data() {
     return {
@@ -188,7 +164,7 @@ export default {
       options: ["unevaluated", "selected", "review", "rejected"],
       statusSnackbar: false,
       statusUpdate: "",
-      feedsnack: false ,
+      feedsnack: false
     };
   },
   beforeCreate() {
@@ -206,7 +182,7 @@ export default {
         VueJwtDecode.decode(localStorage.getItem("token").substring(6))
           .clearance
       );
-      common.getUser(a).then((res) => {
+      common.getUser(a).then(res => {
         if (res.status === 200) {
           this.details = res.data;
           console.log(this.details);
@@ -221,19 +197,19 @@ export default {
           }
           console.log(res);
 
-          common.getRounds().then((response) => {
+          common.getRounds().then(response => {
             this.rounds = response.data;
-            this.details.answers.forEach((round) => {
+            this.details.answers.forEach(round => {
               var findround = this.rounds.find(
-                (element) => element.roundNo == round.roundNo
+                element => element.roundNo == round.roundNo
               );
               var roundentry = {
                 roundNo: round.roundNo,
-                questions: [],
+                questions: []
               };
-              round.questions.forEach((question) => {
+              round.questions.forEach(question => {
                 var foundques = findround.questions.find(
-                  (element) => element._id === question.qid
+                  element => element._id === question.qid
                 );
                 var a = {
                   quesType: question.qtype,
@@ -241,7 +217,7 @@ export default {
                   _id: question.qid,
                   quesLink: foundques.quesLink,
                   quesText: foundques.quesText,
-                  options: foundques.options,
+                  options: foundques.options
                 };
                 roundentry.questions.push(a);
               });
@@ -271,11 +247,11 @@ export default {
       const a = {
         feedback: this.feedback,
         user: this.adminUser,
-        round: this.details.round,
+        round: this.details.round
       };
       this.details.feedback.push(a);
       common.updateFeedback(this.details).then(() => {
-        this.feedsnack = true
+        this.feedsnack = true;
         // alert(res.data.message);
       });
     },
@@ -288,11 +264,11 @@ export default {
     updateEntry() {
       this.statusSnackbar = true;
       var a = this.details;
-      common.updateEntry(a).then((res) => {
+      common.updateEntry(a).then(res => {
         this.statusUpdate = res.data.message;
         // alert(res.data.message);
       });
-    },
-  },
+    }
+  }
 };
 </script>

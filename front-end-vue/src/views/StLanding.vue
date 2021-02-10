@@ -17,10 +17,10 @@
               <v-container>
                 <v-row>
                   <v-col cols="6">
-                    <v-text-field label="Phone No.*" required></v-text-field>
+                    <v-text-field label="Phone No.*" v-model="phone" required></v-text-field>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field label="Roll No.*" required></v-text-field>
+                    <v-text-field label="Roll No.*" v-model="roll" required></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -29,7 +29,7 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-              <v-btn color="blue darken-1" text @click="dialog = false">Submit</v-btn>
+              <v-btn color="blue darken-1" text @click="setProfile">Submit</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -52,12 +52,13 @@
               <v-btn
                 @click="$router.push('/audition')"
                 color="#B2EBF2"
-                v-if="audition.status === 'ong' && (student.studenttime === 0 || su || member || (student.studenttime >0 && student.studenttime > (new Date())))"
+                v-if="audition.status === 'ong' && profile.profilebool === true && (student.studenttime === 0 || su || member || (student.studenttime >0 && student.studenttime > (new Date())))"
                 style="margin: 6px;"
               >
                 <span style="color: #000 !important;">ATTEMPT</span>
               </v-btn>
             </p>
+            <p class="glitch" v-if="profile.profilebool === false">COMPLETE YOUR PROFILE FIRST</p>
 
             <v-btn
               @click="$router.push('/admin')"
@@ -176,7 +177,10 @@ export default {
     su: false,
     audition: [],
     student: null,
-    dialog: false
+    dialog: false,
+    profile: [],
+    phone: "",
+    roll: ""
   }),
   name: "Landing",
   beforeCreate() {
@@ -186,6 +190,12 @@ export default {
     common.getAuditionStatus().then(res => {
       this.audition = res.data;
     });
+    common.getProfile().then(res => {
+      this.profile = res.data;
+      this.phone = this.profile.phone
+      this.roll = this.profile.roll
+      console.log(this.profile)
+    })
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
@@ -217,6 +227,12 @@ export default {
     },
     endCallBack: function(x) {
       console.log(x);
+    },
+    setProfile() {
+      common.setProfile({roll: this.roll, phone: this.phone}).then(() => {
+        this.dialog = false;
+        this.profile.profilebool = true;
+      })
     }
   }
 };
