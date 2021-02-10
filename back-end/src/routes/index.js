@@ -232,15 +232,22 @@ module.exports = function (app, passport) {
         clearance: req.user.clearance
       };
       var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 });
-      var user = new DashModel({
-        uid: req.user._id,
-        name: req.user.UserName,
-        email: req.user.email,
-      });
-
-      user.save();
-
-      res.redirect(`${process.env.FRONTEND}?token=${token}`);
+      DashModel.findOne({ email: req.user.email }).then((doc) => {
+        if (!doc) {
+          var user = new DashModel({
+            uid: req.user._id,
+            name: req.user.UserName,
+            email: req.user.email,
+          });
+          user.save();
+          res.redirect(`${process.env.FRONTEND}?token=${token}`);
+        } else {
+          if(doc.mode === 'google')
+          res.redirect(`${process.env.FRONTEND}?token=${token}`);
+          else
+          res.redirect(`${process.env.FRONTEND}register?error=email`);
+        }
+      })
     }
   );
 
@@ -262,15 +269,21 @@ module.exports = function (app, passport) {
         clearance: req.user.clearance
       };
       var token = jwt.sign(payload, process.env.SECRET, { expiresIn: 600000 });
-      var user = new DashModel({
-        uid: req.user._id,
-        name: req.user.UserName,
-        email: req.user.email,
-      });
-
-      user.save();
-
-      res.redirect(`${process.env.FRONTEND}?token=${token}`);
+      DashModel.findOne({ email: req.user.email }).then((doc) => {
+        if (!doc) {
+          var user = new DashModel({
+            uid: req.user._id,
+            name: req.user.UserName,
+            email: req.user.email,
+          });
+          user.save();
+          res.redirect(`${process.env.FRONTEND}?token=${token}`);
+        } else {
+          if(doc.mode === 'github')
+          res.redirect(`${process.env.FRONTEND}?token=${token}`);
+          else
+          res.redirect(`${process.env.FRONTEND}register?error=email`);        }
+      })
     }
   );
 
@@ -506,7 +519,7 @@ module.exports = function (app, passport) {
           status: "res",
         });
         var rejected = "";
-        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and: [{ role: 's' },{round : { $gt : save.round}}] }).then((userdoc) => {
+        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and: [{ role: 's' }, { round: { $gt: save.round } }] }).then((userdoc) => {
           console.log(userdoc)
           if (!userdoc.length) {
             fs.writeFileSync(
@@ -604,7 +617,43 @@ module.exports = function (app, passport) {
           DashModel.findOne({ uid: req.user._id }).then((doc) => {
             if (!doc) throw err;
             else if (doc.time >= currenttime && doc.round === roundNo) {
+
+
+              ///////////////////
               studentdata = doc;
+              if (studentdata.answers.length === 0) {
+                studentdata.answers = [
+                  {
+                    roundNo: roundNo,
+                    questions: [
+                      {
+                        qid: qid,
+                        answer: answer,
+                        qtype: qtype,
+                      }
+                    ]
+                  }
+                ]
+              }
+
+              var foundround = studentdata.answers.find(round => round.roundNo === roundNo)
+              if (foundround === undefined) {
+                studentdata.answers.push({
+                  roundNo: roundNo,
+                  questions: [
+                    {
+                      qid: qid,
+                      answer: answer,
+                      qtype: qtype,
+                    }
+                  ]
+                })
+              } else {
+                var foundques = foundround.questions.find(question => question.qid === qid)
+                if (foundques === undefined)
+                  found
+              }
+              /////////////////////
               var foundround = false
               studentdata.answers.forEach((round) => {
                 if (round.roundNo === roundNo) {
@@ -628,32 +677,6 @@ module.exports = function (app, passport) {
 
                 }
               })
-             if (studentdata.answers.length === 0) {
-                studentdata.answers = [
-                  {
-                    roundNo: roundNo,
-                    questions: [
-                      {
-                        qid: qid,
-                        answer: answer,
-                        qtype: qtype,
-                      }
-                    ]
-                  }
-                ]
-              }
-              else if(foundround === false){
-                studentdata.answers.push({
-                  roundNo: roundNo,
-                  questions: [
-                    {
-                      qid: qid,
-                      answer: answer,
-                      qtype: qtype,
-                    }
-                  ]
-                })
-              }
             } else {
               res.sendStatus(401);
             }

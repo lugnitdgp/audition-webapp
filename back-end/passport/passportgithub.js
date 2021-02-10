@@ -20,7 +20,7 @@ module.exports = function (passport) {
         clientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET,
       },
       (accessToken, refreshToken, profile, done) => {
-        User.findOne({ password: profile.id }).then((currentUser) => {
+        User.findOne({ email: profile.emails[0].value }).then((currentUser) => {
           if (currentUser) {
             console.log("Existing User: " + currentUser);
             done(null, currentUser);
@@ -29,6 +29,7 @@ module.exports = function (passport) {
               UserName: profile.displayName,
               email: profile.emails[0].value,
               password: profile.id,
+              mode:'github'
             })
               .save()
               .then((newUser) => {

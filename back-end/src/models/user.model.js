@@ -26,6 +26,24 @@ var UserSchema = new Schema({
     clearance:{
         type: Number,
         required: false
+    },
+    mode:{
+        type:String,
+        required:false,
+        default:"normal"
+    },
+    phone:{
+        type: Number,
+        required: false
+    },
+    roll:{
+        type: String,
+        required:false
+    },
+    profilebool:{
+        type: Boolean,
+        required:true,
+        default:false
     }
 });
 
