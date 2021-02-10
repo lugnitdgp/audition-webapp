@@ -9,7 +9,6 @@
     ></video>
     <v-card class="mx-auto overflow-hidden nav-bar">
       <v-app-bar
-
         class="nav-bar"
         fixed
         style="
@@ -17,7 +16,7 @@
           background-color: rgba(255, 255, 255, 0.08);
         "
       >
-       <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
         <div style="width: 50%; text-align: left">
           <Basetimer :time="time" />
         </div>
@@ -31,30 +30,17 @@
     <v-navigation-drawer fixed v-model="drawer" absolute temporary class="nav-drawer">
       <v-list nav dense>
         <v-tabs v-model="tab" class="quess-box" vertical>
-        <v-tab
-          class="utab"
-          v-for="(question, i) in questions"
-          :key="i"
-          v-bind:class="classObject(question._id)"
-          @click="submitanswer(question._id)"
-          >QUES {{ i + 1 }}</v-tab
-        ></v-tabs
-      >
+          <v-tab
+            class="utab"
+            v-for="(question, i) in questions"
+            :key="i"
+            v-bind:class="classObject(question._id)"
+            @click="submitanswer(question._id)"
+          >QUES {{ i + 1 }}</v-tab>
+        </v-tabs>
       </v-list>
     </v-navigation-drawer>
-      <!-- <div class="quess">
-      <v-tabs v-model="tab" class="quess-box">
-        <v-tab
-          class="utab"
-          v-for="(question, i) in questions"
-          :key="i"
-          v-bind:class="classObject(question._id)"
-          @click="submitanswer(question._id)"
-          >QUES {{ i + 1 }}</v-tab
-        ></v-tabs
-      >
-      </div> -->
-      <v-container class="question-cont">
+    <v-container class="question-cont">
       <v-tabs dark show-arrows v-model="tab" class="vtab">
         <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
@@ -63,20 +49,14 @@
           :key="i"
           v-bind:class="classObject(question._id)"
           @click="submitanswer(question._id)"
-          >QUES {{ i + 1 }}</v-tab
-        >
+          :disabled="disabledTab"
+        >QUES {{ i + 1 }}</v-tab>
       </v-tabs>
       <v-tabs-items v-model="tab" class="qbody">
         <v-tab-item v-for="(question, i) in questions" :key="i">
           <v-container>
-            <Normalques
-              :question="question"
-              v-if="question[`quesType`] === 'nor'"
-            />
-            <Imageques
-              :question="question"
-              v-if="question[`quesType`] === 'img'"
-            />
+            <Normalques :question="question" v-if="question[`quesType`] === 'nor'" />
+            <Imageques :question="question" v-if="question[`quesType`] === 'img'" />
             <Mcq :question="question" v-if="question[`quesType`] === 'mcq'" />
             <Audio :question="question" v-if="question[`quesType`] === 'aud'" />
           </v-container>
@@ -109,7 +89,7 @@ export default {
     Imageques,
     Normalques,
     Mcq,
-    Audio,
+    Audio
   },
   data: () => ({
     file: "",
@@ -123,15 +103,16 @@ export default {
     tab: null,
     currentab: null,
     submitSnackbar: false,
+    disabledTab: false
   }),
 
   beforeCreate() {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
-              console.log("lol")
-      common.getstudentRound().then((res) => {
-        console.log(res.data)
+      console.log("lol");
+      common.getstudentRound().then(res => {
+        console.log(res.data);
         let t = res.data.time - 2000 - new Date().getTime();
         if (t > 0) {
           this.time = Math.round(t / 1000);
@@ -143,7 +124,7 @@ export default {
           this.$router.push("/");
         }
       });
-      common.getAnswers().then((res) => {
+      common.getAnswers().then(res => {
         console.log(res.data);
         localStorage.setItem("answers", JSON.stringify(res.data.answers));
       });
@@ -165,36 +146,38 @@ export default {
   },
   methods: {
     classObject(qid) {
-      var a = false
-      if(localStorage.getItem("answers") != null){
-      a = JSON.parse(localStorage.getItem("answers")).find(
-        (ele) => ele.qid === qid
-      );
-      if (a === undefined) a = false;
-      else a = true;
+      var a = false;
+      if (localStorage.getItem("answers") != null) {
+        a = JSON.parse(localStorage.getItem("answers")).find(
+          ele => ele.qid === qid
+        );
+        if (a === undefined) a = false;
+        else a = true;
       }
       return {
-        "done": a
+        done: a
       };
     },
     logout() {
       // eslint-disable-next-line no-unused-vars
-      common.logout().then((res) => {
+      common.logout().then(res => {
         this.$router.push("/login");
       });
     },
     submitanswer(qid) {
       var searchel = JSON.parse(localStorage.getItem("answers")).find(
-        (answer) => answer.qid === this.currentab
+        answer => answer.qid === this.currentab
       );
       if (searchel !== undefined) {
         var payload = {
           qid: this.currentab,
           answer: searchel.answer,
           round: this.round,
-          qtype: searchel.qtype,
+          qtype: searchel.qtype
         };
+        this.disabledTab = true
         common.updateAnswer(payload).then(() => {
+          this.disabledTab = false;
           this.currentab = qid;
         });
       } else {
@@ -208,8 +191,8 @@ export default {
         var payload = {
           round: {
             questions: JSON.parse(localStorage.getItem("answers")),
-            roundNo: this.round,
-          },
+            roundNo: this.round
+          }
         };
 
         common.submitRound(payload).then(() => {
@@ -221,16 +204,18 @@ export default {
       var payload = {
         round: {
           questions: JSON.parse(localStorage.getItem("answers")),
-          roundNo: this.round,
-        },
+          roundNo: this.round
+        }
       };
 
       common.submitRound(payload).then(() => {
         this.submitSnackbar = true;
-        localStorage.removeItem("answers")
-        setTimeout(() => {this.$router.push("/thanks")}, 3000)
+        localStorage.removeItem("answers");
+        setTimeout(() => {
+          this.$router.push("/thanks");
+        }, 3000);
       });
-    },
+    }
   },
   watch: {
     darkmode(newvalue) {
@@ -238,15 +223,15 @@ export default {
     },
     group() {
       this.drawer = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
 
 <style scoped>
-.v-tabs-bar{
-    background-color: rgba(206, 205, 255, 0.075) !important;
+.v-tabs-bar {
+  background-color: rgba(206, 205, 255, 0.075) !important;
   backdrop-filter: blur(8px) !important;
   border-top: 0px solid white !important;
   border-right: 0px solid white !important;
@@ -276,12 +261,12 @@ video {
   margin-top: 100px;
   text-align: center;
 }
-.quess{
+.quess {
   margin: 50px auto;
   margin-top: 100px;
   text-align: center;
 }
-.quess-box{
+.quess-box {
   overflow: scroll;
   background-color: rgba(206, 205, 255, 0.075);
   backdrop-filter: blur(8px);
@@ -291,13 +276,13 @@ video {
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
-    -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 .quess-box::-webkit-scrollbar {
   display: none;
 }
-.utab{
+.utab {
   min-height: 40px;
   width: 200px !important;
   margin: 5px !important;

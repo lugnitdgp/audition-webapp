@@ -242,7 +242,7 @@ module.exports = function (app, passport) {
           user.save();
           res.redirect(`${process.env.FRONTEND}?token=${token}`);
         } else {
-          if(doc.mode === 'google')
+          if(req.user.mode === 'google')
           res.redirect(`${process.env.FRONTEND}?token=${token}`);
           else
           res.redirect(`${process.env.FRONTEND}register?error=email`);
@@ -279,7 +279,7 @@ module.exports = function (app, passport) {
           user.save();
           res.redirect(`${process.env.FRONTEND}?token=${token}`);
         } else {
-          if(doc.mode === 'github')
+          if(req.user.mode === 'github')
           res.redirect(`${process.env.FRONTEND}?token=${token}`);
           else
           res.redirect(`${process.env.FRONTEND}register?error=email`);        }
