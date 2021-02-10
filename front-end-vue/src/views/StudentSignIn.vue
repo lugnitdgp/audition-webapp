@@ -82,6 +82,7 @@
         </v-card-actions>
       </div>
     </v-content>
+    <v-snackbar v-model="error" color="error" elevation="12" app>{{ errorMessage }}</v-snackbar>
   </v-app>
 </template>
 
@@ -94,7 +95,9 @@ export default {
     drawer: false,
     email: "",
     password: "",
-    loading: false
+    loading: false,
+    error: false,
+    errorMessage: "",
   }),
   props: {
     source: String
@@ -116,6 +119,8 @@ export default {
           this.$router.push("/event");
         } else {
           this.loading = false;
+          this.error = true;
+          this.errorMessage = res.data.message;
         }
       });
     },

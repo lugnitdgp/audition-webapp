@@ -2,9 +2,41 @@
   <div id="app">
     <span class="bg"></span>
     <v-app id="inspire">
+      <v-row justify="center" class="mt-5" v-if="!su && !member">
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" v-on="on" color="#B2EBF2">
+              <span style="color: #000 !important;">USER PROFILE</span>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">User Profile</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="6">
+                    <v-text-field label="Phone No.*" required></v-text-field>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-text-field label="Roll No.*" required></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <small>*indicates required field</small>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+              <v-btn color="blue darken-1" text @click="dialog = false">Submit</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
       <div
         class="login-box"
-        v-if="(((student.studentround >= audition.round) && (audition.status != 'res'))  || (su) || (member))"
+        v-if="(((student.studentround >= audition.round) && (audition.status != 'res'))  || su || member)"
       >
         <v-row align="center" justify="center" v-if="audition.round != 0">
           <v-col class="text-center" cols="12">
@@ -20,7 +52,7 @@
               <v-btn
                 @click="$router.push('/audition')"
                 color="#B2EBF2"
-                v-if="audition.status === 'ong' && (student.studenttime === 0 || (su) || (member) (student.studenttime >0 && student.studenttime > (new Date())))"
+                v-if="audition.status === 'ong' && (student.studenttime === 0 || su || member || (student.studenttime >0 && student.studenttime > (new Date())))"
                 style="margin: 6px;"
               >
                 <span style="color: #000 !important;">ATTEMPT</span>
@@ -38,12 +70,7 @@
             <v-btn @click="$router.push('/root')" v-show="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">ROOT</span>
             </v-btn>
-            <v-btn
-              @click="$router.push('/admin')"
-              v-show="su"
-              color="#B2EBF2"
-              style="margin: 6px;"
-            >
+            <v-btn @click="$router.push('/admin')" v-show="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">DASHBOARD</span>
             </v-btn>
             <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
@@ -82,12 +109,7 @@
             <v-btn @click="$router.push('/root')" v-if="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">ROOT</span>
             </v-btn>
-            <v-btn
-              @click="$router.push('/admin')"
-              v-show="su"
-              color="#B2EBF2"
-              style="margin: 6px;"
-            >
+            <v-btn @click="$router.push('/admin')" v-show="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">DASHBOARD</span>
             </v-btn>
             <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
@@ -103,7 +125,7 @@
             <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">Logout</span>
             </v-btn>
-            </v-col>
+          </v-col>
         </v-row>
       </div>
       <div
@@ -153,7 +175,8 @@ export default {
     member: false,
     su: false,
     audition: [],
-    student: null
+    student: null,
+    dialog: false
   }),
   name: "Landing",
   beforeCreate() {

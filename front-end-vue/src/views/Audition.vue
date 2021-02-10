@@ -88,9 +88,7 @@
         </v-btn>
       </div>
     </v-container>
-    <v-snackbar v-model="submitSnackbar" elevation="12" success
-      >Round Submitted</v-snackbar
-    >
+    <v-snackbar v-model="submitSnackbar" elevation="12" color="success">Round Submitted</v-snackbar>
   </div>
 </template>
 
@@ -228,9 +226,9 @@ export default {
       };
 
       common.submitRound(payload).then(() => {
-        alert("Round Submitted");
+        this.submitSnackbar = true;
         localStorage.removeItem("answers")
-        this.$router.push("/thanks");
+        setTimeout(() => {this.$router.push("/thanks")}, 3000)
       });
     },
   },
