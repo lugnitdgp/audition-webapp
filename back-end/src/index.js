@@ -15,11 +15,6 @@ const cookieSession = require('cookie-session');
 
 require('dotenv').config()
 
-// console.log('sending email...')
-// sendMail("Hello world", "this is email body it can contain html also")
-// console.log('email sent ✓')
-
-
 //app.use(mongoSanitize())
 app.use(xss())
 app.use(express.json({ limit: '100kb' }))

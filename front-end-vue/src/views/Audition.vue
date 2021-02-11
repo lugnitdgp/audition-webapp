@@ -16,7 +16,10 @@
           background-color: rgba(255, 255, 255, 0.08);
         "
       >
-        <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon
+          @click="drawer = true"
+          class="app-icon"
+        ></v-app-bar-nav-icon>
         <div style="width: 50%; text-align: left">
           <Basetimer :time="time" />
         </div>
@@ -27,16 +30,24 @@
         </div>
       </v-app-bar>
     </v-card>
-    <v-navigation-drawer fixed v-model="drawer" absolute temporary class="nav-drawer">
+    <v-navigation-drawer
+      fixed
+      v-model="drawer"
+      absolute
+      temporary
+      class="nav-drawer"
+    >
       <v-list nav dense>
-        <v-tabs v-model="tab" class="quess-box" vertical>
+        <v-tabs v-model="tab" class="quess-box" :key="answers" vertical>
           <v-tab
             class="utab"
+            :disabled="disabledTab"
             v-for="(question, i) in questions"
             :key="i"
             v-bind:class="classObject(question._id)"
             @click="submitanswer(question._id)"
-          >QUES {{ i + 1 }}</v-tab>
+            >QUES {{ i + 1 }}</v-tab
+          >
         </v-tabs>
       </v-list>
     </v-navigation-drawer>
@@ -50,13 +61,20 @@
           v-bind:class="classObject(question._id)"
           @click="submitanswer(question._id)"
           :disabled="disabledTab"
-        >QUES {{ i + 1 }}</v-tab>
+          >QUES {{ i + 1 }}</v-tab
+        >
       </v-tabs>
       <v-tabs-items v-model="tab" class="qbody">
         <v-tab-item v-for="(question, i) in questions" :key="i">
-          <v-container>
-            <Normalques :question="question" v-if="question[`quesType`] === 'nor'" />
-            <Imageques :question="question" v-if="question[`quesType`] === 'img'" />
+          <v-container :key="answers">
+            <Normalques
+              :question="question"
+              v-if="question[`quesType`] === 'nor'"
+            />
+            <Imageques
+              :question="question"
+              v-if="question[`quesType`] === 'img'"
+            />
             <Mcq :question="question" v-if="question[`quesType`] === 'mcq'" />
             <Audio :question="question" v-if="question[`quesType`] === 'aud'" />
           </v-container>
@@ -70,7 +88,9 @@
         </div>
       </div>
     </v-container>
-    <v-snackbar v-model="submitSnackbar" elevation="12" color="success">Round Submitted</v-snackbar>
+    <v-snackbar v-model="submitSnackbar" elevation="12" color="success"
+      >Round Submitted</v-snackbar
+    >
   </div>
 </template>
 
@@ -91,7 +111,7 @@ export default {
     Imageques,
     Normalques,
     Mcq,
-    Audio
+    Audio,
   },
   data: () => ({
     file: "",
@@ -101,19 +121,21 @@ export default {
     su: false,
     questions: [],
     time: null,
+    answers: false,
     round: null,
     tab: null,
     currentab: null,
     submitSnackbar: false,
-    disabledTab: false
+    disabledTab: false,
   }),
 
   beforeCreate() {
+    localStorage.removeItem("answers");
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
       console.log("lol");
-      common.getstudentRound().then(res => {
+      common.getstudentRound().then((res) => {
         console.log(res.data);
         let t = res.data.time - 2000 - new Date().getTime();
         if (t > 0) {
@@ -126,10 +148,6 @@ export default {
           this.$router.push("/");
         }
       });
-      common.getAnswers().then(res => {
-        console.log(res.data);
-        localStorage.setItem("answers", JSON.stringify(res.data.answers));
-      });
     }
   },
 
@@ -138,6 +156,9 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
+      this.getAnswers().then(() => {
+        this.answers = true;
+      });
       var tok = VueJwtDecode.decode(localStorage.getItem("token").substring(6));
       if (tok.role === "m") {
         this.member = true;
@@ -147,35 +168,49 @@ export default {
     }
   },
   methods: {
+   async getAnswers() {
+      await common.getAnswers().then((res) => {
+        console.log(res.data);
+        if (res.data.answers != null) {
+          localStorage.setItem("answers", JSON.stringify(res.data.answers));
+            return Promise.resolve();
+        }
+          return Promise.resolve();
+
+      });
+    },
     classObject(qid) {
       var a = false;
-      if (localStorage.getItem("answers") != null) {
+      if (
+        localStorage.getItem("answers") != null &&
+        localStorage.getItem("answers") != "null"
+      ) {
         a = JSON.parse(localStorage.getItem("answers")).find(
-          ele => ele.qid === qid
+          (ele) => ele.qid === qid
         );
         if (a === undefined) a = false;
         else a = true;
       }
       return {
-        done: a
+        done: a,
       };
     },
     logout() {
       // eslint-disable-next-line no-unused-vars
-      common.logout().then(res => {
+      common.logout().then((res) => {
         this.$router.push("/login");
       });
     },
     submitanswer(qid) {
       var searchel = JSON.parse(localStorage.getItem("answers")).find(
-        answer => answer.qid === this.currentab
+        (answer) => answer.qid === this.currentab
       );
       if (searchel !== undefined) {
         var payload = {
           qid: this.currentab,
           answer: searchel.answer,
           round: this.round,
-          qtype: searchel.qtype
+          qtype: searchel.qtype,
         };
         this.disabledTab = true;
         common.updateAnswer(payload).then(() => {
@@ -194,8 +229,8 @@ export default {
         var payload = {
           round: {
             questions: JSON.parse(localStorage.getItem("answers")),
-            roundNo: this.round
-          }
+            roundNo: this.round,
+          },
         };
 
         common.submitRound(payload).then(() => {
@@ -209,8 +244,8 @@ export default {
       var payload = {
         round: {
           questions: JSON.parse(localStorage.getItem("answers")),
-          roundNo: this.round
-        }
+          roundNo: this.round,
+        },
       };
 
       common.submitRound(payload).then(() => {
@@ -221,7 +256,7 @@ export default {
           this.$router.push("/thanks");
         }, 3000);
       });
-    }
+    },
   },
   watch: {
     darkmode(newvalue) {
@@ -229,8 +264,8 @@ export default {
     },
     group() {
       this.drawer = false;
-    }
-  }
+    },
+  },
 };
 </script>
 

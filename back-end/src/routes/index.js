@@ -515,12 +515,14 @@ module.exports = function (app, passport) {
             path.resolve(__dirname + "../../../config/auditionConfig.json")
           )
         );
+        var round = save.round
         save = JSON.stringify({
           round: save.round,
           status: "res",
         });
+  
         var rejected = "";
-        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and: [{ role: 's' }, { round: save.round }] }).then((userdoc) => {
+        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and: [{ role: 's' },{round:Number(round)}] }).then((userdoc) => {
           console.log(userdoc)
           if (!userdoc.length) {
             fs.writeFileSync(
@@ -572,9 +574,8 @@ module.exports = function (app, passport) {
   app.post("/profile", passport.authenticate("jwt", { session: false }),
     (req, res) => {
       if (req.user.role === "s") {
-
-        UserModel.findByIdAndUpdate(
-          req.user._id,
+        DashModel.findOneAndUpdate(
+          {uid:req.user._id},
           { roll: req.body.roll, profilebool: true, phone: req.body.phone },
           { upsert: true },
           (err, user) => {
@@ -590,10 +591,8 @@ module.exports = function (app, passport) {
   app.get("/profile", passport.authenticate("jwt", { session: false }),
     (req, res) => {
       if (req.user.role === "s") {
-        res.status(200).json({
-          profilebool: req.user.profilebool,
-          phone: req.user.phone,
-          roll: req.user.roll
+        DashModel.findOne({uid:req.user._id}).then(doc=>{
+          res.status(200).json({phone:doc.phone,roll:doc.roll, profilebool:doc.profilebool})
         })
       }
     })
