@@ -3,6 +3,7 @@ var jwt = require("jsonwebtoken");
 let DashModel = require("../models/dash.model");
 const fs = require("fs");
 let RoundModel = require("../models/round.model");
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const path = require("path");
 const { sendMail } = require("../../services/reportSender");
 
@@ -520,11 +521,13 @@ module.exports = function (app, passport) {
           round: save.round,
           status: "res",
         });
-  
+        var csvobject = []
         var rejected = "";
-        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and: [{ role: 's' },{round:Number(round)}] }).then((userdoc) => {
+        DashModel.find({ $or: [{ status: "review" }, { status: "unevaluated" }], $and: [{ role: 's' }, { round: Number(round) }] }).then((userdoc) => {
           console.log(userdoc)
           if (!userdoc.length) {
+            fs.closeSync(fs.openSync(path.resolve(__dirname + `../../../result/Result_${round}.csv`), 'w'))
+
             fs.writeFileSync(
               path.resolve(__dirname + "../../../config/auditionConfig.json"),
               save
@@ -535,6 +538,7 @@ module.exports = function (app, passport) {
                   if (user.status === "rejected") {
                     rejected += user.email + ",";
                   } else if (user.status === "selected") {
+                    csvobject.push(user)
                     var userNew = user;
                     userNew.status = "unevaluated";
                     userNew.round = userNew.round + 1;
@@ -550,6 +554,19 @@ module.exports = function (app, passport) {
                 });
               })
               .then(() => {
+                const csvWriter = createCsvWriter({
+                  path: path.resolve(__dirname + `../../../result/Result_${round}.csv`),
+                  header: [
+                    { id: 'name', title: 'Name' },
+                    { id: 'email', title: 'Email' },
+                    { id: 'phone', title: 'Phone' },
+                  ]
+                });
+
+                csvWriter
+                  .writeRecords(csvobject)
+                  .then(() => console.log('The CSV file was written successfully'));
+
                 const rejectedones = rejected.slice(0, -1);
                 sendMail(
                   "Thank you for your participation.",
@@ -575,7 +592,7 @@ module.exports = function (app, passport) {
     (req, res) => {
       if (req.user.role === "s") {
         DashModel.findOneAndUpdate(
-          {uid:req.user._id},
+          { uid: req.user._id },
           { roll: req.body.roll, profilebool: true, phone: req.body.phone },
           { upsert: true },
           (err, user) => {
@@ -591,8 +608,8 @@ module.exports = function (app, passport) {
   app.get("/profile", passport.authenticate("jwt", { session: false }),
     (req, res) => {
       if (req.user.role === "s") {
-        DashModel.findOne({uid:req.user._id}).then(doc=>{
-          res.status(200).json({phone:doc.phone,roll:doc.roll, profilebool:doc.profilebool})
+        DashModel.findOne({ uid: req.user._id }).then(doc => {
+          res.status(200).json({ phone: doc.phone, roll: doc.roll, profilebool: doc.profilebool })
         })
       }
     })
