@@ -74,7 +74,20 @@ var DashSchema = new Schema({
     lastUser:{
         type:String
     },
-    answers:[answerschema]
+    answers:[answerschema],
+    phone:{
+        type: Number,
+        required: false
+    },
+    roll:{
+        type: String,
+        required:false
+    },
+    profilebool:{
+        type: Boolean,
+        required:true,
+        default:false
+    }
 
 });
 

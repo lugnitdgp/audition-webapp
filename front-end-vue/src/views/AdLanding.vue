@@ -20,9 +20,7 @@
                   <v-list-item-content>
                     <div class="subtitle-2">TOTAL STUDENTS</div>
                     <v-list-item-title class="display-2">
-                      {{
-                      items.length
-                      }}
+                      {{ items.length }}
                     </v-list-item-title>
                   </v-list-item-content>
 
@@ -37,7 +35,9 @@
                 <v-list-item three-line>
                   <v-list-item-content>
                     <div class="subtitle-2">COMPLETED</div>
-                    <v-list-item-title class="display-2">{{ completed.length }}</v-list-item-title>
+                    <v-list-item-title class="display-2">{{
+                      completed.length
+                    }}</v-list-item-title>
                     <v-list-item-subtitle></v-list-item-subtitle>
                   </v-list-item-content>
 
@@ -52,7 +52,9 @@
                 <v-list-item three-line>
                   <v-list-item-content>
                     <div class="subtitle-2">PENDING</div>
-                    <v-list-item-title class="display-2">{{ items.length - completed.length }}</v-list-item-title>
+                    <v-list-item-title class="display-2">{{
+                      items.length - completed.length
+                    }}</v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-avatar tile size="90">
                     <v-img src="../assets/img/w.png"></v-img>
@@ -64,9 +66,11 @@
           <v-row align="center" justify="center" v-if="round != 0">
             <v-col cols="12" sm="6" lg="3" align="center" justify="center">
               <v-alert outlined color="success">
-                <v-list-item v-for="(item,i) in round" :key="i">
+                <v-list-item v-for="(item, i) in round" :key="i">
                   <v-list-item-content>
-                    <div class="subtitle-3">ROUND {{ i+1 }} - {{ count(i) }}</div>
+                    <div class="subtitle-3">
+                      ROUND {{ i + 1 }} - {{ count(i) }}
+                    </div>
                   </v-list-item-content>
                 </v-list-item>
               </v-alert>
@@ -83,17 +87,30 @@
                   label="Search"
                   hide-details
                 ></v-text-field>
+                <v-spacer />
                 <div v-if="round > 0">
-                  <v-tabs dark background-color="teal darken-3" show-arrows v-model="tab">
+                  <v-tabs
+                    dark
+                    center-active
+                    background-color="teal darken-3"
+                    show-arrows
+                    v-model="tab"
+                  >
                     <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
-                    <v-tab v-for="i in round" :key="i">Round {{ i }}</v-tab>
+                    <v-tab v-for="i in round" :key="i" 
+                      >Round {{ i }}</v-tab
+                    >
                   </v-tabs>
                   <v-tabs-items v-model="tab">
-                    <v-tab-item v-for="i in round" :key="i">
+                    <v-tab-item
+                      v-for="i in round"
+                      :key="i"
+                    >
                       <v-container v-if="i < round">
                         <v-data-table
-                          :headers="headers"
+                          disable-pagination
+                          :headers="headers.slice(0, -1)"
                           hide-default-footer
                           :items="items"
                           :search="search"
@@ -104,15 +121,15 @@
                               <td>{{ row.item.name }}</td>
                               <td>{{ row.item.status }}</td>
                               <td>{{ row.item.lastUser }}</td>
-                              <td @click="usercontrol(row.item)" class="details">
-                                <v-icon>mdi-open-in-new</v-icon>
-                              </td>
+                              <td>{{ row.item.phone }}</td>
+                              <td>{{ row.item.roll }}</td>
                             </tr>
                           </template>
                         </v-data-table>
                       </v-container>
-                      <v-container v-if="i === round ">
+                      <v-container v-if="i === round">
                         <v-data-table
+                          disable-pagination
                           :headers="headers"
                           hide-default-footer
                           :items="items"
@@ -120,12 +137,20 @@
                           class="elevation-1"
                         >
                           <template v-slot:item="row">
-                            <tr v-show="row.item.round >= tab + 1" @click="usercontrol(row.item)">
-                              <td>{{ row.item.name }}</td>
-                              <td>{{ row.item.status }}</td>
+                            <tr v-show="row.item.round >= tab + 1">
+                              <td @click="usercontrol(row.item)">
+                                {{ row.item.name }}
+                              </td>
+                              <td @click="usercontrol(row.item)">
+                                {{ row.item.status }}
+                              </td>
 
-                              <td>{{ row.item.lastUser }}</td>
-                              <td @click="usercontrol(row.item)" class="details">
+                              <td @click="usercontrol(row.item)">
+                                {{ row.item.lastUser }}
+                              </td>
+                              <td>{{ row.item.phone }}</td>
+                              <td>{{ row.item.roll }}</td>
+                              <td @click="popup(row.item)" class="details">
                                 <v-icon>mdi-open-in-new</v-icon>
                               </td>
                             </tr>
@@ -135,9 +160,10 @@
                     </v-tab-item>
                   </v-tabs-items>
                 </div>
-                <div v-if="round ===0">
+                <div v-if="round === 0">
                   <v-container>
                     <v-data-table
+                      disable-pagination
                       :headers="headers1"
                       hide-default-footer
                       :items="items"
@@ -147,6 +173,8 @@
                       <template v-slot:item="row">
                         <tr align="center" justify="center">
                           <td>{{ row.item.name }}</td>
+                          <td>{{ row.item.phone }}</td>
+                          <td>{{ row.item.roll }}</td>
                         </tr>
                       </template>
                     </v-data-table>
@@ -169,7 +197,7 @@ import Sidenav from "../components/layout/Sidenav";
 export default {
   name: "Landing",
   components: {
-    Sidenav
+    Sidenav,
   },
   data() {
     return {
@@ -185,12 +213,18 @@ export default {
         { text: "FULL NAME", align: "start", value: "name" },
         { text: "STATUS", align: "start", value: "status" },
 
-        { text: "LAST VIEWED", align: "start", value: "details" },
-        { text: "DETAILS", align: "start", value: "details" }
+        { text: "LAST VIEWED", align: "start", value: "lastUser" },
+        { text: "Phone", align: "start", value: "phone" },
+        { text: "Roll Number", align: "start", value: "roll" },
+        { text: "DETAILS", align: "start", value: "details" },
       ],
-      headers1: [{ text: "FULL NAME", align: "center", value: "name" }],
-      tab: null,
-      rounds: ["web", "shopping", "videos", "images", "news"]
+      headers1: [
+        { text: "FULL NAME", align: "center", value: "name" },
+        { text: "Phone", align: "start", value: "phone" },
+        { text: "Roll Number", align: "start", value: "roll" },
+      ],
+      tab: 0,
+      rounds: ["web", "shopping", "videos", "images", "news"],
     };
   },
 
@@ -200,17 +234,18 @@ export default {
     ).UserName;
 
     console.log(this.adminUser);
-    common.getAuditionStatus().then(res => {
+    common.getAuditionStatus().then((res) => {
       console.log(res);
       this.round = res.data.round;
+      this.tab= this.round -1
     });
-    common.getUsers().then(res => {
+    common.getUsers().then((res) => {
       if (res.status === 200) {
         console.log(res.data);
         this.items = res.data.doc;
-        this.items = this.items.filter(item => item.role === "s");
+        this.items = this.items.filter((item) => item.role === "s");
         this.completed = this.items.filter(
-          item => item.status === "selected" || item.status === "rejected"
+          (item) => item.status === "selected" || item.status === "rejected"
         );
       } else if (res.status === 401) {
         alert("UNAUTHORISED ACCESS");
@@ -236,7 +271,7 @@ export default {
   methods: {
     logout() {
       // eslint-disable-next-line no-unused-vars
-      common.logout().then(res => {
+      common.logout().then((res) => {
         localStorage.clear();
         this.$router.push("/");
       });
@@ -246,21 +281,32 @@ export default {
       payload["lastUser"] = this.adminUser;
       console.log(this.adminUser);
       common.updateEntry(payload);
+      this.$router.push({
+        name: "UserControl",
+        query: { id: a._id },
+      });
+    },
+    popup(a) {
+      var payload = a;
+      payload["lastUser"] = this.adminUser;
+      console.log(this.adminUser);
+      common.updateEntry(payload);
       let routeData = this.$router.resolve({
         name: "UserControl",
-        query: { id: a._id }
+        query: { id: a._id },
       });
+
       window.open(routeData.href, "_blank");
     },
     count(index) {
-      return this.items.filter(item => item.round >= index + 1).length;
-    }
+      return this.items.filter((item) => item.round >= index + 1).length;
+    },
   },
   watch: {
     darkmode(newvalue) {
       this.$vuetify.theme.dark = newvalue;
-    }
-  }
+    },
+  },
 };
 </script>
 

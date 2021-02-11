@@ -90,6 +90,7 @@
         </v-card-actions>
       </div>
     </v-content>
+    <v-snackbar v-model="emailSnack" color="error" elevation="12" app>Mail is already in use</v-snackbar>
   </v-app>
 </template>
 
@@ -104,13 +105,19 @@ export default {
     UserName: "",
     email: "",
     password: "",
-    loading: false
+    loading: false,
+    emailSnack: false
   }),
   props: {
     source: String
   },
   created() {
     this.$vuetify.theme.dark = true;
+    var error = this.$route.query.error;
+    console.log(error);
+    if (error != null) {
+      this.emailSnack = true;
+    }
   },
   methods: {
     signup() {
@@ -121,13 +128,13 @@ export default {
         password: this.password,
         isAdmin: false
       };
-
       common.signup(user).then(res => {
         this.loading = false;
         if (res.data.success == true) {
           this.$router.push("/");
         } else {
-          this.$router.push("/register");
+          this.emailSnack = true;
+          this.email = this.password = this.UserName = "";
         }
       });
     },

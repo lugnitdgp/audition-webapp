@@ -11,10 +11,16 @@
   <link rel="shortcut icon" type="png/x-icon" href="./glug-logo.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-.v-slide-group__wrapper{
+.nav-drawer .v-slide-group__wrapper{
   background-color: rgba(206, 205, 255, 0.0) !important;
   backdrop-filter: blur(0px) !important;
-
+  height: 96vh;
+  overflow: scroll;
+      -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.v-slide-group__wrapper::-webkit-scrollbar {
+  display: none;
 }
 .v-slide-group__content{
   background-color: rgba(206, 205, 255, 0.0) !important;

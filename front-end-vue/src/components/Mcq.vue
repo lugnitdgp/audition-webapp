@@ -21,7 +21,7 @@
                         color="#00FFBF"
                       ></v-radio>
                     </v-radio-group>
-                    <v-radio-group v-if="admin === true" v-model="studentanswer">
+                    <v-radio-group v-if="admin === true" readonly v-model="studentanswer">
                       <v-radio
                         v-for="option in question.options.split(',')"
                         :key="option"

@@ -16,7 +16,10 @@
           background-color: rgba(255, 255, 255, 0.08);
         "
       >
-       <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon
+          @click="drawer = true"
+          class="app-icon"
+        ></v-app-bar-nav-icon>
         <div style="width: 50%; text-align: left">
           <Basetimer :time="time" />
         </div>
@@ -27,33 +30,28 @@
         </div>
       </v-app-bar>
     </v-card>
-    <v-navigation-drawer v-model="drawer" absolute temporary class="nav-drawer">
+    <v-navigation-drawer
+      fixed
+      v-model="drawer"
+      absolute
+      temporary
+      class="nav-drawer"
+    >
       <v-list nav dense>
-        <v-tabs v-model="tab" class="quess-box" vertical>
-        <v-tab
-          class="utab"
-          v-for="(question, i) in questions"
-          :key="i"
-          v-bind:class="classObject(question._id)"
-          @click="submitanswer(question._id)"
-          >QUES {{ i + 1 }}</v-tab
-        ></v-tabs
-      >
+        <v-tabs v-model="tab" class="quess-box" :key="answers" vertical>
+          <v-tab
+            class="utab"
+            :disabled="disabledTab"
+            v-for="(question, i) in questions"
+            :key="i"
+            v-bind:class="classObject(question._id)"
+            @click="submitanswer(question._id)"
+            >QUES {{ i + 1 }}</v-tab
+          >
+        </v-tabs>
       </v-list>
     </v-navigation-drawer>
-      <!-- <div class="quess">
-      <v-tabs v-model="tab" class="quess-box">
-        <v-tab
-          class="utab"
-          v-for="(question, i) in questions"
-          :key="i"
-          v-bind:class="classObject(question._id)"
-          @click="submitanswer(question._id)"
-          >QUES {{ i + 1 }}</v-tab
-        ></v-tabs
-      >
-      </div> -->
-      <v-container class="question-cont">
+    <v-container class="question-cont">
       <v-tabs dark show-arrows v-model="tab" class="vtab">
         <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
@@ -62,12 +60,13 @@
           :key="i"
           v-bind:class="classObject(question._id)"
           @click="submitanswer(question._id)"
+          :disabled="disabledTab"
           >QUES {{ i + 1 }}</v-tab
         >
       </v-tabs>
       <v-tabs-items v-model="tab" class="qbody">
         <v-tab-item v-for="(question, i) in questions" :key="i">
-          <v-container>
+          <v-container :key="answers">
             <Normalques
               :question="question"
               v-if="question[`quesType`] === 'nor'"
@@ -81,14 +80,16 @@
           </v-container>
         </v-tab-item>
       </v-tabs-items>
-      <div class="submit">
-        <v-btn @click="submitround" color="#B2EBF2">
-          <span style="color: #000 !important">Save Round</span>
-        </v-btn>
+      <div class="s-box">
+        <div class="submit">
+          <v-btn @click="submitround" color="#B2EBF2" :disabled="disabledTab">
+            <span style="color: #000 !important">Save Round</span>
+          </v-btn>
+        </div>
       </div>
     </v-container>
-    <v-snackbar v-model="submitSnackbar" elevation="12" success
-      >ROund Submitted</v-snackbar
+    <v-snackbar v-model="submitSnackbar" elevation="12" color="success"
+      >Round Submitted</v-snackbar
     >
   </div>
 </template>
@@ -120,18 +121,22 @@ export default {
     su: false,
     questions: [],
     time: null,
+    answers: false,
     round: null,
     tab: null,
     currentab: null,
     submitSnackbar: false,
+    disabledTab: false,
   }),
 
   beforeCreate() {
+    localStorage.removeItem("answers");
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
+      console.log("lol");
       common.getstudentRound().then((res) => {
-        console.log(res.data)
+        console.log(res.data);
         let t = res.data.time - 2000 - new Date().getTime();
         if (t > 0) {
           this.time = Math.round(t / 1000);
@@ -143,10 +148,6 @@ export default {
           this.$router.push("/");
         }
       });
-      common.getAnswers().then((res) => {
-        console.log(res.data);
-        localStorage.setItem("answers", JSON.stringify(res.data.answers));
-      });
     }
   },
 
@@ -155,6 +156,9 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
+      this.getAnswers().then(() => {
+        this.answers = true;
+      });
       var tok = VueJwtDecode.decode(localStorage.getItem("token").substring(6));
       if (tok.role === "m") {
         this.member = true;
@@ -164,17 +168,31 @@ export default {
     }
   },
   methods: {
+   async getAnswers() {
+      await common.getAnswers().then((res) => {
+        console.log(res.data);
+        if (res.data.answers != null) {
+          localStorage.setItem("answers", JSON.stringify(res.data.answers));
+            return Promise.resolve();
+        }
+          return Promise.resolve();
+
+      });
+    },
     classObject(qid) {
-      var a = false
-      if(localStorage.getItem("answers") != null){
-      a = JSON.parse(localStorage.getItem("answers")).find(
-        (ele) => ele.qid === qid
-      );
-      if (a === undefined) a = false;
-      else a = true;
+      var a = false;
+      if (
+        localStorage.getItem("answers") != null &&
+        localStorage.getItem("answers") != "null"
+      ) {
+        a = JSON.parse(localStorage.getItem("answers")).find(
+          (ele) => ele.qid === qid
+        );
+        if (a === undefined) a = false;
+        else a = true;
       }
       return {
-        "done": a
+        done: a,
       };
     },
     logout() {
@@ -194,7 +212,9 @@ export default {
           round: this.round,
           qtype: searchel.qtype,
         };
+        this.disabledTab = true;
         common.updateAnswer(payload).then(() => {
+          this.disabledTab = false;
           this.currentab = qid;
         });
       } else {
@@ -205,6 +225,7 @@ export default {
       if (localStorage.getItem("answers") === null) {
         // alert("Try. ._. :/ ???");
       } else {
+        this.disabledTab = true;
         var payload = {
           round: {
             questions: JSON.parse(localStorage.getItem("answers")),
@@ -214,10 +235,12 @@ export default {
 
         common.submitRound(payload).then(() => {
           this.submitSnackbar = true;
+          this.disabledTab = false;
         });
       }
     },
     autosubmit() {
+      this.disabledTab = true;
       var payload = {
         round: {
           questions: JSON.parse(localStorage.getItem("answers")),
@@ -226,8 +249,12 @@ export default {
       };
 
       common.submitRound(payload).then(() => {
-        alert("Round Submitted");
-        this.$router.push("/thanks");
+        this.submitSnackbar = true;
+        this.disabledTab = false;
+        localStorage.removeItem("answers");
+        setTimeout(() => {
+          this.$router.push("/thanks");
+        }, 3000);
       });
     },
   },
@@ -244,8 +271,8 @@ export default {
 
 
 <style scoped>
-.v-tabs-bar{
-    background-color: rgba(206, 205, 255, 0.075) !important;
+.v-tabs-bar {
+  background-color: rgba(206, 205, 255, 0.075) !important;
   backdrop-filter: blur(8px) !important;
   border-top: 0px solid white !important;
   border-right: 0px solid white !important;
@@ -275,22 +302,30 @@ video {
   margin-top: 100px;
   text-align: center;
 }
-.quess{
+.quess {
   margin: 50px auto;
   margin-top: 100px;
   text-align: center;
 }
-.quess-box{
+.quess-box {
+  overflow: scroll;
   background-color: rgba(206, 205, 255, 0.075);
   backdrop-filter: blur(8px);
   justify-content: center;
   width: 90%;
+  position: relative;
   max-width: 1100px;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
-.utab{
+.quess-box::-webkit-scrollbar {
+  display: none;
+}
+.utab {
+  min-height: 40px;
   width: 200px !important;
   margin: 5px !important;
   border: 1px solid white !important;
@@ -313,6 +348,10 @@ video {
   border-right: 1px solid white;
   border-left: 1px solid white;
 }
+.s-box {
+  position: relative;
+  width: 100%;
+}
 .submit {
   width: 100%;
   background-color: rgba(206, 205, 255, 0.075);
@@ -320,6 +359,7 @@ video {
   border-right: 1px solid white;
   border-left: 1px solid white;
   border-bottom: 10px solid white;
+  position: absolute;
   padding-bottom: 20px;
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;

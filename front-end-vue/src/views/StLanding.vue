@@ -2,30 +2,63 @@
   <div id="app">
     <span class="bg"></span>
     <v-app id="inspire">
+      <v-row justify="center" class="mt-5" v-if="!su && !member">
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" v-on="on" color="#B2EBF2">
+              <span style="color: #000 !important;">USER PROFILE</span>
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">User Profile</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="6">
+                    <v-text-field label="Phone No.*" v-model="phone" required></v-text-field>
+                  </v-col>
+                  <v-col cols="6">
+                    <v-text-field label="Roll No.*" v-model="roll" required></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <small>*indicates required field</small>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+              <v-btn color="blue darken-1" text @click="setProfile">Submit</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
       <div
         class="login-box"
-        v-if="(((student.studentround >= audition.round) && (audition.status != 'res'))  || (su) || (member))"
+        v-if="(((student.studentround >= audition.round) && (audition.status != 'res'))  || su || member)"
       >
         <v-row align="center" justify="center" v-if="audition.round != 0">
           <v-col class="text-center" cols="12">
             <h4 class="glitch">ROUND {{audition.round}}</h4>
             <p class="glitch" v-if="audition.status === 'res'">
-              The results for {{audition.round}} are out now
+              The results are out now
               <v-btn @click="$router.push('/results')" color="#B2EBF2" style="margin: 6px;">
                 <span style="color: #000 !important;">Results</span>
               </v-btn>
             </p>
-            <p v-if="audition.status === 'def'">The results for {{audition.round}} will be out soon</p>
+            <p v-if="audition.status === 'def'">The results will be out soon</p>
             <p v-if="audition.status === 'ong'">
               <v-btn
                 @click="$router.push('/audition')"
                 color="#B2EBF2"
-                v-if="audition.status === 'ong'"
+                v-if="audition.status === 'ong' && profile.profilebool === true && (student.studenttime === 0 || su || member || (student.studenttime >0 && student.studenttime > (new Date())))"
                 style="margin: 6px;"
               >
                 <span style="color: #000 !important;">ATTEMPT</span>
               </v-btn>
             </p>
+            <p class="glitch" v-if="profile.profilebool === false">COMPLETE YOUR PROFILE FIRST</p>
 
             <v-btn
               @click="$router.push('/admin')"
@@ -38,12 +71,7 @@
             <v-btn @click="$router.push('/root')" v-show="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">ROOT</span>
             </v-btn>
-            <v-btn
-              @click="$router.push('/admin')"
-              v-show="su"
-              color="#B2EBF2"
-              style="margin: 6px;"
-            >
+            <v-btn @click="$router.push('/admin')" v-show="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">DASHBOARD</span>
             </v-btn>
             <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
@@ -82,12 +110,7 @@
             <v-btn @click="$router.push('/root')" v-if="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">ROOT</span>
             </v-btn>
-            <v-btn
-              @click="$router.push('/admin')"
-              v-show="su"
-              color="#B2EBF2"
-              style="margin: 6px;"
-            >
+            <v-btn @click="$router.push('/admin')" v-show="su" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">DASHBOARD</span>
             </v-btn>
             <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
@@ -103,7 +126,7 @@
             <v-btn @click="logout" color="#B2EBF2" style="margin: 6px;">
               <span style="color: #000 !important;">Logout</span>
             </v-btn>
-            </v-col>
+          </v-col>
         </v-row>
       </div>
       <div
@@ -116,7 +139,7 @@
             <h4 class="glitch">WE HOPE TO SEE YOU IN FURTHER GLUG EVENTS</h4>
             <p v-if="((audition.status === 'res') && (audition.round != 0))" class="glitch">
               The results for {{audition.round}} are out now
-              <v-btn color="#B2EBF2" style="margin: 6px;">
+              <v-btn @click="$router.push('/results')" color="#B2EBF2" style="margin: 6px;">
                 <span style="color: #000 !important;">Results</span>
               </v-btn>
             </p>
@@ -153,7 +176,11 @@ export default {
     member: false,
     su: false,
     audition: [],
-    student: null
+    student: null,
+    dialog: false,
+    profile: [],
+    phone: "",
+    roll: ""
   }),
   name: "Landing",
   beforeCreate() {
@@ -163,6 +190,12 @@ export default {
     common.getAuditionStatus().then(res => {
       this.audition = res.data;
     });
+    common.getProfile().then(res => {
+      this.profile = res.data;
+      this.phone = this.profile.phone
+      this.roll = this.profile.roll
+      console.log(this.profile)
+    })
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
@@ -194,6 +227,12 @@ export default {
     },
     endCallBack: function(x) {
       console.log(x);
+    },
+    setProfile() {
+      common.setProfile({roll: this.roll, phone: this.phone}).then(() => {
+        this.dialog = false;
+        this.profile.profilebool = true;
+      })
     }
   }
 };

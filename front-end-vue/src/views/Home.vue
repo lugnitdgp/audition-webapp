@@ -282,4 +282,9 @@ export default {
 .button2:hover .o2 {
   stroke-dashoffset: -420;
 }
+@-moz-document url-prefix() {
+  .bg {
+    opacity: 0.5 !important;
+  }
+}
 </style>
