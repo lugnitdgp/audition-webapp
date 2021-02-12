@@ -547,7 +547,7 @@ module.exports = function (app, passport) {
           DashModel.findByIdAndUpdate(user._id, userNew).then((res) => {
            sendMail(
             "Congratulations!",
-            `Hi ${user.name}.\nWe are glad to inform you that you will be moving ahead in the audition process. Further details will be let known very soon.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)`,
+            `<html>Hi ${user.name}.<br/><br/>We are glad to inform you that you were shortlisted in Round ${round}.<br/> You will be moving ahead in the audition process.<br/>Further details will be let known very soon.<br/><br/>May The Source Be With You!<br/><br/>Thanking You,<br/>Your's Sincerely,<br/>GNU/Linux Users' Group, NIT Durgapur.</html>`,
             user.email
            );
           });
@@ -571,7 +571,7 @@ module.exports = function (app, passport) {
         const rejectedones = rejected.slice(0, -1);
         sendMail(
          "Thank you for your participation.",
-         "Hi there.\nWe announce with a heavy heart that you will not be moving ahead in the audition process. However, the GNU/Linux User's Group will always be there to help your every need to the best of our abilities.\nMay The Source Be With You!\n\nThanking You,\nYours' Sincerely,\nRohan Rao\n(Junior Member, GLUG)",
+         "<html>Hi there.<br/>We announce with a heavy heart that you will not be moving ahead in the audition process.<br/><br/>However, the GNU/Linux User's Group will always be there to help your every need to the best of our abilities.<br/>May The Source Be With You!<br/><br/>Thanking You,<br/>Yours' Sincerely,<br/>GNU/Linux Users' Group, NIT Durgapur.</html>",
          rejectedones
         );
        })
@@ -806,6 +806,15 @@ module.exports = function (app, passport) {
    } else res.sendStatus(401);
   }
  );
+
+//  app.get("/mailcheck",(req,res)=>{
+//   sendMail(
+//     "Congratulations!",
+//     `<html>Hello Rohan<br/>GG WP<br/><br/>Regards,<br/>GLUG</html>`,
+//     "rohanrao.dec11@gmail.com"
+//    );
+//    res.sendStatus(200)
+//  })
 
  app.get("/student/get", passport.authenticate("jwt", { session: false }),
   (req, res) => {
