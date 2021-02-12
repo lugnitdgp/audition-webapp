@@ -9,27 +9,29 @@
               <span style="color: #000 !important;">USER PROFILE</span>
             </v-btn>
           </template>
-          <v-card>
+          <v-card >
             <v-card-title>
               <span class="headline">User Profile</span>
             </v-card-title>
             <v-card-text>
               <v-container>
+                <v-form v-model="isValid">
                 <v-row>
                   <v-col cols="6">
-                    <v-text-field label="Phone No.*" v-model="phone" required></v-text-field>
+                    <v-text-field label="Phone No.*" v-model="phone" :rules="phoneRules" required></v-text-field>
                   </v-col>
                   <v-col cols="6">
-                    <v-text-field label="Roll No.*" v-model="roll" required></v-text-field>
+                    <v-text-field label="Roll No.*" v-model="roll" :rules="rollRules" required></v-text-field>
                   </v-col>
                 </v-row>
+                </v-form>
               </v-container>
               <small>*indicates required field</small>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-              <v-btn color="blue darken-1" text @click="setProfile">Submit</v-btn>
+              <v-btn color="blue darken-1" text @click="setProfile"  :disabled="!isValid">Submit</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -180,7 +182,22 @@ export default {
     dialog: false,
     profile: [],
     phone: "",
-    roll: ""
+    roll: "",
+    isValid: true,
+    phoneRules: [
+      v => !!v || "Phone No is required",
+      v => /^-?(\d+\.?\d*)$|(\d*\.?\d+)$/.test(v) || "Phone no must be valid",
+      v =>
+        (v && v.length <= 10 && v.length >= 10) ||
+        "Enter a valid (91+) 10 digit Phone no"
+    ],
+    rollRules: [
+      v => !!v || "Roll No is required",
+      v => /^([a-zA-Z0-9-]+)$/.test(v) || "Roll No must be valid",
+      v =>
+        (v && v.length <= 10 ) ||
+        "Enter a valid Roll no"
+    ]
   }),
   name: "Landing",
   beforeCreate() {
@@ -192,10 +209,10 @@ export default {
     });
     common.getProfile().then(res => {
       this.profile = res.data;
-      this.phone = this.profile.phone
-      this.roll = this.profile.roll
-      console.log(this.profile)
-    })
+      this.phone = this.profile.phone;
+      this.roll = this.profile.roll;
+      console.log(this.profile);
+    });
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     }
@@ -229,10 +246,10 @@ export default {
       console.log(x);
     },
     setProfile() {
-      common.setProfile({roll: this.roll, phone: this.phone}).then(() => {
+      common.setProfile({ roll: this.roll, phone: this.phone }).then(() => {
         this.dialog = false;
         this.profile.profilebool = true;
-      })
+      });
     }
   }
 };
