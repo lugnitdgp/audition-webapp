@@ -284,7 +284,7 @@ export default {
             this.loading = false;
             this.text = "Results published";
           } else {
-            alert("n07 4ll s7uden75 ar3 3v4lu4t3d");
+            alert("SOME STUDENTS ARE STILL UNEVALUATED");
           }
         });
       }
