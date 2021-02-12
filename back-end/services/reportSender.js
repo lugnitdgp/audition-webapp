@@ -5,7 +5,9 @@ const nodemailer = require('nodemailer');
                 try {
                     console.log("to ---"+ to)
                 const transporter = nodemailer.createTransport({
-                    service: 'Gmail',
+                    host: "smtp.zoho.com",
+                    secure: true,
+                    port: 465,
                     auth: {
                     user: process.env.MAILER,
                     pass: process.env.MAILER_PWD,
@@ -13,10 +15,9 @@ const nodemailer = require('nodemailer');
                 });
 
                 const message = {
-                    from: `The GNU/Linux User's Group, NIT Durgapur`,
-                    to,
-                    subject,
-                    text: subject,
+                    from: process.env.MAILER,
+                    to:to,
+                    subject:subject,
                     html: text,
                 };
 
