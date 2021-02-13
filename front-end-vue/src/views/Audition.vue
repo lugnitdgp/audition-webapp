@@ -16,10 +16,7 @@
           background-color: rgba(255, 255, 255, 0.08);
         "
       >
-        <v-app-bar-nav-icon
-          @click="drawer = true"
-          class="app-icon"
-        ></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
         <div style="width: 50%; text-align: left">
           <Basetimer :time="time" />
         </div>
@@ -30,24 +27,16 @@
         </div>
       </v-app-bar>
     </v-card>
-    <v-navigation-drawer
-      fixed
-      v-model="drawer"
-      absolute
-      temporary
-      class="nav-drawer"
-    >
+    <v-navigation-drawer fixed v-model="drawer" absolute temporary class="nav-drawer">
       <v-list nav dense>
-        <v-tabs v-model="tab" class="quess-box" :key="answers" vertical>
+        <v-tabs v-model="tab" class="quess-box" vertical>
           <v-tab
             class="utab"
-            :disabled="disabledTab"
             v-for="(question, i) in questions"
             :key="i"
             v-bind:class="classObject(question._id)"
             @click="submitanswer(question._id)"
-            >QUES {{ i + 1 }}</v-tab
-          >
+          >QUES {{ i + 1 }}</v-tab>
         </v-tabs>
       </v-list>
     </v-navigation-drawer>
@@ -61,36 +50,27 @@
           v-bind:class="classObject(question._id)"
           @click="submitanswer(question._id)"
           :disabled="disabledTab"
-          >QUES {{ i + 1 }}</v-tab
-        >
+        >QUES {{ i + 1 }}</v-tab>
       </v-tabs>
       <v-tabs-items v-model="tab" class="qbody">
         <v-tab-item v-for="(question, i) in questions" :key="i">
-          <v-container :key="answers">
-            <Normalques
-              :question="question"
-              v-if="question[`quesType`] === 'nor'"
-            />
-            <Imageques
-              :question="question"
-              v-if="question[`quesType`] === 'img'"
-            />
+          <v-container>
+            <Normalques :question="question" v-if="question[`quesType`] === 'nor'" />
+            <Imageques :question="question" v-if="question[`quesType`] === 'img'" />
             <Mcq :question="question" v-if="question[`quesType`] === 'mcq'" />
             <Audio :question="question" v-if="question[`quesType`] === 'aud'" />
           </v-container>
         </v-tab-item>
       </v-tabs-items>
-      <div class="s-box">
-        <div class="submit">
-          <v-btn @click="submitround" color="#B2EBF2" :disabled="disabledTab">
-            <span style="color: #000 !important">Save Round</span>
-          </v-btn>
-        </div>
+      <div class="sbox">
+      <div class="submit">
+        <v-btn @click="submitround" color="#B2EBF2">
+          <span style="color: #000 !important">Save Round</span>
+        </v-btn>
+      </div>
       </div>
     </v-container>
-    <v-snackbar v-model="submitSnackbar" elevation="12" color="success"
-      >Round Submitted</v-snackbar
-    >
+    <v-snackbar v-model="submitSnackbar" elevation="12" color="success">Round Submitted</v-snackbar>
   </div>
 </template>
 
@@ -111,7 +91,7 @@ export default {
     Imageques,
     Normalques,
     Mcq,
-    Audio,
+    Audio
   },
   data: () => ({
     file: "",
@@ -121,21 +101,19 @@ export default {
     su: false,
     questions: [],
     time: null,
-    answers: false,
     round: null,
     tab: null,
     currentab: null,
     submitSnackbar: false,
-    disabledTab: false,
+    disabledTab: false
   }),
 
   beforeCreate() {
-    localStorage.removeItem("answers");
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
       console.log("lol");
-      common.getstudentRound().then((res) => {
+      common.getstudentRound().then(res => {
         console.log(res.data);
         let t = res.data.time - 2000 - new Date().getTime();
         if (t > 0) {
@@ -148,6 +126,10 @@ export default {
           this.$router.push("/");
         }
       });
+      common.getAnswers().then(res => {
+        console.log(res.data);
+        localStorage.setItem("answers", JSON.stringify(res.data.answers));
+      });
     }
   },
 
@@ -156,9 +138,6 @@ export default {
     if (localStorage.getItem("token") === null) {
       this.$router.push("/");
     } else {
-      this.getAnswers().then(() => {
-        this.answers = true;
-      });
       var tok = VueJwtDecode.decode(localStorage.getItem("token").substring(6));
       if (tok.role === "m") {
         this.member = true;
@@ -168,51 +147,37 @@ export default {
     }
   },
   methods: {
-   async getAnswers() {
-      await common.getAnswers().then((res) => {
-        console.log(res.data);
-        if (res.data.answers != null) {
-          localStorage.setItem("answers", JSON.stringify(res.data.answers));
-            return Promise.resolve();
-        }
-          return Promise.resolve();
-
-      });
-    },
     classObject(qid) {
       var a = false;
-      if (
-        localStorage.getItem("answers") != null &&
-        localStorage.getItem("answers") != "null"
-      ) {
+      if (localStorage.getItem("answers") != null) {
         a = JSON.parse(localStorage.getItem("answers")).find(
-          (ele) => ele.qid === qid
+          ele => ele.qid === qid
         );
         if (a === undefined) a = false;
         else a = true;
       }
       return {
-        done: a,
+        done: a
       };
     },
     logout() {
       // eslint-disable-next-line no-unused-vars
-      common.logout().then((res) => {
+      common.logout().then(res => {
         this.$router.push("/login");
       });
     },
     submitanswer(qid) {
       var searchel = JSON.parse(localStorage.getItem("answers")).find(
-        (answer) => answer.qid === this.currentab
+        answer => answer.qid === this.currentab
       );
       if (searchel !== undefined) {
         var payload = {
           qid: this.currentab,
           answer: searchel.answer,
           round: this.round,
-          qtype: searchel.qtype,
+          qtype: searchel.qtype
         };
-        this.disabledTab = true;
+        this.disabledTab = true
         common.updateAnswer(payload).then(() => {
           this.disabledTab = false;
           this.currentab = qid;
@@ -225,38 +190,34 @@ export default {
       if (localStorage.getItem("answers") === null) {
         // alert("Try. ._. :/ ???");
       } else {
-        this.disabledTab = true;
         var payload = {
           round: {
             questions: JSON.parse(localStorage.getItem("answers")),
-            roundNo: this.round,
-          },
+            roundNo: this.round
+          }
         };
 
         common.submitRound(payload).then(() => {
           this.submitSnackbar = true;
-          this.disabledTab = false;
         });
       }
     },
     autosubmit() {
-      this.disabledTab = true;
       var payload = {
         round: {
           questions: JSON.parse(localStorage.getItem("answers")),
-          roundNo: this.round,
-        },
+          roundNo: this.round
+        }
       };
 
       common.submitRound(payload).then(() => {
         this.submitSnackbar = true;
-        this.disabledTab = false;
         localStorage.removeItem("answers");
         setTimeout(() => {
           this.$router.push("/thanks");
         }, 3000);
       });
-    },
+    }
   },
   watch: {
     darkmode(newvalue) {
@@ -264,8 +225,8 @@ export default {
     },
     group() {
       this.drawer = false;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -281,6 +242,10 @@ export default {
   border-top-left-radius: 0px !important;
 }
 .nav-drawer {
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  z-index: 999999;
   background-color: rgba(0, 0, 0, 0);
   backdrop-filter: blur(6px);
 }
@@ -301,6 +266,7 @@ video {
 .question-cont {
   margin-top: 100px;
   text-align: center;
+  position: relative;
 }
 .quess {
   margin: 50px auto;
@@ -313,7 +279,6 @@ video {
   backdrop-filter: blur(8px);
   justify-content: center;
   width: 90%;
-  position: relative;
   max-width: 1100px;
   margin: 0 auto;
   display: flex;
@@ -348,18 +313,17 @@ video {
   border-right: 1px solid white;
   border-left: 1px solid white;
 }
-.s-box {
+.sbox{
   position: relative;
   width: 100%;
 }
 .submit {
+  position: absolute;
   width: 100%;
   background-color: rgba(206, 205, 255, 0.075);
-  backdrop-filter: blur(8px);
   border-right: 1px solid white;
   border-left: 1px solid white;
   border-bottom: 10px solid white;
-  position: absolute;
   padding-bottom: 20px;
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;

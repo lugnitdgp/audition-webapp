@@ -255,7 +255,7 @@ module.exports = function (app, passport) {
 
  app.get(
   "/auth/github",
-  passport.authenticate("github", { scope: ["user:email"] })
+  passport.authenticate("github")
  );
 
  app.get(
