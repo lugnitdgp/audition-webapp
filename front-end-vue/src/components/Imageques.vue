@@ -9,7 +9,7 @@
         <v-flex xs12 sm12 lg12>
           <div align-center>
             <v-container grid-list-sm fluid>
-              <v-layout style="width: 100%; max-width:600px; height: auto; margin: 0 auto;"  row wrap>
+              <v-layout style="width: auto; max-height: 400px; margin: 0 auto;"  row wrap>
                 <v-img style="border-radius: 20px;" :src="question.quesLink"></v-img>
               </v-layout>
             </v-container>

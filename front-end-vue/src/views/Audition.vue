@@ -62,10 +62,12 @@
           </v-container>
         </v-tab-item>
       </v-tabs-items>
+      <div class="sbox">
       <div class="submit">
         <v-btn @click="submitround" color="#B2EBF2">
           <span style="color: #000 !important">Save Round</span>
         </v-btn>
+      </div>
       </div>
     </v-container>
     <v-snackbar v-model="submitSnackbar" elevation="12" color="success">Round Submitted</v-snackbar>
@@ -240,6 +242,11 @@ export default {
   border-top-left-radius: 0px !important;
 }
 .nav-drawer {
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 999999;
   background-color: rgba(0, 0, 0, 0);
   backdrop-filter: blur(6px);
 }
@@ -260,6 +267,7 @@ video {
 .question-cont {
   margin-top: 100px;
   text-align: center;
+  position: relative;
 }
 .quess {
   margin: 50px auto;
@@ -306,10 +314,14 @@ video {
   border-right: 1px solid white;
   border-left: 1px solid white;
 }
+.sbox{
+  position: relative;
+  width: 100%;
+}
 .submit {
+  position: absolute;
   width: 100%;
   background-color: rgba(206, 205, 255, 0.075);
-  backdrop-filter: blur(8px);
   border-right: 1px solid white;
   border-left: 1px solid white;
   border-bottom: 10px solid white;
