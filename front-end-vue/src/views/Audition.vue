@@ -243,9 +243,8 @@ export default {
 }
 .nav-drawer {
   height: 100vh;
-  position: absolute;
+  position: fixed;
   left: 0;
-  top: 0;
   z-index: 999999;
   background-color: rgba(0, 0, 0, 0);
   backdrop-filter: blur(6px);

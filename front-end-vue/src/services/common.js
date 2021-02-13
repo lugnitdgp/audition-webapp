@@ -123,7 +123,16 @@ export default {
     return Api().get("student/getAnswers",{
       headers: { Authorization: localStorage.getItem("token") }
     })
-  }
-  
+  },
+  getProfile() {
+    return Api().get("profile", {
+      headers: { Authorization: localStorage.getItem("token") }
+    })
+  },
+  setProfile(profile) {
+    return Api().post("profile",profile,{
+      headers: { Authorization: localStorage.getItem("token") }
+    })
+  } 
 }
 

@@ -8,11 +8,11 @@
       <v-layout class="justify-center">
         <v-flex xs12 sm12 lg12>
           <div align-center>
-            <v-container grid-list-sm fluid>
-              <v-layout style="width: auto; max-height: 400px; margin: 0 auto;"  row wrap>
-                <v-img style="border-radius: 20px;" :src="question.quesLink"></v-img>
-              </v-layout>
-            </v-container>
+            
+              
+                <v-img contain max-height="400px" style="border-radius: 10px; margin: 20px;" :src="question.quesLink"></v-img>
+              
+            
           </div>
         </v-flex>
       </v-layout>

@@ -8,7 +8,7 @@
           <v-text-field
             v-model="UserName"
             label="Full Name"
-            name="UserName"
+            name="UserName*"
             prepend-icon="person"
             type="text"
             class="user-box"
@@ -16,8 +16,9 @@
           <v-text-field
             v-model="email"
             class="user-box"
-            label="Email"
+            label="Email*"
             name="login"
+            :rules="emailRules"
             prepend-icon="email"
             type="text"
           />
@@ -25,7 +26,7 @@
           <v-text-field
             v-model="password"
             id="password"
-            label="Password"
+            label="Password*"
             name="password"
             prepend-icon="lock"
             type="password"

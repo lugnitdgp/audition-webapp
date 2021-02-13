@@ -10,7 +10,7 @@
             <v-expansion-panel-content>
               <v-container fluid>
                 <v-card class="bord">
-                  <v-text-field v-model="time" label="round time" outlined color="error"></v-text-field>
+                  <v-text-field v-model="time" label="round time" disabled outlined color="error"></v-text-field>
                   <v-skeleton-loader
                     class="mx-auto"
                     v-if="loading === true"
@@ -93,7 +93,7 @@
                       </template>
                     </v-btn>
                   </v-card>
-                  <v-snackbar v-model="snackbar">The round has been succesfully pushed.</v-snackbar>
+                  <v-snackbar v-model="snackbar">The ques was added succesfully.</v-snackbar>
                   <v-spacer />
                   <v-spacer />
                   <v-spacer />
@@ -133,7 +133,7 @@
         </v-expansion-panels>
       </div>
 
-      <v-snackbar v-model="snackbar">Be patient</v-snackbar>
+      <v-snackbar v-model="snackbar">quetions added succesfully</v-snackbar>
     </v-container>
   </v-app>
 </template>
@@ -236,6 +236,7 @@ export default {
         round: round
       };
       common.updateRound(payload).then(res => {
+         this.snackbar = true;
         console.log(res);
       });
     }
