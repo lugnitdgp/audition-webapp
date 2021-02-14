@@ -70,7 +70,7 @@
       </div>
       </div>
     </v-container>
-    <v-snackbar v-model="submitSnackbar" elevation="12" color="success">Round Submitted</v-snackbar>
+    <v-snackbar v-model="submitSnackbar" elevation="12" color="success">Round Saved</v-snackbar>
   </div>
 </template>
 
@@ -163,6 +163,7 @@ export default {
     logout() {
       // eslint-disable-next-line no-unused-vars
       common.logout().then(res => {
+        localStorage.removeItem("token")
         this.$router.push("/login");
       });
     },

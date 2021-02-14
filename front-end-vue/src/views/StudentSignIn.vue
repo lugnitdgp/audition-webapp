@@ -4,11 +4,12 @@
       <span class="bg"></span>
       <div class="login-box">
         <h2 class="glitch">LOGIN</h2>
-        <v-form class="elevaton-23">
+        <v-form class="elevaton-23" v-model="isValid">
           <v-text-field
             v-model="email"
             class="user-box"
             label="Email"
+            :rules="emailRules"
             name="login"
             prepend-icon="email"
             type="text"
@@ -16,6 +17,7 @@
           <v-text-field
             v-model="password"
             id="password"
+            :rules="passwordRules"
             label="Password"
             name="password"
             prepend-icon="lock"
@@ -30,12 +32,12 @@
               <v-col cols="8">
                 <v-btn
                   :loading="loading"
-                  :disabled="loading"
+                  :disabled="loading || !isValid"
                   block
                   outlined
                   color="blue"
                   @click="send"
-                  style="border-radius: 20px;"
+                  style="border-radius: 20px"
                 >
                   LOGIN
                   <template v-slot:loader>
@@ -51,7 +53,7 @@
                 cols="6"
                 align="center"
                 justify="center"
-                style="display:flex; justify-content: flex-end;"
+                style="display: flex; justify-content: flex-end"
               >
                 <v-btn color="red" outlined fab large @click="goauth">
                   <v-icon>mdi-google</v-icon>
@@ -61,7 +63,7 @@
                 cols="6"
                 align="center"
                 justify="center"
-                style="display:flex; justify-content: flex-start;"
+                style="display: flex; justify-content: flex-start"
               >
                 <v-btn color="blue" outlined fab large @click="githuboauth">
                   <i class="fab fa-github"></i>
@@ -74,19 +76,24 @@
                 Don't have an account ?
                 <a
                   @click="$router.push('/register')"
-                  style="color: cyan !important;"
-                >Register</a>
+                  style="color: cyan !important"
+                  >Register</a
+                >
               </p>
             </v-row>
           </v-container>
         </v-card-actions>
       </div>
     </v-content>
-    <v-snackbar v-model="error" color="error" elevation="12" app>{{ errorMessage }}</v-snackbar>
+    <v-snackbar v-model="error" color="error" elevation="12" app>{{
+      errorMessage
+    }}</v-snackbar>
   </v-app>
 </template>
 
 <script>
+/* eslint-disable */
+
 import common from "@/services/common.js";
 
 export default {
@@ -96,11 +103,23 @@ export default {
     email: "",
     password: "",
     loading: false,
+    isValid: true,
     error: false,
+    emailRules: [
+      (v) => !!v || "Required.",
+      (v) =>
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(
+          v
+        ) || "Invalid Email address",
+    ],
+    passwordRules: [
+      (v) => !!v || "Required.",
+      (v) => v.length >= 8 || "Min 8 characters",
+    ],
     errorMessage: "",
   }),
   props: {
-    source: String
+    source: String,
   },
   created() {
     this.$vuetify.theme.dark = true;
@@ -110,9 +129,9 @@ export default {
       this.loading = !this.loading;
       var user = {
         email: this.email,
-        password: this.password
+        password: this.password,
       };
-      common.login(user).then(res => {
+      common.login(user).then((res) => {
         if (res.data.success == true) {
           localStorage.setItem("token", res.data.token);
           this.loading = false;
@@ -129,8 +148,8 @@ export default {
     },
     githuboauth() {
       window.location.href = `${process.env.VUE_APP_BASE_URL}auth/github/`;
-    }
-  }
+    },
+  },
 };
 </script>
 

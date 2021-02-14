@@ -9,6 +9,12 @@
           Call: <a :href="`tel:+91${details.phone}`">{{ details.phone }}</a>
         </p>
         <p class="text-center">Roll Number: {{ details.roll }}</p>
+        <v-btn
+          @click="wildcard"
+          v-if="currentround > details.round && status === 'rejected' || status === 'unevaluated' && wildcardbool === true"
+          color="#FF0000"
+          >WILD-CARD</v-btn
+        >
       </v-alert>
     </v-container>
     <v-container fluid>
@@ -203,9 +209,11 @@ export default {
       rounds: [],
       expand: false,
       answers: [],
+      wildcardbool:false,
       type: null,
       tab: 0,
       dialog: false,
+      currentround: -1,
       status: "",
       clearance: true,
       options: ["unevaluated", "selected", "review", "rejected"],
@@ -220,7 +228,7 @@ export default {
       else {
         return this.details.feedback.filter((i) => {
           console.log(i);
-          console.log(this.filter.substring(6))
+          console.log(this.filter.substring(6));
           return i.round == Number(this.filter.substring(6));
         });
       }
@@ -257,6 +265,10 @@ export default {
           ) {
             this.clearance = false;
           }
+          if( VueJwtDecode.decode(localStorage.getItem("token").substring(6))
+              .role === "su"){
+                this.wildcardbool = true
+              }
           console.log(res);
 
           common.getRounds().then((response) => {
@@ -288,6 +300,10 @@ export default {
               this.answers.push(roundentry);
             });
             this.tab = this.answers.length - 1;
+          });
+          common.getAuditionStatus().then((res) => {
+            console.log(res);
+            this.currentround = res.data.round;
           });
           console.log(this.answers.length);
         } else if (res.status === 401) {
@@ -325,6 +341,11 @@ export default {
         this.details.status = this.status;
         this.updateEntry();
       }
+    },
+    wildcard(){
+      common.wildcard(this.details.uid).then(()=>{
+          this.$router.push("/admin");
+      })
     },
     updateEntry() {
       this.statusSnackbar = true;
