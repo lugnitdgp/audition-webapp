@@ -118,9 +118,9 @@
                         >
                           <template v-slot:item="row">
                             <tr v-show="row.item.round >= tab + 1">
-                              <td>{{ row.item.name }}</td>
-                              <td>{{ row.item.status }}</td>
-                              <td>{{ row.item.lastUser }}</td>
+                              <td @click="usercontrol(row.item)">{{ row.item.name }}</td>
+                              <td @click="usercontrol(row.item)">{{ row.item.status }}</td>
+                              <td @click="usercontrol(row.item)">{{ row.item.lastUser }}</td>
                               <td>{{ row.item.phone }}</td>
                               <td>{{ row.item.roll }}</td>
                             </tr>

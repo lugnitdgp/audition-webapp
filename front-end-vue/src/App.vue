@@ -1,27 +1,28 @@
 <template>
-<v-app>
-  <div id="app">
-    <router-view/>
-   
-  </div>
-</v-app>
+  <v-app>
+    <div id="app">
+      <router-view />
+    </div>
+    <Footer />
+  </v-app>
 </template>
 
 <script>
-
+ import Footer from "./components/layout/Footer";
 
 export default {
-  
-  name:"app",
- 
-  created(){
-    this.$vuetify.theme.dark = true
-  }
-}
+  name: "app",
+  components: {
+     Footer,
+  },
+  created() {
+    this.$vuetify.theme.dark = true;
+  },
+};
 </script>
 
 <style scoped>
-#app{
- height: 100%;
- }
+#app {
+  
+}
 </style>

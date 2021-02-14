@@ -824,4 +824,27 @@ module.exports = function (app, passport) {
    })
   }
  )
+
+ app.post("/wildcard", passport.authenticate("jwt", { session: false }),
+ (req, res) => {
+  if(req.user.role === 'su'){
+  let save = JSON.parse(
+    fs.readFileSync(
+     path.resolve(__dirname + "../../../config/auditionConfig.json")
+    )
+   );
+  DashModel.findOne({ uid: req.body.uid }).then((kid) => {
+   if (!kid) res.sendStatus(404);
+    kid.round = save.round
+    kid.status = "unevaluated"
+    kid.save().then(()=>{
+      res.sendStatus(200)
+    })
+  })
+ }else{
+   res.sendStatus(401)
+ }
+}
+)
+ 
 };

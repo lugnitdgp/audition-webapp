@@ -39,26 +39,24 @@ module.exports = function (passport) {
         })
           .then(res => res.json())
           .then(json => {
-            console.log(json)
             var emails = json.filter(function (email) {
-              return email.verified;
+              return (email.verified) && (email.email.toString().includes("users.noreply.github.com") === false);
             });
 
             if (!emails.length) {
               return done(null, false);
             }
             profile.emails = emails;
-
             console.log(profile)
-            User.findOne({ email: profile.emails[0].email }).then((currentUser) => {
+            User.findOne({ $or: [{ password: profile.username }, { email: profile.emails[0].email }]}).then((currentUser) => {
               if (currentUser) {
                 console.log("Existing User: " + currentUser);
                 done(null, currentUser);
               } else {
                 new User({
-                  UserName: profile.displayName,
+                  UserName: (profile.displayName === null || profile.displayName === undefined)?profile.username:profile.displayName,
                   email: profile.emails[0].email,
-                  password: profile.id,
+                  password: profile.username,
                   mode: 'github'
                 })
                   .save()

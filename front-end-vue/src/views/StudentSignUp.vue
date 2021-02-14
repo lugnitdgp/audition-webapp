@@ -4,11 +4,12 @@
       <span class="bg"></span>
       <div class="login-box">
         <h2 class="glitch">REGISTER</h2>
-        <v-form class="elevation-24">
+        <v-form v-model="isValid" class="elevation-24">
           <v-text-field
             v-model="UserName"
             label="Full Name"
             name="UserName*"
+            :rules="nameRules"
             prepend-icon="person"
             type="text"
             class="user-box"
@@ -27,6 +28,7 @@
             v-model="password"
             id="password"
             label="Password*"
+            :rules="passwordRules"
             name="password"
             prepend-icon="lock"
             type="password"
@@ -40,12 +42,12 @@
               <v-col cols="8">
                 <v-btn
                   :loading="loading"
-                  :disabled="loading"
+                  :disabled="loading || !isValid"
                   block
                   outlined
                   color="blue"
                   @click="signup"
-                  style="border-radius: 20px;"
+                  style="border-radius: 20px"
                 >
                   REGISTER
                   <template v-slot:loader>
@@ -61,7 +63,7 @@
                 cols="6"
                 align="center"
                 justify="center"
-                style="display:flex; justify-content: flex-end;"
+                style="display: flex; justify-content: flex-end"
               >
                 <v-btn color="red" outlined fab large @click="goauth">
                   <v-icon>mdi-google</v-icon>
@@ -71,27 +73,31 @@
                 cols="6"
                 align="center"
                 justify="center"
-                style="display:flex; justify-content: flex-start;"
+                style="display: flex; justify-content: flex-start"
               >
                 <v-btn color="blue" outlined fab large @click="githuboauth">
                   <i class="fab fa-github"></i>
                 </v-btn>
               </v-col>
             </v-row>
+
             <v-row class="mt-4" align="center" justify="center">
               <p align="center">
                 Already have an account ?
                 <a
                   @click="$router.push('/login')"
-                  style="color: cyan !important;"
-                >Login</a>
+                  style="color: cyan !important"
+                  >Login</a
+                >
               </p>
             </v-row>
           </v-container>
         </v-card-actions>
       </div>
     </v-content>
-    <v-snackbar v-model="emailSnack" color="error" elevation="12" app>Mail is already in use</v-snackbar>
+    <v-snackbar v-model="emailSnack" color="error" elevation="12" app
+      >Mail is already in use</v-snackbar
+    >
   </v-app>
 </template>
 
@@ -106,11 +112,26 @@ export default {
     UserName: "",
     email: "",
     password: "",
+    isValid: true,
     loading: false,
-    emailSnack: false
+    emailRules: [
+      (v) => !!v || "Required.",
+      (v) =>
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(
+          v
+        ) || "Invalid Email address",
+    ],
+    passwordRules: [
+      (v) => !!v || "Required.",
+      (v) => v.length >= 8 || "Min 8 characters",
+    ],
+    nameRules:[
+      v => !!v || "Required."
+    ],
+    emailSnack: false,
   }),
   props: {
-    source: String
+    source: String,
   },
   created() {
     this.$vuetify.theme.dark = true;
@@ -127,9 +148,9 @@ export default {
         UserName: this.UserName,
         email: this.email,
         password: this.password,
-        isAdmin: false
+        isAdmin: false,
       };
-      common.signup(user).then(res => {
+      common.signup(user).then((res) => {
         this.loading = false;
         if (res.data.success == true) {
           this.$router.push("/");
@@ -144,8 +165,8 @@ export default {
     },
     githuboauth() {
       window.location.href = `${process.env.VUE_APP_BASE_URL}auth/github/`;
-    }
-  }
+    },
+  },
 };
 </script>
 
