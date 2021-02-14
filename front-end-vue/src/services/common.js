@@ -133,6 +133,11 @@ export default {
     return Api().post("profile",profile,{
       headers: { Authorization: localStorage.getItem("token") }
     })
-  } 
+  },
+  wildcard(id){
+    return Api().post("wildcard",{uid:id},{
+      headers: { Authorization: localStorage.getItem("token") }
+    })
+  }
 }
 
