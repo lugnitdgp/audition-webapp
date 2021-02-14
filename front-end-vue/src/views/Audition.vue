@@ -264,7 +264,8 @@ video {
   color: white;
 }
 .question-cont {
-  margin-top: 100px;
+  margin: 100px auto;
+
   text-align: center;
   position: relative;
 }

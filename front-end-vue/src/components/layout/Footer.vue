@@ -13,11 +13,12 @@ export default {
 </script>
 <style scoped>
 .footer {
-  position: relative;
+  position: fixed;
+  bottom: 0px;
   width: 100%;
-  background-color: rgba(19, 1, 1, 0.349);
-  backdrop-filter: blur(6px);
-  height: 50px;
+  background-color: rgba(19, 1, 1, 0.449);
+  backdrop-filter: blur(8px);
+  height: 45px;
   color: white;
   display: flex;
   justify-content: center;
