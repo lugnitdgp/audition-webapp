@@ -11,7 +11,7 @@
         <p class="text-center">Roll Number: {{ details.roll }}</p>
         <v-btn
           @click="wildcard"
-          v-if="currentround > details.round && status === 'rejected' || status === 'unevaluated' && wildcardbool === true"
+          v-if="currentround > details.round && (status === 'rejected' || status === 'unevaluated') && wildcardbool === true"
           color="#FF0000"
           >WILD-CARD</v-btn
         >

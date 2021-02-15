@@ -16,7 +16,7 @@
           <v-row align="center" justify="center">
             <v-col cols="12" sm="6" lg="3">
               <v-alert outlined color="#00FFFF">
-                <v-list-item three-line>
+                <v-list-item>
                   <v-list-item-content>
                     <div class="subtitle-2">TOTAL STUDENTS</div>
                     <v-list-item-title class="display-2">
@@ -32,7 +32,7 @@
             </v-col>
             <v-col cols="12" sm="6" lg="3">
               <v-alert outlined color="success">
-                <v-list-item three-line>
+                <v-list-item>
                   <v-list-item-content>
                     <div class="subtitle-2">COMPLETED</div>
                     <v-list-item-title class="display-2">{{
@@ -49,7 +49,7 @@
             </v-col>
             <v-col cols="12" sm="6" lg="3">
               <v-alert outlined color="warning">
-                <v-list-item three-line>
+                <v-list-item>
                   <v-list-item-content>
                     <div class="subtitle-2">PENDING</div>
                     <v-list-item-title class="display-2">{{
@@ -57,7 +57,10 @@
                     }}</v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-avatar tile size="90">
-                    <v-img src="../assets/img/w.png"></v-img>
+                    <v-img
+                      style="height: 100px"
+                      src="../assets/img/w.png"
+                    ></v-img>
                   </v-list-item-avatar>
                 </v-list-item>
               </v-alert>
@@ -98,15 +101,10 @@
                   >
                     <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
 
-                    <v-tab v-for="i in round" :key="i" 
-                      >Round {{ i }}</v-tab
-                    >
+                    <v-tab v-for="i in round" :key="i">Round {{ i }}</v-tab>
                   </v-tabs>
                   <v-tabs-items v-model="tab">
-                    <v-tab-item
-                      v-for="i in round"
-                      :key="i"
-                    >
+                    <v-tab-item v-for="i in round" :key="i">
                       <v-container v-if="i < round">
                         <v-data-table
                           disable-pagination
@@ -118,9 +116,16 @@
                         >
                           <template v-slot:item="row">
                             <tr v-show="row.item.round >= tab + 1">
-                              <td @click="usercontrol(row.item)">{{ row.item.name }}</td>
-                              <td @click="usercontrol(row.item)">{{ row.item.status }}</td>
-                              <td @click="usercontrol(row.item)">{{ row.item.lastUser }}</td>
+                              <td @click="usercontrol(row.item)">
+                                {{ row.item.name }}
+                              </td>
+                              <td @click="usercontrol(row.item)">
+                                {{ row.item.status }}
+                              </td>
+                              <td @click="usercontrol(row.item)">
+                                {{ row.item.lastUser }}
+                              </td>
+                              <td>{{ row.item.email }}</td>
                               <td>{{ row.item.phone }}</td>
                               <td>{{ row.item.roll }}</td>
                             </tr>
@@ -148,6 +153,7 @@
                               <td @click="usercontrol(row.item)">
                                 {{ row.item.lastUser }}
                               </td>
+                              <td>{{ row.item.email }}</td>
                               <td>{{ row.item.phone }}</td>
                               <td>{{ row.item.roll }}</td>
                               <td @click="popup(row.item)" class="details">
@@ -212,8 +218,8 @@ export default {
       headers: [
         { text: "FULL NAME", align: "start", value: "name" },
         { text: "STATUS", align: "start", value: "status" },
-
         { text: "LAST VIEWED", align: "start", value: "lastUser" },
+        { text: "E-mail", align: "start", value: "email" },
         { text: "Phone", align: "start", value: "phone" },
         { text: "Roll Number", align: "start", value: "roll" },
         { text: "DETAILS", align: "start", value: "details" },
@@ -237,7 +243,7 @@ export default {
     common.getAuditionStatus().then((res) => {
       console.log(res);
       this.round = res.data.round;
-      this.tab= this.round -1
+      this.tab = this.round - 1;
     });
     common.getUsers().then((res) => {
       if (res.status === 200) {
