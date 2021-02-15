@@ -89,7 +89,7 @@ export default {
 
     })
   },
-  getRounds(){
+  getRounds() {
     return Api().get('getRounds', {
       headers: { Authorization: localStorage.getItem("token") }
 
@@ -112,15 +112,15 @@ export default {
   getStudent() {
     return Api().get('/student/get', {
       headers: { Authorization: localStorage.getItem("token") }
-  })
+    })
   },
-  updateRound(round){
+  updateRound(round) {
     return Api().put('updateRound', round, {
       headers: { Authorization: localStorage.getItem("token") }
     })
   },
-  getAnswers(){
-    return Api().get("student/getAnswers",{
+  getAnswers() {
+    return Api().get("student/getAnswers", {
       headers: { Authorization: localStorage.getItem("token") }
     })
   },
@@ -129,13 +129,18 @@ export default {
       headers: { Authorization: localStorage.getItem("token") }
     })
   },
-  setProfile(profile) {
-    return Api().post("profile",profile,{
+  extendtime(id) {
+    return Api().put("protected/extendtime",id, {
       headers: { Authorization: localStorage.getItem("token") }
     })
   },
-  wildcard(id){
-    return Api().post("wildcard",{uid:id},{
+  setProfile(profile) {
+    return Api().post("profile", profile, {
+      headers: { Authorization: localStorage.getItem("token") }
+    })
+  },
+  wildcard(id) {
+    return Api().post("wildcard", { uid: id }, {
       headers: { Authorization: localStorage.getItem("token") }
     })
   }

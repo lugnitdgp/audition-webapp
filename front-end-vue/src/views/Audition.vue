@@ -298,7 +298,7 @@ video {
   border: 1px solid white !important;
 }
 .done {
-  background-color: rgba(52, 170, 48, 0.247) !important;
+  background-color: rgba(52, 170, 48, 0.39) !important;
 }
 .vtab {
   background-color: rgba(206, 205, 255, 0.075) !important;
