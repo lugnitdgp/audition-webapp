@@ -58,7 +58,7 @@
               <v-spacer />
               
               <v-spacer />
-              <v-btn color="blue-grey" class="ma-2 white--text" @click="uploadForm">
+              <v-btn color="blue-grey" class="ma-2 white--text" :disabled="file === ''" @click="uploadForm">
                 Media
                 <v-icon right dark>mdi-cloud-upload</v-icon>
               </v-btn>
@@ -67,7 +67,7 @@
               <v-spacer />
               <v-btn
                 color="blue-grey"
-                :disabled="quesText === ''"
+                :disabled="quesText === '' || quesType === ''"
                 class="ma-2 white--text"
                 @click="addQues"
               >

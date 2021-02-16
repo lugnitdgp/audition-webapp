@@ -57,7 +57,7 @@ module.exports = function (app, passport) {
     return true;
   }
 
-  async function eventeventlogger(user, message) {
+  async function eventlogger(user, message) {
     var newLog = new EventLogModel({
       user:user.UserName + '('+user.role+')',
       time: (new Date()).toString().substring(0, 24),
@@ -126,7 +126,7 @@ module.exports = function (app, passport) {
           questions: req.body.questions,
         });
         round.save().then(() => {
-          if (eventeventlogger(req.user, `added Round ${total + 1}`))
+          if (eventlogger(req.user, `added Round ${total + 1}`))
             res.json({ success: true });
           else
             res.sendStatus(500)
@@ -161,7 +161,7 @@ module.exports = function (app, passport) {
           req.body.round._id,
           req.body.round
         ).then(() => {
-          if (eventeventlogger(req.user, `Edited Round ${req.body.round}`))
+          if (eventlogger(req.user, `Edited Round ${req.body.round}`))
             res.sendStatus(202)
           else
             res.sendStatus(500)
@@ -423,7 +423,7 @@ module.exports = function (app, passport) {
         (req.user.role === "m" && req.user.clearance >= a.round)
       ) {
         DashModel.replaceOne({ _id: req.body._id }, a).then((doc) => {
-          if (eventeventlogger(req.user, `Changed selection status for ${a.name} to ${a.status}`))
+          if (eventlogger(req.user, `Changed selection status for ${a.name} to ${a.status}`))
             return res.status(202).json({ message: "Changes have been saved" });
           else
             res.sendStatus(500)
@@ -444,7 +444,7 @@ module.exports = function (app, passport) {
         (req.user.role === "m")
       ) {
         DashModel.replaceOne({ _id: req.body._id }, a).then((doc) => {
-          if (eventeventlogger(req.user, `Added feedback for ${a.name}`))
+          if (eventlogger(req.user, `Added feedback for ${a.name}`))
             return res.status(202).json({ message: "Changes have been saved" });
           else
             res.sendStatus(500)
@@ -479,7 +479,7 @@ module.exports = function (app, passport) {
             if (err) throw err;
             else {
               console.log(dash)
-              if (eventeventlogger(req.user, `changed the role for ${dash.name} to ${role}`))
+              if (eventlogger(req.user, `changed the role for ${dash.name} to ${role}`))
                 res.sendStatus(202)
               else
                 res.sendStatus(500)
@@ -505,7 +505,7 @@ module.exports = function (app, passport) {
           (err, user) => {
             if (err) throw err;
             else {
-              if (eventeventlogger(req.user, `Set Clearance for ${user.UserName} to ${clearance}`))
+              if (eventlogger(req.user, `Set Clearance for ${user.UserName} to ${clearance}`))
                 res.sendStatus(202);
               else
                 res.sendStatus(500)
@@ -537,7 +537,7 @@ module.exports = function (app, passport) {
             res.sendStatus(400)
           } else {
             save.time = doc.time;
-            if (eventeventlogger(req.user, `Pushed Round ${save.round}`)) {
+            if (eventlogger(req.user, `Pushed Round ${save.round}`)) {
               save = JSON.stringify(save);
               fs.writeFileSync(
                 path.resolve(__dirname + "../../../config/auditionConfig.json"),
@@ -569,7 +569,7 @@ module.exports = function (app, passport) {
 
         save.round = save.round;
         save.status = "def";
-        if (eventeventlogger(req.user, `Stopped Round ${save.round}`)) {
+        if (eventlogger(req.user, `Stopped Round ${save.round}`)) {
           save = JSON.stringify(save);
           fs.writeFileSync(
             path.resolve(__dirname + "../../../config/auditionConfig.json"),
@@ -618,7 +618,7 @@ module.exports = function (app, passport) {
               })
             }
           }).then(() => {
-            if (eventeventlogger(req.user, `Extended Time for everyone by 10 minutes`))
+            if (eventlogger(req.user, `Extended Time for everyone by 10 minutes`))
               res.sendStatus(202)
             else
               res.sendStatus(500)
@@ -631,7 +631,7 @@ module.exports = function (app, passport) {
             else
               kid.time += 600000;
             kid.save().then(() => {
-              if (eventeventlogger(req.user, `Extended Time for ${kid.name} by 10 minutes to ${new Date(kind.time).toString.substring(0, 24)}`))
+              if (eventlogger(req.user, `Extended Time for ${kid.name} by 10 minutes to ${new Date(kind.time).toString.substring(0, 24)}`))
                 res.sendStatus(202)
               else
                 res.sendStatus(500)
@@ -711,7 +711,7 @@ module.exports = function (app, passport) {
                 );
               })
               .then(() => {
-                if (eventeventlogger(req.user, `Result pushed for round ${round}`))
+                if (eventlogger(req.user, `Result pushed for round ${round}`))
                   return res.status(201).send({ status: true });
                 else
                   res.sendStatus(500)
@@ -976,7 +976,7 @@ module.exports = function (app, passport) {
           kid.round = save.round
           kid.status = "unevaluated"
           kid.save().then(() => {
-            if (eventlogger(req.user, `Used the wildcard feature to push ${kid.name} to ${kid.status}`))
+            if (eventlogger(req.user, `Used the wildcard feature to push ${kid.name} to Round ${save.round}`))
               res.sendStatus(200)
             else res.sendStatus(500)
           })
