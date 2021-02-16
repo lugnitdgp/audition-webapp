@@ -43,8 +43,7 @@
     </v-navigation-drawer>
     <v-container class="question-cont">
       <v-tabs dark show-arrows v-model="tab" class="vtab">
-        <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
-
+        <v-tabs-slider style="background-color: rgb(200, 204, 255) !important;"></v-tabs-slider>
         <v-tab
           v-for="(question, i) in questions"
           :key="i"
@@ -65,7 +64,7 @@
       </v-tabs-items>
       <div class="sbox">
       <div class="submit">
-        <v-btn @click="submitround" style="background-color: rgb(12, 56, 255); border-radius: 20px;">
+        <v-btn @click="submitround" style="background-color: rgb(70, 104, 255); border-radius: 20px;">
           <span style="color: #fff !important">Save Round</span>
         </v-btn>
       </div>
@@ -238,11 +237,11 @@ export default {
   background-color: black !important;
 }
 .v-tabs-bar {
-  background-color: rgba(206, 205, 255, 0) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
   backdrop-filter: blur(8px) !important;
-  border-top: 0px solid rgb(12, 56, 255) !important;
-  border-right: 0px solid rgb(12, 56, 255) !important;
-  border-left: 0px solid rgb(12, 56, 255) !important;
+  border-top: 0px solid rgb(70, 104, 255) !important;
+  border-right: 0px solid rgb(70, 104, 255) !important;
+  border-left: 0px solid rgb(70, 104, 255) !important;
   border-top-right-radius: 0px !important;
   border-top-left-radius: 0px !important;
 }
@@ -293,7 +292,7 @@ video {
 }
 .quess-box {
   overflow: scroll;
-  background-color: rgba(206, 205, 255, 0.0);
+  background-color: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
   justify-content: center;
   width: 90%;
@@ -323,13 +322,13 @@ video {
   color: #b2ebf2 !important;
   text-align: center !important;
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 500;
 }
 .qbody {
-  background-color: rgba(206, 205, 255, 0.0);
+  background-color: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
-  border-right: 1px solid rgb(53, 30, 255);
-  border-left: 1px solid rgb(53, 30, 255);
+  border-right: 1px solid rgb(70, 104, 255);
+  border-left: 1px solid rgb(70, 104, 255);
 }
 .sbox{
   position: relative;
@@ -339,10 +338,10 @@ video {
   position: absolute;
   width: 100%;
   backdrop-filter: blur(8px);
-  background-color: rgba(206, 205, 255, 0.0);
-  border-right: 1px solid rgb(53, 30, 255);
-  border-left: 1px solid rgb(53, 30, 255);
-  border-bottom: 10px solid rgb(53, 30, 255);
+  background-color: rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgb(70, 104, 255);
+  border-left: 1px solid rgb(70, 104, 255);
+  border-bottom: 10px solid rgb(70, 104, 255);
   padding-bottom: 20px;
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;

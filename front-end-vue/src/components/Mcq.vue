@@ -110,7 +110,12 @@ export default {
   color: white;
   text-align: center !important;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
+}
+#studentans{
+  background-color: rgba(0,0,0,0);
+  border-radius: 20px;
+  border: 1px solid white;
 }
 v-img {
   text-align: center !important;

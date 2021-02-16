@@ -25,6 +25,7 @@
       name="input-7-4"
       label="Answers"
       auto-grow
+      id="studentans"
       color="#00FFBF"
       class="text"
     ></v-textarea>
@@ -123,7 +124,13 @@ export default {
   color: white;
   text-align: center !important;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
+  
+}
+#studentans{
+  background-color: rgba(0,0,0,0);
+  border-radius: 20px;
+  border: 1px solid white;
 }
 v-img {
   text-align: center !important;
