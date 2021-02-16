@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <Sidenav :roundNo='audition.round' :status='audition.status' />
+    <!-- <div v-if="audition.status === 'ong'">ONGOING</div>
+                <div v-if="audition.status === 'def'">STOPPED</div>
+                <div v-if="audition.status === 'res'">RESULT PUSHED</div> -->
+    <Sidenav :roundNo='audition.round' status='ONGOING' v-if="audition.status === 'ong'" />
+    <Sidenav :roundNo='audition.round' status='STOPPED' v-if="audition.status === 'def'" />
+    <Sidenav :roundNo='audition.round' status='RESULT PUSHED' v-if="audition.status === 'res'" />
     <v-app id="inspire">
       <template>
         <v-container>
