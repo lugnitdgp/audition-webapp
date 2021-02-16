@@ -36,7 +36,10 @@
     <v-container fluid>
       <v-row>
         <v-col md="8">
-          <v-card>
+          <v-card v-if="answers.length == 0">
+            <h2 style="color: red; text-align: center;">Hasn't attempted any questions.</h2>
+          </v-card>
+          <v-card v-if="answers.length != 0">
             <v-toolbar dark flat>
               <template v-slot:extension>
                 <v-tabs
