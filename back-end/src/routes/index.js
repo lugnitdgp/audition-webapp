@@ -1,6 +1,7 @@
 let UserModel = require("../models/user.model");
 var jwt = require("jsonwebtoken");
 let DashModel = require("../models/dash.model");
+let EventLogModel = require("../models/eventlog.model");
 const fs = require("fs");
 let RoundModel = require("../models/round.model");
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
@@ -8,7 +9,6 @@ const path = require("path");
 const { sendMail } = require("../../services/reportSender");
 
 const upload = require("../../services/upload");
-const { uploadImage, getImages } = require("../controller/appController");
 const e = require("express");
 const { resolveSoa } = require("dns");
 
@@ -20,6 +20,71 @@ module.exports = function (app, passport) {
   //////////////////////////////////////////////
   //          UPLOAD
   //////////////////////////////////////////
+
+  let clients = [];
+
+ async function eventsHandler(req, res, next) {
+    // Mandatory headers and http status to keep connection open
+    const headers = {
+      'Content-Type': 'text/event-stream',
+      'Connection': 'keep-alive',
+      'Cache-Control': 'no-cache'
+    };
+    res.writeHead(200, headers);
+    // After client opens connection send all nests as string
+    var data = '';
+    // fs.closeSync(fs.openSync(path.resolve(__dirname + `../../../config/member.log`), 'a'))
+    // var readStream = fs.createReadStream(path.resolve(__dirname + `../../../config/member.log`), 'utf8');
+
+    // readStream.on('data', function (chunk) {
+    //   data += chunk;
+    // }).on('end', function () {
+      
+    // });
+
+    EventLogModel.find().then(document=>{
+      if(document){
+        res.write(`data: {${JSON.stringify(document)}}\n\n`);
+      }
+    })
+    /////
+    // object of client connection on clients list
+    // Later we'll iterate it and send updates to each client
+    const clientId = Date.now();
+    const newClient = {
+      id: clientId,
+      res
+    };
+    clients.push(newClient);
+    // When client closes connection we update the clients list
+    // avoiding the disconnected one
+    req.on('close', () => {
+      console.log(`${clientId} Connection closed`);
+      clients = clients.filter(c => c.id !== clientId);
+    });
+  }
+
+  function sendEventsToAll(newLog) {
+    clients.forEach(c => c.res.write(`data: {${JSON.stringify(newLog)}}\n\n`))
+    return true;
+  }
+
+  async function eventeventlogger(user, message) {
+    //fs.closeSync(fs.openSync(path.resolve(__dirname + `../../../config/member.log`), 'a'))
+    //const log = fs.createWriteStream(path.resolve(__dirname + `../../../config/member.log`), { flags: 'a' });
+    var newLog = new EventLogModel({
+      user:user.UserName + '('+user.role+')',
+      time: (new Date()).toString().substring(0, 24),
+      message:message
+    })
+    newLog.save().then(()=>{
+      return sendEventsToAll(newLog);
+    })
+   // log.write(`${(new Date()).toString().substring(0, 24)}: ${user.UserName} Role - ${user.role} ${message},`);
+    
+  }
+
+  app.get('/events', eventsHandler);
 
   app.post("/upload", upload.single("file"), (req, res) => {
     if (req.file && req.file.path) {
@@ -75,7 +140,10 @@ module.exports = function (app, passport) {
           questions: req.body.questions,
         });
         round.save().then(() => {
-          res.json({ success: true });
+          if (eventeventlogger(req.user, `added Round ${total + 1}`))
+            res.json({ success: true });
+          else
+            res.sendStatus(500)
         });
       } else return res.sendStatus(401);
     }
@@ -106,7 +174,12 @@ module.exports = function (app, passport) {
         await RoundModel.findByIdAndUpdate(
           req.body.round._id,
           req.body.round
-        ).then(res.sendStatus(202));
+        ).then(() => {
+          if (eventeventlogger(req.user, `Edited Round ${req.body.round}`))
+            res.sendStatus(202)
+          else
+            res.sendStatus(500)
+        });
       } else res.sendStatus(401);
     }
   );
@@ -364,7 +437,10 @@ module.exports = function (app, passport) {
         (req.user.role === "m" && req.user.clearance >= a.round)
       ) {
         DashModel.replaceOne({ _id: req.body._id }, a).then((doc) => {
-          return res.status(202).json({ message: "Changes have been saved" });
+          if (eventeventlogger(req.user, `Changed selection status for ${a.name} to ${a.status}`))
+            return res.status(202).json({ message: "Changes have been saved" });
+          else
+            res.sendStatus(500)
         });
       } else {
         return res.sendStatus(401);
@@ -382,7 +458,10 @@ module.exports = function (app, passport) {
         (req.user.role === "m")
       ) {
         DashModel.replaceOne({ _id: req.body._id }, a).then((doc) => {
-          return res.status(202).json({ message: "Changes have been saved" });
+          if (eventeventlogger(req.user, `Added feedback for ${a.name}`))
+            return res.status(202).json({ message: "Changes have been saved" });
+          else
+            res.sendStatus(500)
         });
       } else {
         return res.sendStatus(401);
@@ -414,7 +493,10 @@ module.exports = function (app, passport) {
             if (err) throw err;
             else {
               console.log(dash)
-              res.sendStatus(202)
+              if (eventeventlogger(req.user, `changed the role for ${dash.name} to ${role}`))
+                res.sendStatus(202)
+              else
+                res.sendStatus(500)
             }
           })
         });
@@ -437,7 +519,10 @@ module.exports = function (app, passport) {
           (err, user) => {
             if (err) throw err;
             else {
-              res.sendStatus(202);
+              if (eventeventlogger(req.user, `Set Clearance for ${user.name} to ${clearance}`))
+                res.sendStatus(202);
+              else
+                res.sendStatus(500)
             }
           }
         );
@@ -466,12 +551,16 @@ module.exports = function (app, passport) {
             res.sendStatus(400)
           } else {
             save.time = doc.time;
-            save = JSON.stringify(save);
-            fs.writeFileSync(
-              path.resolve(__dirname + "../../../config/auditionConfig.json"),
-              save
-            );
-            res.sendStatus(200);
+            if (eventeventlogger(req.user, `Pushed Round ${save.round}`)) {
+              save = JSON.stringify(save);
+              fs.writeFileSync(
+                path.resolve(__dirname + "../../../config/auditionConfig.json"),
+                save
+              );
+              res.sendStatus(200);
+            } else {
+              res.sendStatus(500)
+            }
           }
         });
 
@@ -494,20 +583,24 @@ module.exports = function (app, passport) {
 
         save.round = save.round;
         save.status = "def";
+        if (eventeventlogger(req.user, `Stopped Round ${save.round}`)) {
+          save = JSON.stringify(save);
+          fs.writeFileSync(
+            path.resolve(__dirname + "../../../config/auditionConfig.json"),
+            save
+          );
+          res.sendStatus(200);
+        } else {
+          res.sendStatus(500)
+        }
 
-        save = JSON.stringify(save);
-        fs.writeFileSync(
-          path.resolve(__dirname + "../../../config/auditionConfig.json"),
-          save
-        );
-        res.sendStatus(200);
       } else {
         res.sendStatus(300);
       }
     }
   );
 
-  app.put("/protected/extendtime", passport.authenticate("jwt", { session: false }),  (req, res)=> {
+  app.put("/protected/extendtime", passport.authenticate("jwt", { session: false }), (req, res) => {
     if (req.user.role === 'su') {
       let save = JSON.parse(
         fs.readFileSync(
@@ -516,7 +609,7 @@ module.exports = function (app, passport) {
       );
       if (save.status === 'ong') {
         if (req.body.id === 'all') {
-           DashModel.find({ round: save.round }).then((document) => {
+          DashModel.find({ round: save.round }).then((document) => {
             if (!document) {
               res.sendStatus(404)
             } else {
@@ -533,14 +626,16 @@ module.exports = function (app, passport) {
                       kid.time = new Date().getTime() + 600000 + 2000;
                     else
                       kid.time += 600000;
-                    kid.save().then(() => {
-                      res.sendStatus(202)
-                    })
-                  })                }
+                    kid.save()
+                  })
+                }
               })
             }
-          }).then(()=>{
-            res.sendStatus(202)
+          }).then(() => {
+            if (eventeventlogger(req.user, `Extended Time for everyone by 10 minutes`))
+              res.sendStatus(202)
+            else
+              res.sendStatus(500)
 
           })
         } else {
@@ -550,7 +645,10 @@ module.exports = function (app, passport) {
             else
               kid.time += 600000;
             kid.save().then(() => {
-              res.sendStatus(202)
+              if (eventeventlogger(req.user, `Extended Time for ${kid.name} by 10 minutes to ${new Date(kind.time).toString.substring(0, 24)}`))
+                res.sendStatus(202)
+              else
+                res.sendStatus(500)
             })
           })
         }
@@ -627,7 +725,10 @@ module.exports = function (app, passport) {
                 );
               })
               .then(() => {
-                return res.status(201).send({ status: true });
+                if (eventeventlogger(req.user, `Result pushed for round ${round}`))
+                  return res.status(201).send({ status: true });
+                else
+                  res.sendStatus(500)
               })
           } else {
             res.status(200).send({ status: false })
@@ -889,7 +990,9 @@ module.exports = function (app, passport) {
           kid.round = save.round
           kid.status = "unevaluated"
           kid.save().then(() => {
-            res.sendStatus(200)
+            if (eventlogger(req.user, `Used the wildcard feature to push ${kid.name} to ${kid.status}`))
+              res.sendStatus(200)
+            else res.sendStatus(500)
           })
         })
       } else {

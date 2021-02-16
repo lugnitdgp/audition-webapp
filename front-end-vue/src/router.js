@@ -12,6 +12,7 @@ import EditRound from './views/EditRound.vue'
 import Audition from './views/Audition.vue'
 import Result from './views/Result.vue'
 import Thanks from './views/Thanks.vue'
+import Log from './views/Log.vue'
 
 
 
@@ -45,6 +46,11 @@ export default new Router({
       path: '/event',
       name: 'StLanding',
       component: StLanding
+    },
+    {
+      path: '/log',
+      name: 'Log',
+      component: Log
     },
     {
       path: '/user',
