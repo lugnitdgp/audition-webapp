@@ -17,6 +17,17 @@
               </span>
             </template>
           </v-btn>
+          <v-btn
+            color="primary"
+            @click="$router.push('/log')"
+          >
+            Check Logs
+            <template v-slot:loader>
+              <span class="custom-loader">
+                <v-icon light>mdi-cached</v-icon>
+              </span>
+            </template>
+          </v-btn>
           <v-container>
             <v-alert outlined color="error">
               <div class="title">Round: {{ audition.round }}</div>

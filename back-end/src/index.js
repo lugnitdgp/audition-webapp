@@ -30,7 +30,7 @@ app.use(cookieSession({
     keys: ["rohan"]
 }))
 require('./routes/index')(app, passport)
-app.use(Routes)
+//app.use(Routes)
 
 app.use((req, res, next) => {
     console.log(`${new Date().toString()} =>${req.originalUrl}`, req.body)

@@ -31,20 +31,9 @@ module.exports = function (app, passport) {
       'Cache-Control': 'no-cache'
     };
     res.writeHead(200, headers);
-    // After client opens connection send all nests as string
-    var data = '';
-    // fs.closeSync(fs.openSync(path.resolve(__dirname + `../../../config/member.log`), 'a'))
-    // var readStream = fs.createReadStream(path.resolve(__dirname + `../../../config/member.log`), 'utf8');
-
-    // readStream.on('data', function (chunk) {
-    //   data += chunk;
-    // }).on('end', function () {
-      
-    // });
-
     EventLogModel.find().then(document=>{
       if(document){
-        res.write(`data: {${JSON.stringify(document)}}\n\n`);
+        res.write(`data: ${JSON.stringify(document)}\n\n`);
       }
     })
     /////
@@ -56,8 +45,7 @@ module.exports = function (app, passport) {
       res
     };
     clients.push(newClient);
-    // When client closes connection we update the clients list
-    // avoiding the disconnected one
+
     req.on('close', () => {
       console.log(`${clientId} Connection closed`);
       clients = clients.filter(c => c.id !== clientId);
@@ -65,13 +53,11 @@ module.exports = function (app, passport) {
   }
 
   function sendEventsToAll(newLog) {
-    clients.forEach(c => c.res.write(`data: {${JSON.stringify(newLog)}}\n\n`))
+    clients.forEach(c => c.res.write(`data: [${JSON.stringify(newLog)}]\n\n`))
     return true;
   }
 
   async function eventeventlogger(user, message) {
-    //fs.closeSync(fs.openSync(path.resolve(__dirname + `../../../config/member.log`), 'a'))
-    //const log = fs.createWriteStream(path.resolve(__dirname + `../../../config/member.log`), { flags: 'a' });
     var newLog = new EventLogModel({
       user:user.UserName + '('+user.role+')',
       time: (new Date()).toString().substring(0, 24),
@@ -519,7 +505,7 @@ module.exports = function (app, passport) {
           (err, user) => {
             if (err) throw err;
             else {
-              if (eventeventlogger(req.user, `Set Clearance for ${user.name} to ${clearance}`))
+              if (eventeventlogger(req.user, `Set Clearance for ${user.UserName} to ${clearance}`))
                 res.sendStatus(202);
               else
                 res.sendStatus(500)
