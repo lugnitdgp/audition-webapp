@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Sidenav title="Student Dashboard" :roundNo='round' :totalStudents='items.length' />
-    <v-content style="margin-bottom: 100px;">
+    <v-content>
       <v-container fluid>
         <!-- <div>
           <v-spacer>

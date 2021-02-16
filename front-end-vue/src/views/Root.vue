@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <Sidenav />
+    <Sidenav :roundNo='audition.round' :status='audition.status' />
     <v-app id="inspire">
       <template>
-        <v-container style="margin-bottom: 100px;">
+        <v-container>
           <v-btn
             color="primary"
             @click="btnHandler()"
@@ -29,10 +29,10 @@
             </template>
           </v-btn>
           <v-container>
-            <v-alert outlined color="error">
+            <!-- <v-alert outlined color="error">
               <div class="title">Round: {{ audition.round }}</div>
-            </v-alert>
-            <v-alert outlined color="purple">
+            </v-alert> -->
+            <!-- <v-alert outlined color="purple">
               <div class="title">
                 Status:
                 <div v-if="audition.status === 'ong'">ONGOING</div>
@@ -40,7 +40,7 @@
                 <div v-if="audition.status === 'res'">RESULT PUSHED</div>
               </div>
               
-            </v-alert>
+            </v-alert> -->
             <v-btn
                 class="mx-2"
                 light
@@ -239,6 +239,7 @@ import Sidenav from "../components/layout/Sidenav";
 
 export default {
   name: "Landing",
+
   components: {
     Sidenav,
   },
