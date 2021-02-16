@@ -1,12 +1,13 @@
 <template>
   <div>
-    <video
+    <span class="bg"></span>
+    <!-- <video
       src="https://video.wixstatic.com/video/b0567a_9aed8193b5b742d5ac48c51a8e5f9f4e/1080p/mp4/file.mp4"
       autoplay
       loop
       playsinline
       muted
-    ></video>
+    ></video> -->
     <v-card class="mx-auto overflow-hidden nav-bar">
       <v-app-bar
         class="nav-bar"
@@ -64,8 +65,8 @@
       </v-tabs-items>
       <div class="sbox">
       <div class="submit">
-        <v-btn @click="submitround" color="#B2EBF2">
-          <span style="color: #000 !important">Save Round</span>
+        <v-btn @click="submitround" style="background-color: rgb(12, 56, 255); border-radius: 20px;">
+          <span style="color: #fff !important">Save Round</span>
         </v-btn>
       </div>
       </div>
@@ -221,9 +222,9 @@ export default {
     }
   },
   watch: {
-    darkmode(newvalue) {
-      this.$vuetify.theme.dark = newvalue;
-    },
+    // darkmode(newvalue) {
+    //   this.$vuetify.theme.dark = newvalue;
+    // },
     group() {
       this.drawer = false;
     }
@@ -233,12 +234,15 @@ export default {
 
 
 <style scoped>
+.v-application--wrap {
+  background-color: black !important;
+}
 .v-tabs-bar {
-  background-color: rgba(206, 205, 255, 0.075) !important;
+  background-color: rgba(206, 205, 255, 0) !important;
   backdrop-filter: blur(8px) !important;
-  border-top: 0px solid white !important;
-  border-right: 0px solid white !important;
-  border-left: 0px solid white !important;
+  border-top: 0px solid rgb(12, 56, 255) !important;
+  border-right: 0px solid rgb(12, 56, 255) !important;
+  border-left: 0px solid rgb(12, 56, 255) !important;
   border-top-right-radius: 0px !important;
   border-top-left-radius: 0px !important;
 }
@@ -257,6 +261,18 @@ video {
   position: fixed;
   top: 0;
   left: 0;
+}
+.bg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: url("../assets/img/bgi.jpg") no-repeat center center;
+  background-size: cover;
+  filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.5;
 }
 .nav-bar {
   background-color: transparent !important;
@@ -277,7 +293,7 @@ video {
 }
 .quess-box {
   overflow: scroll;
-  background-color: rgba(206, 205, 255, 0.075);
+  background-color: rgba(206, 205, 255, 0.0);
   backdrop-filter: blur(8px);
   justify-content: center;
   width: 90%;
@@ -301,7 +317,7 @@ video {
   background-color: rgba(52, 170, 48, 0.39) !important;
 }
 .vtab {
-  background-color: rgba(206, 205, 255, 0.075) !important;
+  background-color: rgba(206, 205, 255, 0.0) !important;
 }
 #text {
   color: #b2ebf2 !important;
@@ -310,10 +326,10 @@ video {
   font-weight: 700;
 }
 .qbody {
-  background-color: rgba(206, 205, 255, 0.075);
+  background-color: rgba(206, 205, 255, 0.0);
   backdrop-filter: blur(8px);
-  border-right: 1px solid white;
-  border-left: 1px solid white;
+  border-right: 1px solid rgb(53, 30, 255);
+  border-left: 1px solid rgb(53, 30, 255);
 }
 .sbox{
   position: relative;
@@ -322,10 +338,11 @@ video {
 .submit {
   position: absolute;
   width: 100%;
-  background-color: rgba(206, 205, 255, 0.075);
-  border-right: 1px solid white;
-  border-left: 1px solid white;
-  border-bottom: 10px solid white;
+  backdrop-filter: blur(8px);
+  background-color: rgba(206, 205, 255, 0.0);
+  border-right: 1px solid rgb(53, 30, 255);
+  border-left: 1px solid rgb(53, 30, 255);
+  border-bottom: 10px solid rgb(53, 30, 255);
   padding-bottom: 20px;
   border-bottom-right-radius: 20px;
   border-bottom-left-radius: 20px;
