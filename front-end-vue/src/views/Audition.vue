@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-bottom: 170px;">
     <span class="bg"></span>
     <!-- <video
       src="https://video.wixstatic.com/video/b0567a_9aed8193b5b742d5ac48c51a8e5f9f4e/1080p/mp4/file.mp4"
@@ -18,10 +18,10 @@
         "
       >
         <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
-        <div style="width: 50%; text-align: left">
+        <div style="width: 55%; text-align: left">
           <Basetimer :time="time" />
         </div>
-        <div style="width: 50%; text-align: right">
+        <div style="width: 45%; text-align: right">
           <v-btn @click="logout" color="#B2EBF2">
             <span style="color: #000 !important">Logout</span>
           </v-btn>

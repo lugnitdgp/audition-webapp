@@ -1,14 +1,14 @@
 <template>
   <v-app>
     <v-container fluid style="margin-bottom: 100px;">
-      <v-alert outlined color="#00FFFF">
+      <v-alert color="#000" style="padding: 5px; margin: 5px;">
         <h2 class="text-center">
           {{ details.name.toUpperCase() }} - {{ details.email }}
         </h2>
-        <p class="text-center">
+        <p class="text-center" style="padding: 0px; margin: 5px;">
           Call: <a :href="`tel:+91${details.phone}`">{{ details.phone }}</a>
         </p>
-        <p class="text-center">Roll Number: {{ details.roll }}</p>
+        <p class="text-center" style="padding: 5px;">Roll Number: {{ details.roll }}</p>
         <v-btn
           @click="wildcard"
           v-if="
@@ -27,10 +27,10 @@
           v-on:click="extendtime"
           >Extend Time (By 10 min)</v-btn
         >
-        <p class="text-left" v-if="details.time > 0">
+        <p class="text-center" v-if="details.time > 0" style="padding: 0px; margin: 5px;">
           Time ends at: {{ new Date(details.time).toString().substring(0, 24) }}
         </p>
-        <p class="text-left" v-if="details.time == 0">Hasn't attempted yet</p>
+        <p class="text-center" v-if="details.time == 0" style="padding: 0px; margin: 5px;">Hasn't attempted yet</p>
       </v-alert>
     </v-container>
     <v-container fluid>

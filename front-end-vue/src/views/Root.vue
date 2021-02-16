@@ -3,7 +3,7 @@
     <Sidenav />
     <v-app id="inspire">
       <template>
-        <v-container style="margin-bottom: 100px;">
+        <v-container>
           <v-btn
             color="primary"
             @click="btnHandler()"

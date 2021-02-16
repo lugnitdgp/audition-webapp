@@ -3,7 +3,7 @@
     <span class="bg"></span>
     <Sidenav />
     <v-content>
-      <v-container style="margin-bottom: 100px;">
+      <v-container >
         <v-card class="bord">
           <v-container>
             <v-text-field
