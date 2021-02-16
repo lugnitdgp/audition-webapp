@@ -1,21 +1,21 @@
 <template>
   <v-app>
-    <Sidenav />
+    <Sidenav title="Student Dashboard" :roundNo='round' :totalStudents='items.length' />
     <v-content style="margin-bottom: 100px;">
       <v-container fluid>
-        <div>
+        <!-- <div>
           <v-spacer>
-            <v-alert outlined color="#00FFFF">
-              <h1 class="text-center">STUDENTS DASHBOARD</h1>
+            <v-alert>
+              <h3 class="text-center">STUDENTS DASHBOARD</h3>
             </v-alert>
           </v-spacer>
         </div>
-        <v-spacer />
+        <v-spacer /> -->
         <v-spacer />
         <v-container absolute fluid>
           <v-row align="center" justify="center">
             <v-col cols="12" sm="6" lg="3">
-              <v-alert outlined color="#00FFFF">
+              <v-alert outlined color="#00FFFF" style="padding: 0;">
                 <v-list-item>
                   <v-list-item-content>
                     <div class="subtitle-2">TOTAL STUDENTS</div>
@@ -24,39 +24,39 @@
                     </v-list-item-title>
                   </v-list-item-content>
 
-                  <v-list-item-avatar tile size="90">
+                  <v-list-item-avatar tile size="60">
                     <v-img src="../assets/img/stu.png"></v-img>
                   </v-list-item-avatar>
                 </v-list-item>
               </v-alert>
             </v-col>
             <v-col cols="12" sm="6" lg="3">
-              <v-alert outlined color="success">
+              <v-alert outlined color="success" style="padding: 0;">
                 <v-list-item>
                   <v-list-item-content>
-                    <div class="subtitle-2">COMPLETED</div>
+                    <div class="subtitle-2">EVALUATED</div>
                     <v-list-item-title class="display-2">{{
                       completed.length
                     }}</v-list-item-title>
                     <v-list-item-subtitle></v-list-item-subtitle>
                   </v-list-item-content>
 
-                  <v-list-item-avatar tile size="90">
+                  <v-list-item-avatar tile size="60">
                     <v-img src="../assets/img/t.png"></v-img>
                   </v-list-item-avatar>
                 </v-list-item>
               </v-alert>
             </v-col>
             <v-col cols="12" sm="6" lg="3">
-              <v-alert outlined color="warning">
+              <v-alert outlined color="warning" style="padding: 0;">
                 <v-list-item>
                   <v-list-item-content>
-                    <div class="subtitle-2">PENDING</div>
+                    <div class="subtitle-2">PENDING REVIEW</div>
                     <v-list-item-title class="display-2">{{
                       items.length - completed.length
                     }}</v-list-item-title>
                   </v-list-item-content>
-                  <v-list-item-avatar tile size="90">
+                  <v-list-item-avatar tile size="60">
                     <v-img
                       style="height: 100px"
                       src="../assets/img/w.png"
@@ -66,7 +66,7 @@
               </v-alert>
             </v-col>
           </v-row>
-          <v-row align="center" justify="center" v-if="round != 0">
+          <!-- <v-row align="center" justify="center" v-if="round != 0">
             <v-col cols="12" sm="6" lg="3" align="center" justify="center">
               <v-alert outlined color="success">
                 <v-list-item v-for="(item, i) in round" :key="i">
@@ -78,7 +78,7 @@
                 </v-list-item>
               </v-alert>
             </v-col>
-          </v-row>
+          </v-row> -->
         </v-container>
         <template>
           <v-container>

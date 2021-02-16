@@ -16,7 +16,8 @@ export default {
   position: fixed;
   bottom: 0px;
   width: 100%;
-  background-color: rgba(19, 1, 1, 0.449);
+  border-top: 2px solid rgb(70, 104, 255);
+  background-color: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(8px);
   height: 45px;
   color: white;
