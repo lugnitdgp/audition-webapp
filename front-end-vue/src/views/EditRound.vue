@@ -25,7 +25,6 @@
                       outlined
                       auto-grow
                     ></v-textarea>
-
                     <v-select
                       :items="items"
                       v-model="quesType"

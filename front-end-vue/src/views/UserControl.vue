@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-container fluid>
+    <v-container fluid style="margin-bottom: 100px;">
       <v-alert outlined color="#00FFFF">
         <h2 class="text-center">
           {{ details.name.toUpperCase() }} - {{ details.email }}

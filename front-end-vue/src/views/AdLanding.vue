@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Sidenav />
-    <v-content>
+    <v-content style="margin-bottom: 100px;">
       <v-container fluid>
         <div>
           <v-spacer>

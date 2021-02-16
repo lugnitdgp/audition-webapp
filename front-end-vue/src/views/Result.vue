@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="margin-bottom: 100px;">
     <span class="bg"></span>
     <h1 class="glitch" style="text-align: center;">Results for Round {{ audition.round }}</h1>
     <div class="table-wrap">
