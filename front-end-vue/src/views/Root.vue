@@ -25,11 +25,19 @@
               <div class="title">
                 Status:
                 <div v-if="audition.status === 'ong'">ONGOING</div>
-                                <div v-if="audition.status === 'def'">STOPPED</div>
+                <div v-if="audition.status === 'def'">STOPPED</div>
                 <div v-if="audition.status === 'res'">RESULT PUSHED</div>
-
               </div>
+              
             </v-alert>
+            <v-btn
+                class="mx-2"
+                light
+                v-if="audition.status === 'ong'"
+                small
+                v-on:click="extendtime"
+                >Extend Time (By 10 min)</v-btn
+              >
           </v-container>
 
           <v-text-field
@@ -64,6 +72,7 @@
                       <template v-slot:item="row">
                         <tr v-show="row.item.role === 'su'">
                           <td>{{ row.item.name }}</td>
+                          <td>{{ row.item.email }}</td>
                           <td>{{ row.item.status }}</td>
 
                           <td>{{ row.item.role }}</td>
@@ -97,6 +106,7 @@
                       <template v-slot:item="row">
                         <tr v-show="row.item.role === 'm'">
                           <td>{{ row.item.name }}</td>
+                          <td>{{ row.item.email }}</td>
                           <td>{{ row.item.status }}</td>
 
                           <td>{{ row.item.role }}</td>
@@ -131,8 +141,8 @@
                       <template v-slot:item="row">
                         <tr v-show="row.item.role === 's'">
                           <td>{{ row.item.name }}</td>
+                          <td>{{ row.item.email }}</td>
                           <td>{{ row.item.status }}</td>
-
                           <td>{{ row.item.role }}</td>
 
                           <td>
@@ -199,6 +209,13 @@
           :timeout="2000"
           >Role Changed</v-snackbar
         >
+         <v-snackbar
+          v-model="extendtimeSnackbar"
+          class="text-center"
+          color="success"
+          :timeout="2000"
+          >Time Extended for all students by 10 minutes</v-snackbar
+        >
       </template>
     </v-app>
   </div>
@@ -224,6 +241,7 @@ export default {
       loading: false,
       snackbar: false,
       roleSnackbar: false,
+      extendtimeSnackbar:false,
       text: "",
       roles: ["Super User", "Member", "Student"],
       item: [],
@@ -233,9 +251,10 @@ export default {
       role: "",
       btntext: "",
       search: "",
-      clearance: 0,
+      clearance: 1,
       headers: [
         { text: "FULL NAME", align: "start", value: "name" },
+        { text: "Email", align: "start", value: "email" },
         { text: "STATUS", align: "start", value: "status" },
         { text: "CURRENT ROLE", align: "start", value: "details" },
         { text: "CHANGE ROLE", align: "start", value: "role" },
@@ -333,8 +352,13 @@ export default {
         }
       });
     },
+    extendtime(){
+      common.extendtime({id:'all'}).then(()=>{
+        this.extendtimeSnackbar=true;
+      })
+    },
     closedialog() {
-      (this.dialog = false), (this.clearance = 0), (this.role = "");
+      (this.dialog = false), (this.clearance = 1), (this.role = "");
     },
     changeRole(id) {
       var a = {

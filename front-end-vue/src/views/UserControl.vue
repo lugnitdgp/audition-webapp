@@ -11,10 +11,26 @@
         <p class="text-center">Roll Number: {{ details.roll }}</p>
         <v-btn
           @click="wildcard"
-          v-if="currentround > details.round && (status === 'rejected' || status === 'unevaluated') && wildcardbool === true"
+          v-if="
+            currentround > details.round &&
+            (status === 'rejected' || status === 'unevaluated') &&
+            subool === true
+          "
           color="#FF0000"
           >WILD-CARD</v-btn
         >
+        <v-btn
+          class="mx-2"
+          light
+          v-if="currentround === details.round && subool === true"
+          small
+          v-on:click="extendtime"
+          >Extend Time (By 10 min)</v-btn
+        >
+        <p class="text-left" v-if="details.time > 0">
+          Time ends at: {{ new Date(details.time).toString().substring(0, 24) }}
+        </p>
+        <p class="text-left" v-if="details.time == 0">Hasn't attempted yet</p>
       </v-alert>
     </v-container>
     <v-container fluid>
@@ -177,7 +193,15 @@
     <v-snackbar v-model="feedsnack" color="success" elevation="12" app
       >FEEDBACK SUBMITTED</v-snackbar
     >
+    <v-snackbar
+          v-model="extendtimeSnackbar"
+          class="text-center"
+          color="success"
+          :timeout="2000"
+          >Time Extended for the student by 10 minutes</v-snackbar
+        >
   </v-app>
+  
 </template>
 
 <script>
@@ -206,10 +230,11 @@ export default {
       flag: false,
       panel: [],
       feedback: "",
+      extendtimeSnackbar:false,
       rounds: [],
       expand: false,
       answers: [],
-      wildcardbool:false,
+      subool: false,
       type: null,
       tab: 0,
       dialog: false,
@@ -265,10 +290,12 @@ export default {
           ) {
             this.clearance = false;
           }
-          if( VueJwtDecode.decode(localStorage.getItem("token").substring(6))
-              .role === "su"){
-                this.wildcardbool = true
-              }
+          if (
+            VueJwtDecode.decode(localStorage.getItem("token").substring(6))
+              .role === "su"
+          ) {
+            this.subool = true;
+          }
           console.log(res);
 
           common.getRounds().then((response) => {
@@ -342,10 +369,18 @@ export default {
         this.updateEntry();
       }
     },
-    wildcard(){
-      common.wildcard(this.details.uid).then(()=>{
-          this.$router.push("/admin");
-      })
+    extendtime() {
+      common.extendtime({ id: this.details._id }).then(() => {
+        this.extendtimeSnackbar = true;
+        if (this.details.time < new Date().getTime())
+          this.details.time = new Date().getTime() + 600000 + 2000;
+        else this.details.time += 600000;
+      });
+    },
+    wildcard() {
+      common.wildcard(this.details.uid).then(() => {
+        this.$router.push("/admin");
+      });
     },
     updateEntry() {
       this.statusSnackbar = true;
