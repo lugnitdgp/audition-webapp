@@ -3,7 +3,7 @@
     <v-card class="mx-auto overflow-hidden" color="rgb(0, 0, 0, 0.2)">
       <v-app-bar class="elevation-0" id="nav-bar">
         <v-app-bar-nav-icon @click="drawer = true" class="app-icon"></v-app-bar-nav-icon>
-        <h2 style="width: 100%; text-align: center;" v-if="status">{{roundNo}} | {{status}}</h2>
+        <h2 style="width: 100%; text-align: center;" v-if="status">Current Round : {{roundNo}} | Status : {{status}}</h2>
         <h2 style="width: 100%; text-align: center;" v-if="title">{{title}} | Current Round : {{roundNo}} - {{totalStudents}}</h2>
       </v-app-bar>
     </v-card>
