@@ -146,7 +146,17 @@
                               <td @click="usercontrol(row.item)">
                                 {{ row.item.name }}
                               </td>
-                              <td @click="usercontrol(row.item)">
+
+                              <td v-if='row.item.status == "selected"' @click="usercontrol(row.item)" style="color: #3f3;">
+                                {{ row.item.status }}
+                              </td>
+                              <td v-if='row.item.status == "rejected"' @click="usercontrol(row.item)" style="color: red;">
+                                {{ row.item.status }}
+                              </td>
+                              <td v-if='row.item.status == "review"' @click="usercontrol(row.item)" style="color: yellow;">
+                                {{ row.item.status }}
+                              </td>
+                               <td v-if='row.item.status == "unevaluated"' @click="usercontrol(row.item)" style="color: white;">
                                 {{ row.item.status }}
                               </td>
 

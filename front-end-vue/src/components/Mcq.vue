@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container fluid>
-      <div class="bord" style="background-color: rgba(0,0,0,0); width: 95%; max-width:700px; margin: 0 auto;">
+      <div class="bord mcq" style="background-color: rgba(0,0,0,0); width: 95%; max-width:700px; margin: 0 auto;">
      
         <v-card-text class="justify-center" id="text" style="color: #fff ;">{{
           question.quesText
