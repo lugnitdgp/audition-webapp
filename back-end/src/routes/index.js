@@ -23,7 +23,7 @@ module.exports = function (app, passport) {
 
   let clients = [];
 
- async function eventsHandler(req, res, next) {
+  async function eventsHandler(req, res, next) {
     // Mandatory headers and http status to keep connection open
     const headers = {
       'Content-Type': 'text/event-stream',
@@ -31,8 +31,8 @@ module.exports = function (app, passport) {
       'Cache-Control': 'no-cache'
     };
     res.writeHead(200, headers);
-    EventLogModel.find().then(document=>{
-      if(document){
+    EventLogModel.find().then(document => {
+      if (document) {
         res.write(`data: ${JSON.stringify(document)}\n\n`);
       }
     })
@@ -59,15 +59,15 @@ module.exports = function (app, passport) {
 
   async function eventlogger(user, message) {
     var newLog = new EventLogModel({
-      user:user.UserName + '('+user.role+')',
+      user: user.UserName + '(' + user.role + ')',
       time: (new Date()).toString().substring(0, 24),
-      message:message
+      message: message
     })
-    newLog.save().then(()=>{
+    newLog.save().then(() => {
       return sendEventsToAll(newLog);
     })
-   // log.write(`${(new Date()).toString().substring(0, 24)}: ${user.UserName} Role - ${user.role} ${message},`);
-    
+    // log.write(`${(new Date()).toString().substring(0, 24)}: ${user.UserName} Role - ${user.role} ${message},`);
+
   }
 
   app.get('/events', eventsHandler);
@@ -422,12 +422,18 @@ module.exports = function (app, passport) {
         req.user.role === "su" ||
         (req.user.role === "m" && req.user.clearance >= a.round)
       ) {
-        DashModel.replaceOne({ _id: req.body._id }, a).then((doc) => {
-          if (eventlogger(req.user, `Changed selection status for ${a.name} to ${a.status}`))
-            return res.status(202).json({ message: "Changes have been saved" });
-          else
-            res.sendStatus(500)
-        });
+        DashModel.findById(req.body._id).then((entry) => {
+          entry.status = a.status
+          entry.save().then(() => {
+            if (eventlogger(req.user, `Changed selection status for ${a.name} to ${a.status}`))
+              return res.status(202).json({ message: "Changes have been saved" });
+            else
+              res.sendStatus(500)
+          })
+        })
+        // DashModel.replaceOne({ _id: req.body._id }, a).then((doc) => {
+
+        // });
       } else {
         return res.sendStatus(401);
       }
@@ -443,12 +449,19 @@ module.exports = function (app, passport) {
         req.user.role === "su" ||
         (req.user.role === "m")
       ) {
-        DashModel.replaceOne({ _id: req.body._id }, a).then((doc) => {
-          if (eventlogger(req.user, `Added feedback for ${a.name}`))
-            return res.status(202).json({ message: "Changes have been saved" });
-          else
-            res.sendStatus(500)
-        });
+
+        DashModel.findById(req.body._id).then((entry) => {
+          entry.feedback.push(req.body.feedback);
+          entry.save().then(() => {
+            if (eventlogger(req.user, `Added feedback for ${req.body.name}`))
+              return res.status(202).json({ message: "Changes have been saved" });
+            else
+              res.sendStatus(500)
+          })
+        })
+        // DashModel.replaceOne({ _id: req.body._id }, a).then((doc) => {
+
+        // });
       } else {
         return res.sendStatus(401);
       }

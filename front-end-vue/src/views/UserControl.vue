@@ -359,7 +359,7 @@ export default {
         round: this.details.round,
       };
       this.details.feedback.push(a);
-      common.updateFeedback(this.details).then(() => {
+      common.updateFeedback({_id:this.details._id,name:this.details.name,feedback:a}).then(() => {
         this.feedsnack = true;
         this.feedback = "";
         this.panel = [];
