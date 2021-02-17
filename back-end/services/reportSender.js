@@ -6,12 +6,12 @@ const nodemailer = require('nodemailer');
                 try {
                     console.log("to ---"+ to)
                 const transporter = nodemailer.createTransport({
-                    host: "smtp.sendgrid.net",
-                    secure: false,
-                    port: 587,
+                    host: "smtp.mailgun.org",
+                    secure: true,
+                    port: 465,
                     auth: {
-                    user: process.env.SENDGRID_USER,
-                    pass: process.env.SENDGRID_API_KEY,
+                    user: process.env.MAILGUN_USER,
+                    pass: process.env.MAILGUN_PASSWORD
                     },
                 });
 
@@ -25,7 +25,7 @@ const nodemailer = require('nodemailer');
                   
 
                 const message = {
-                    from: process.env.MAILER,
+                    from: `GNU/Linux Users' Group <${process.env.MAILER}>`,
                     to:to,
                     subject:subject,
                     html: text,

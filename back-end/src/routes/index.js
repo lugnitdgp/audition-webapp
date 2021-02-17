@@ -671,9 +671,9 @@ module.exports = function (app, passport) {
             DashModel.find()
               .then((doc) => {
                 doc.forEach((user) => {
-                  if (user.status === "rejected") {
+                  if (user.status === "rejected" && user.round === round) {
                     rejected += user.email + ",";
-                  } else if (user.status === "selected") {
+                  } else if (user.status === "selected" && user.round === round) {
                     csvobject.push(user)
                     var userNew = user;
                     userNew.status = "unevaluated";
@@ -682,7 +682,20 @@ module.exports = function (app, passport) {
                     DashModel.findByIdAndUpdate(user._id, userNew).then((res) => {
                       sendMail(
                         "Congratulations!",
-                        `<html>Hi ${user.name}.<br/><br/>We are glad to inform you that you were shortlisted in Round ${round}.<br/> You will be moving ahead in the audition process.<br/>Further details will be let known very soon.<br/><br/>May The Source Be With You!<br/><br/>Thanking You,<br/>Your's Sincerely,<br/>GNU/Linux Users' Group, NIT Durgapur.</html>`,
+                        `<html>Hi <b>${user.name}.</b><br/><br/>
+                        We are glad to inform you that you were shortlisted in <b>Round ${round}.</b><br/>
+                        You will be moving ahead in the audition process.<br/>
+                        Further details will be let known very soon.<br/><br/>
+                        Join our Whatsapp All in Group here: ${process.env.WHATSAPP} if you haven't joined yet.<br/><br/>
+                        All latest updates will come there first!<br/><br/>
+                        Make sure you join the GLUG ALL-IN server for the next rounds of the audition process.<br/>
+                        Join here: ${process.env.DISCORD}<br/><br/>
+                        Make sure that you set your server nick-name as your real name alongwith your complete roll number.<br/>
+                        If your name is ABCD and Roll number is 20XX800XX, your username should be ABCD_20XX800XX.<br/><br/>
+                        May The Source Be With You!🐧❤️<br/><br/>
+                        Thanking You,<br/>
+                        Your's Sincerely,<br/>
+                        <b>GNU/Linux Users' Group, NIT Durgapur.</b></html>`,
                         user.email
                       );
                     });
@@ -944,15 +957,6 @@ module.exports = function (app, passport) {
       } else res.sendStatus(401);
     }
   );
-
-  //  app.get("/mailcheck",(req,res)=>{
-  //   sendMail(
-  //     "Congratulations!",
-  //     `<html>Hello Rohan<br/>GG WP<br/><br/>Regards,<br/>GLUG</html>`,
-  //     "rohanrao.dec11@gmail.com"
-  //    );
-  //    res.sendStatus(200)
-  //  })
 
   app.get("/student/get", passport.authenticate("jwt", { session: false }),
     (req, res) => {
