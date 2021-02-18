@@ -1,16 +1,28 @@
 <template>
   <v-container>
     <span class="bg"></span>
-    <h1 class="glitch" style="text-align: center;">Results for Round {{ audition.round }}</h1>
+    <h1 class="glitch" style="text-align: center">
+      Results for Round {{ audition.round }}
+    </h1>
     <div class="table-wrap">
-    <div class="trowhead">selected students</div>
-    <div v-for="(item,i) in items" :key="i">
-      <div v-show="item.status === 'unevaluated'" class="trow">{{item.name}}</div>
-    </div>
-    </div>
-    <v-snackbar v-model="snackbar">
-      Be patient
-    </v-snackbar>
+      <div class="trowhead">selected students</div>
+      <v-data-table
+        disable-pagination
+        :headers="headers.slice(0, -1)"
+        hide-default-footer
+        :items="items"
+        :search="search"
+        class="elevation-1"
+      ><template v-slot:item="row">
+        <tr>
+          <td>
+            {{row.item}}
+          </td>
+          </tr>
+      </template>
+        </v-data-table>
+      </div>
+    <v-snackbar v-model="snackbar"> Be patient </v-snackbar>
   </v-container>
 </template>
 
@@ -36,7 +48,6 @@ export default {
     });
     common.getResult().then((res) => {
       this.items = res.data;
-      console.log(this.items);
     });
   },
   created() {
@@ -58,7 +69,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0.5;
 }
-.table-wrap{
+.table-wrap {
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
@@ -67,7 +78,7 @@ export default {
   border-radius: 5px;
   border: 1px solid #ccc;
 }
-.trowhead{
+.trowhead {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -82,7 +93,7 @@ export default {
   text-transform: uppercase;
   font-weight: 600;
 }
-.trow{
+.trow {
   display: flex;
   justify-content: center;
   align-items: center;

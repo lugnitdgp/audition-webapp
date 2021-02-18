@@ -787,8 +787,13 @@ module.exports = function (app, passport) {
     );
 
     if (save.status === "res") {
+      var result = []
       DashModel.find({ status: "unevaluated", round: save.round + 1 }).then((doc) => {
-        res.status(200).send(doc)
+        doc.forEach((kid)=>{
+          result.push(kid.name)
+        })
+      }).then(()=>{
+        res.status(200).send(result)
       })
     }
     else {
