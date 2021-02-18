@@ -797,7 +797,14 @@ module.exports = function (app, passport) {
       })
     }
     else {
-      res.sendStatus(401)
+      var result = []
+      DashModel.find({ status: "unevaluated", round: save.round }).then((doc) => {
+        doc.forEach((kid)=>{
+          result.push(kid.name)
+        })
+      }).then(()=>{
+        res.status(200).send(result)
+      })
     }
   })
 
