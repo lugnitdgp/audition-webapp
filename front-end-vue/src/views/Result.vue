@@ -4,7 +4,7 @@
     <h1 class="glitch" style="text-align: center">
       Results for Round {{ audition.round }}
     </h1>
-    <div class="table-wrap">
+    <div>
       <div class="trowhead">selected students</div>
       <v-data-table
         disable-pagination
@@ -16,7 +16,7 @@
       ><template v-slot:item="row">
         <tr>
           <td>
-            {{row.item}}
+           <center>{{row.item}}</center>
           </td>
           </tr>
       </template>
