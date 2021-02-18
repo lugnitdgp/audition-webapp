@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <span class="bg"></span>
+    <!-- <span class="bg"></span> -->
     <h1 class="glitch" style="text-align: center">
       Results for Round {{ audition.round }}
     </h1>
