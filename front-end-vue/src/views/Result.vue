@@ -6,23 +6,25 @@
     </h1>
     <div>
       <div class="trowhead">selected students</div>
-      <v-data-table
-        disable-pagination
-        :headers="headers.slice(0, -1)"
-        hide-default-footer
-        :items="items"
-        :search="search"
-        class="elevation-1"
-        color="black"
-      ><template v-slot:item="row">
-        <tr style="background-color: rgba(0,0,0, 1) !important;">
-          <td>
-           <center>{{row.item}}</center>
-          </td>
-          </tr>
-      </template>
-        </v-data-table>
-      </div>
+      <v-container>
+        <v-data-table
+          disable-pagination
+          :headers="headers.slice(0, -1)"
+          hide-default-footer
+          :items="items"
+          :search="search"
+          class="elevation-1"
+          color="black"
+          ><template v-slot:item="row">
+            <tr style="background-color: rgba(0, 0, 0, 1) !important">
+              <td>
+                <center>{{ row.item }}</center>
+              </td>
+            </tr>
+          </template>
+        </v-data-table></v-container
+      >
+    </div>
     <v-snackbar v-model="snackbar"> Be patient </v-snackbar>
   </v-container>
 </template>
