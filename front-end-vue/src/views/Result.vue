@@ -13,8 +13,9 @@
         :items="items"
         :search="search"
         class="elevation-1"
+        color="black"
       ><template v-slot:item="row">
-        <tr>
+        <tr style="background-color: rgba(0,0,0, 1) !important;">
           <td>
            <center>{{row.item}}</center>
           </td>
@@ -59,24 +60,14 @@ export default {
 <style scoped>
 .bg {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
   background: url("../assets/img/f.gif") no-repeat center center;
   background-size: cover;
-  filter: blur(2px);
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0.5;
-}
-.table-wrap {
-  width: 90%;
-  max-width: 600px;
-  max-height: 80vh;
-  margin: 0 auto;
-  overflow-y: scroll;
-  border-radius: 5px;
-  border: 1px solid #ccc;
 }
 .trowhead {
   display: flex;
@@ -100,8 +91,6 @@ export default {
   color: #fff !important;
   width: 100%;
   opacity: 1 !important;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(10px);
   border: 0px solid #fff;
   padding: 10px;
 }
