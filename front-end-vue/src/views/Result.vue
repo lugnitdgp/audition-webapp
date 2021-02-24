@@ -5,7 +5,7 @@
       Results for Round {{ audition.round }}
     </h1>
     <h1 class="glitch" style="text-align: center" v-if="audition.status === 'ong' || audition.status === 'def'">
-      Results for Round {{ audition.round - 1 }}
+      Results for Round {{ 4 }}
     </h1>
     <div>
       <div class="trowhead">selected students</div>
