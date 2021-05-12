@@ -22,7 +22,7 @@
     "multer-storage-cloudinary": "^4.0.0",
     "node-cron": "^2.0.3",
     "node-fetch": "^2.6.1",
-    "nodemailer": "^6.4.15",
+    "nodemailer": "^6.4.16",
     "nodemon": "^2.0.6",
     "passport": "^0.4.1",
     "passport-facebook": "^3.0.0",
