@@ -74,7 +74,10 @@ This app has been made using the MEVN stack.
 
 ## Authors
 
-* **V. Rohan Rao** 
+* [**V. Rohan Rao**](https://github.com/v-rohan/)
+* [**Yashvardhan Prasad**](https://github.com/Error-200/)
+* [**Yash Maroo**](https://github.com/YASHMAROO/)
+* [**Rishav Rajkumar**](https://github.com/rishav4101/)
 
 for the **GNU/Linux User's Group, NIT DURGAPUR**
 
